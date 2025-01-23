@@ -25,7 +25,7 @@ impl Application {
 
       println!("Input: {:?}", keys);
 
-      // self.keyboard.lock();
+      self.keyboard.lock();
 
       // let status = self.platform.get_status();
       // let input = self.platform.get_input();
@@ -34,7 +34,7 @@ impl Application {
 
       // self.platform.set_output(output);
 
-      // self.keyboard.unlock();
+      self.keyboard.unlock();
     }
   }
 }
