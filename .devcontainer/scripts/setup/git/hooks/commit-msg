@@ -1,0 +1,31 @@
+#!/bin/bash
+
+commit_msg_file=".git/COMMIT_EDITMSG"
+
+message=$(cat "$commit_msg_file")
+
+docs="https://www.conventionalcommits.org/en/v1.0.0/"
+
+reg_msg='^(feat|fix|build|chore|ci|docs|style|refactor|perf|test)(\([^)]+\))?!?: '
+
+if [[ ! $message =~ $reg_msg ]]; then
+  printf "Incorrect commit message:"
+  printf "\n\n$message\n"
+  printf "Please, read the documentation: $docs"
+  exit 1
+fi
+
+reg_brk='^[a-zA-Z]+(\([^)]+\))?!:'
+
+if [[ $message =~ $reg_brk ]]; then
+  exp_chng="\n\nBREAKING CHANGE: "
+
+  if [[ ! $message =~ $exp_chng ]]; then
+    printf "BREAKING CHANGE required in commit message:"
+    printf "\n\n$message\n\n"
+    exit 1
+  fi
+fi
+
+printf "Message is correct:\n\n$message\n\n"
+exit 0

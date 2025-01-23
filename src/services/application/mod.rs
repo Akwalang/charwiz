@@ -1,0 +1,40 @@
+use crate::services::{Platform, Keyboard, Transformer};
+
+pub struct Application {
+  platform: Platform,
+  keyboard: Keyboard,
+  transformer: Transformer,
+}
+
+impl Application {
+  pub fn new() -> Self {
+    let platform = Platform::new();
+    let keyboard = Keyboard::new();
+    let transformer = Transformer::new();
+
+    Self { platform, keyboard, transformer }
+  }
+
+  pub async fn run(&mut self) {
+    self.keyboard.listen();
+
+    println!("Application is running...");
+
+    loop {
+      let keys = self.keyboard.get_input().await;
+
+      println!("Input: {:?}", keys);
+
+      // self.keyboard.lock();
+
+      // let status = self.platform.get_status();
+      // let input = self.platform.get_input();
+
+      // let output = self.transformer.convert(input, keys, status);
+
+      // self.platform.set_output(output);
+
+      // self.keyboard.unlock();
+    }
+  }
+}

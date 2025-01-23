@@ -1,0 +1,4 @@
+/target
+
+/.devcontainer/logs/*
+!/.devcontainer/logs/.gitkeep
