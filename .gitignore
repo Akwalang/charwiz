@@ -2,3 +2,5 @@
 
 /.devcontainer/logs/*
 !/.devcontainer/logs/.gitkeep
+
+/dump
