@@ -10,7 +10,6 @@ use rdev::{listen, Event, EventType, Key};
 use enums::KeyEvent;
 
 pub struct Keyboard {
-  locked: bool,
   active: HashSet<Key>,
   sender: Sender<KeyEvent>,
   receiver: Receiver<KeyEvent>,
@@ -23,15 +22,7 @@ impl Keyboard {
 
     let (sender, receiver) = channel::unbounded::<KeyEvent>();
 
-    Self { locked, active, sender, receiver }
-  }
-
-  pub fn lock(&mut self) {
-    self.locked = true;
-  }
-
-  pub fn unlock(&mut self) {
-    self.locked = false;
+    Self { active, sender, receiver }
   }
 
   pub fn listen(&mut self) {
@@ -50,17 +41,15 @@ impl Keyboard {
     });
   }
 
-  pub async fn get_input(&mut self) -> Vec<Key> {
+  pub async fn get_input(&mut self) -> HashSet<Key> {
     loop {
       if let Ok(event) = self.receiver.recv().await {
-        if self.locked { continue; }
-
         match event {
           KeyEvent::KeyDown(key) => { self.active.insert(key); },
           KeyEvent::KeyUp(key) => { self.active.remove(&key); },
         }
 
-        return self.active.iter().cloned().collect();
+        return self.active.clone();
       }
     }
   }

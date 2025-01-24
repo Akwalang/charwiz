@@ -1,4 +1,4 @@
-use crate::services::{Platform, Keyboard, Transformer};
+use crate::services::{Platform, PlatformTrait, Keyboard, Transformer};
 
 pub struct Application {
   platform: Platform,
@@ -25,16 +25,15 @@ impl Application {
 
       println!("Input: {:?}", keys);
 
-      self.keyboard.lock();
-
       // let status = self.platform.get_status();
       // let input = self.platform.get_input();
 
-      // let output = self.transformer.convert(input, keys, status);
+      let output = self.transformer.convert(keys);
 
-      // self.platform.set_output(output);
-
-      self.keyboard.unlock();
+      if let Some(output) = output {
+        println!("Output: {:?}", output);
+        self.platform.apply_output(output);
+      }
     }
   }
 }
