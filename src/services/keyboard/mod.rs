@@ -17,7 +17,6 @@ pub struct Keyboard {
 
 impl Keyboard {
   pub fn new() -> Self {
-    let locked = false;
     let active = HashSet::new();
 
     let (sender, receiver) = channel::unbounded::<KeyEvent>();
