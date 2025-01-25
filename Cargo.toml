@@ -7,6 +7,7 @@ edition = "2021"
 async-std = { version = "1.13", features = ["attributes"] }
 clipboard-win = "5.4.0"
 rdev = "0.5.3"
+rlua = "0.20.1"
 
 [dependencies.windows]
 version = "0.59"

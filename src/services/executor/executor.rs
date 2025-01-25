@@ -1,4 +1,4 @@
-use crate::services::{keyboard, Clipboard, Platform, PlatformTrait};
+use crate::services::{keyboard, Clipboard, Plugins, Platform, PlatformTrait};
 
 use super::enums::Command;
 use super::utils;
@@ -6,18 +6,20 @@ use super::utils;
 pub struct Executor {
   platform: Platform,
   clipboard: Clipboard,
+  plugins: Plugins,
 }
 
 impl Executor {
   pub fn new() -> Self {
     let platform = Platform::new();
     let clipboard = Clipboard::new();
+    let plugins = Plugins::new();
 
     println!("");
     platform.log_state();
     println!("");
 
-    Self { platform, clipboard }
+    Self { platform, clipboard, plugins }
   }
 
   pub async fn apply(&mut self, cmd: Command) -> Result<(), Box<dyn std::error::Error>> {
