@@ -9,6 +9,6 @@ pub struct Settings {}
 
 impl Settings {
   pub fn get_hotkeys() -> &'static Vec<HotKey> {
-    settings::get_hot_keys()
+    settings::get_hotkeys()
   }
 }

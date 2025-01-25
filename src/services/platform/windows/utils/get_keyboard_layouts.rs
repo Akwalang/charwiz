@@ -4,7 +4,7 @@ use std::os::windows::ffi::OsStringExt;
 use windows::Win32::UI::Input::KeyboardAndMouse::*;
 use windows::Win32::Globalization::*;
 
-use super::super::KeyboardLayout;
+use crate::services::platform::KeyboardLayout;
 
 const MAX_LAYOUTS_COUNT: usize = 16;
 const MAX_LANG_NAME_SIZE: usize = 85;

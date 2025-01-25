@@ -1,4 +1,4 @@
 #[derive(Debug)]
-pub enum HotKeyAction {
+pub enum Command {
   SwitchLanguage,
 }

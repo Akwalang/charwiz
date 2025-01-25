@@ -1,18 +1,23 @@
-use crate::services::{Platform, PlatformTrait, Keyboard, Transformer};
+use crate::services::{
+  Platform,
+  Keyboard,
+  Executor,
+  Hotkeys,
+};
 
 pub struct Application {
   platform: Platform,
   keyboard: Keyboard,
-  transformer: Transformer,
+  executor: Executor,
 }
 
 impl Application {
   pub fn new() -> Self {
     let platform = Platform::new();
     let keyboard = Keyboard::new();
-    let transformer = Transformer::new();
+    let executor = Executor::new();
 
-    Self { platform, keyboard, transformer }
+    Self { platform, keyboard, executor }
   }
 
   pub async fn run(&mut self) {
@@ -28,9 +33,9 @@ impl Application {
       // let status = self.platform.get_status();
       // let input = self.platform.get_input();
 
-      let output = self.transformer.convert(keys);
+      let command = Hotkeys::convert(keys);
 
-      if output.is_none() { continue; }
+      if command.is_none() { continue; }
 
       // Waiting for release of keys
       loop {
@@ -39,10 +44,7 @@ impl Application {
         if keys.is_empty() { break; }
       }
 
-      if let Some(output) = output {
-        println!("Output: {:?}", output);
-        self.platform.apply_output(output);
-      }
+      self.executor.apply(command.unwrap()).await;
     }
   }
 }

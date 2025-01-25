@@ -1,6 +1,3 @@
-mod enums;
-pub use enums::PlatformAction;
-
 mod structs;
 pub use structs::KeyboardLayout;
 
@@ -13,4 +10,4 @@ pub use traits::{Platform as PlatformTrait};
 #[cfg(target_os = "windows")]
 mod windows;
 #[cfg(target_os = "windows")]
-pub use windows::Windows as Platform;
+pub use windows::{Windows as Platform, Clipboard};
