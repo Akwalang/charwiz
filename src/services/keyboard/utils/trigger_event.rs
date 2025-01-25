@@ -11,7 +11,7 @@ pub async fn trigger_event(key: Key, is_press: bool) -> Result<(), rdev::Simulat
 
   simulate(&event)?;
 
-  sleep(Duration::from_millis(5)).await;
+  sleep(Duration::from_millis(8)).await;
 
   Ok(())
 }
