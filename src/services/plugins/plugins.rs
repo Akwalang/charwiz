@@ -13,12 +13,11 @@ impl Plugins {
   pub fn new() -> Plugins {
     let lua = Self::initialize_lua_scripts();
 
-    let lua: Option<Lua> = if let Ok(lua) = lua {
-      lua
-    } else {
-      print!("Error: {}", lua.unwrap_err());
-      None
-    };
+    let lua = lua.or::<Option<Lua>>(Ok(None)).unwrap();
+
+    if lua.is_none() {
+      println!("Error: Lua scripts could not be loaded");
+    }
 
     Plugins { lua }
   }
@@ -28,7 +27,7 @@ impl Plugins {
 
     let dir = Path::new(PLUGINS_FOLDER);
 
-    println!("Loading Lua scripts from: {:?}", dir);
+    println!("Loading Lua scripts from: {:?}\n", dir);
 
     if !dir.exists() {
       println!("Error: Lua scripts directory does not exist");
