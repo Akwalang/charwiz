@@ -10,10 +10,19 @@ impl Windows {
   pub fn new() -> Windows {
     let keyboard_layouts = utils::get_keyboard_layouts();
 
-    println!("Current keyboard layout: {}", utils::get_current_keyboard_layout_id());
-    println!("Keyboard layouts: {:?}", keyboard_layouts);
-
     Windows { keyboard_layouts }
+  }
+
+  pub fn log_state(&self) {
+    let id = utils::get_current_keyboard_layout_id();
+
+    println!("Keyboard layouts:");
+
+    for lt in &self.keyboard_layouts {
+      let marker = if lt.id == id { "+" } else { " " };
+
+      println!(" {} {} ({})", marker, lt.name, lt.id);
+    }
   }
 }
 
@@ -49,7 +58,7 @@ impl PlatformTrait for Windows {
 
     utils::switch_global_keyboard_layout(layout_id)?;
 
-    println!("Switched to keyboard layout: {} ({})", lt.name, layout_id);
+    println!(" + {} ({})", lt.name, layout_id);
 
     Ok(Some(lt))
   }

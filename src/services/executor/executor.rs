@@ -13,6 +13,10 @@ impl Executor {
     let platform = Platform::new();
     let clipboard = Clipboard::new();
 
+    println!("");
+    platform.log_state();
+    println!("");
+
     Self { platform, clipboard }
   }
 
