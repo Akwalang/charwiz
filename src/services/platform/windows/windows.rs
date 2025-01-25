@@ -51,6 +51,8 @@ impl PlatformTrait for Windows {
 
     self.current_keyboard_layout_id = layout_id.to_string();
 
+    println!("Switched to keyboard layout: {} ({})", lt.name, layout_id);
+
     Ok(Some(lt))
   }
 

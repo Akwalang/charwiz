@@ -1,39 +1,49 @@
-use crate::services::{keyboard, Clipboard, Platform};
+use crate::services::{keyboard, Clipboard, Platform, PlatformTrait};
 
 use super::enums::Command;
 use super::utils;
 
 pub struct Executor {
+  platform: Platform,
   clipboard: Clipboard,
 }
 
 impl Executor {
   pub fn new() -> Self {
+    let platform = Platform::new();
     let clipboard = Clipboard::new();
 
-    Self { clipboard }
+    Self { platform, clipboard }
   }
 
-  pub async fn apply(&mut self, cmd: Command) {
+  pub async fn apply(&mut self, cmd: Command) -> Result<(), Box<dyn std::error::Error>> {
     match cmd {
-      Command::SwitchLanguage => self.switch_language().await,
+      Command::SwitchLanguage => self.switch_language().await?,
     }
+
+    Ok(())
   }
 
-  async fn switch_language(&mut self) {
+  async fn switch_language(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    self.platform.switch_keyboard_layout()?;
+
     self.clipboard.save();
 
-    keyboard::select_word().await.unwrap();
-    keyboard::copy().await.unwrap();
+    keyboard::utils::select_word().await?;
+    keyboard::utils::copy().await?;
 
-    let value = Clipboard::get_clipboard_text().unwrap();
-    let value = utils::convert_language(value);
+    let value = Clipboard::get_clipboard_text()?;
 
-    Clipboard::set_clipboard_text(&value).unwrap();
+    if value.is_none() { return Ok(()); }
 
-    keyboard::paste().await.unwrap();
-    keyboard::deselect().await.unwrap();
+    let value = utils::convert_language(value.unwrap());
+
+    Clipboard::set_clipboard_text(&value)?;
+
+    keyboard::utils::paste().await?;
 
     self.clipboard.restore();
+
+    Ok(())
   }
 }

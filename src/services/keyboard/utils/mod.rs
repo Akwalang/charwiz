@@ -1,5 +1,5 @@
 mod trigger_event;
-pub use trigger_event::trigger_event;
+pub use trigger_event::{trigger_event, trigger_event_ms};
 
 mod select_all;
 pub use select_all::select_all;

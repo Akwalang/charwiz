@@ -1,23 +1,20 @@
 use crate::services::{
-  Platform,
   Keyboard,
   Executor,
   Hotkeys,
 };
 
 pub struct Application {
-  platform: Platform,
   keyboard: Keyboard,
   executor: Executor,
 }
 
 impl Application {
   pub fn new() -> Self {
-    let platform = Platform::new();
     let keyboard = Keyboard::new();
     let executor = Executor::new();
 
-    Self { platform, keyboard, executor }
+    Self { keyboard, executor }
   }
 
   pub async fn run(&mut self) {
@@ -28,23 +25,24 @@ impl Application {
     loop {
       let keys = self.keyboard.get_input().await;
 
-      println!("Input: {:?}", keys);
-
-      // let status = self.platform.get_status();
-      // let input = self.platform.get_input();
+      // println!("Input: {:?}", keys);
 
       let command = Hotkeys::convert(keys);
 
-      if command.is_none() { continue; }
+      match command {
+        Some(command) => {
+          loop {
+            let keys = self.keyboard.get_input().await;
 
-      // Waiting for release of keys
-      loop {
-        let keys = self.keyboard.get_input().await;
+            if keys.is_empty() { break; }
+          }
 
-        if keys.is_empty() { break; }
-      }
-
-      self.executor.apply(command.unwrap()).await;
+          if let Err(_) = self.executor.apply(command).await {
+            println!("Failed to apply command");
+          }
+        },
+        None => { continue; },
+      };
     }
   }
 }

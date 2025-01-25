@@ -10,19 +10,26 @@ impl Clipboard {
   }
 
   pub fn save(&mut self) {
-    self.buffer = Self::get_clipboard_text();
+    let result = Self::get_clipboard_text();
+
+    match result {
+      Ok(buffer) => self.buffer = buffer,
+      Err(_) => println!("Failed to save clipboard buffer"),
+    }
   }
 
   pub fn restore(&self) {
     if let Some(buffer) = &self.buffer {
-      Self::set_clipboard_text(buffer);
+      if let Err(_) = Self::set_clipboard_text(buffer) {
+        println!("Failed to restore clipboard buffer");
+      }
     }
   }
 
-  pub fn get_clipboard_text() -> Option<String> {
+  pub fn get_clipboard_text() -> Result<Option<String>, Box<dyn std::error::Error + 'static>> {
     match get_clipboard(formats::Unicode) {
-      Ok(buffer) => Some(buffer),
-      Err(_) => None,
+      Ok(buffer) => Ok(Some(buffer)),
+      Err(_) => Err(Box::new(std::io::Error::last_os_error())),
     }
   }
 
