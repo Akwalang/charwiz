@@ -12,7 +12,6 @@ pub struct Plugins {
 impl Plugins {
   pub fn new() -> Plugins {
     let lua = Self::initialize_lua_scripts();
-
     let lua = lua.or::<Option<Lua>>(Ok(None)).unwrap();
 
     if lua.is_none() {

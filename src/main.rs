@@ -1,9 +1,19 @@
+#![windows_subsystem = "windows"]
+
 mod constants;
 mod services;
 
-use services::Application;
+use futures::join;
+
+use services::{Application, Tray};
 
 #[async_std::main]
 async fn main() {
-  Application::new().run().await;
+  let mut application = Application::new();
+  let mut tray = Tray::new();
+
+  let _= join!(
+    application.run(),
+    tray.run(),
+  );
 }

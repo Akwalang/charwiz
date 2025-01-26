@@ -1,6 +1,9 @@
 mod application;
 pub use application::Application;
 
+mod tray;
+pub use tray::Tray;
+
 mod keyboard;
 pub use keyboard::Keyboard;
 
