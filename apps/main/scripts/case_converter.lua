@@ -1,9 +1,17 @@
+local function trim(s)
+   return s:match("^%s*(.-)%s*$")
+end
+
 local function split_into_words(input)
-    local normalized = input:gsub("[-_ ]+", " ")
+    local str = input
+
+    str = str:gsub("[-_ ]+", " ")
+    str = str:gsub("([A-Z])", " %1")
+    str = trim(str)
 
     local words = {}
 
-    for word in normalized:gmatch("%S+") do
+    for word in str:gmatch("%S+") do
         table.insert(words, word)
     end
 
@@ -17,6 +25,8 @@ function to_snake_case(input)
 end
 
 function to_pascal_case(input)
+    local words = split_into_words(input)
+
     for i, word in ipairs(words) do
         words[i] = word:sub(1, 1):upper() .. word:sub(2):lower()
     end
