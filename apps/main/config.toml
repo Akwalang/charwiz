@@ -5,9 +5,14 @@ switch_keyboard_layout = true
 handler = "convert_char_layout"
 
 [[actions]]
+keys = ["Ctrl", "Shift", "MetaLeft"]
+target = "selection"
+switch_keyboard_layout = true
+handler = "convert_char_layout"
+
+[[actions]]
 keys = ["Ctrl", "Shift", "KeyZ"]
 target = "selection"
-keep_selection = true
 handler = "invert_case"
 
 [[actions]]
