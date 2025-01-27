@@ -1,7 +1,6 @@
 use crate::services::{
   Keyboard,
   Executor,
-  Hotkeys,
 };
 
 pub struct Application {
@@ -25,24 +24,30 @@ impl Application {
     loop {
       let keys = self.keyboard.get_input().await;
 
-      // println!("Input: {:?}", keys);
+      let action = Executor::find_action(keys);
 
-      let command = Hotkeys::convert(keys);
+      // println!("Action: {:?}", action);
 
-      match command {
-        Some(command) => {
-          loop {
-            let keys = self.keyboard.get_input().await;
+      match action {
+        Some(action) => {
+          self.block_until_empty_input().await;
 
-            if keys.is_empty() { break; }
-          }
-
-          if let Err(_) = self.executor.apply(command).await {
+          if let Err(_) = self.executor.apply(action).await {
             println!("Failed to apply command");
           }
+
+          self.keyboard.drop_input().await;
         },
         None => { continue; },
       };
+    }
+  }
+
+  async fn block_until_empty_input(&mut self) {
+    loop {
+      let keys = self.keyboard.get_input().await;
+
+      if keys.is_empty() { break; }
     }
   }
 }

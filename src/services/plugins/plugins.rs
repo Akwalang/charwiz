@@ -4,6 +4,7 @@ use std::path::Path;
 use rlua::{Lua, Result};
 
 use crate::constants::PLUGINS_FOLDER;
+use crate::services::ActionConfig;
 
 pub struct Plugins {
   lua: Option<Lua>,
@@ -49,13 +50,17 @@ impl Plugins {
     Ok(Some(lua))
   }
 
-  pub fn run(&self, script: &str, value: &str) -> Result<String> {
+  pub fn run(&self, value: &str, action: &ActionConfig) -> Result<Option<String>> {
+    if self.lua.is_none() { return Ok(None); }
+
     let lua = self.lua.as_ref().unwrap();
 
-    let func: rlua::Function = lua.globals().get(script)?;
+    let handler: Result<rlua::Function> = lua.globals().get(action.handler.to_string());
 
-    let result: String = func.call(value)?;
+    if handler.is_err() { return Ok(None); }
 
-    Ok(result)
+    let result: String = handler.unwrap().call(value)?;
+
+    Ok(Some(result))
   }
 }

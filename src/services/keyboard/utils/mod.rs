@@ -10,11 +10,8 @@ pub use select_line::select_line;
 mod select_word;
 pub use select_word::select_word;
 
-mod deselect;
-pub use deselect::deselect;
-
-mod cut;
-pub use cut::cut;
+mod select_chars;
+pub use select_chars::select_chars;
 
 mod copy;
 pub use copy::copy;

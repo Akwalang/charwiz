@@ -1,6 +1,3 @@
-mod enums;
-pub use enums::Command;
-
 pub mod utils;
 
 mod executor;

@@ -20,7 +20,7 @@ fn init_mapping() -> HashMap<char, char> {
   mapping
 }
 
-pub fn convert_language(value: String) -> String {
+pub fn convert_char_layout(value: &str) -> String {
   let mapping = MAPPING.get_or_init(init_mapping);
 
   let mut result = String::with_capacity(value.len());

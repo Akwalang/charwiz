@@ -1,6 +1,10 @@
-use crate::services::{keyboard, Clipboard, Plugins, Platform, PlatformTrait};
+use std::collections::HashSet;
 
-use super::enums::Command;
+use rdev::Key;
+
+use crate::services::{keyboard, Config, ActionConfig, ActionTarget, Clipboard, Plugins, Platform, PlatformTrait};
+
+// use super::enums::Command;
 use super::utils;
 
 pub struct Executor {
@@ -22,34 +26,80 @@ impl Executor {
     Self { platform, clipboard, plugins }
   }
 
-  pub async fn apply(&mut self, cmd: Command) -> Result<(), Box<dyn std::error::Error>> {
-    match cmd {
-      Command::SwitchLanguage => self.switch_language().await?,
+  pub fn find_action(keys: HashSet<Key>) -> Option<&'static ActionConfig> {
+    let actions = Config::get_actions();
+
+    actions.iter().find(|action| {
+      if action.keys.len() != keys.len() { return false; }
+
+      action.keys.iter().all(|key| keys.contains(key))
+    })
+  }
+
+  pub async fn apply(&mut self, action: &ActionConfig) -> Result<(), Box<dyn std::error::Error>> {
+    self.clipboard.save();
+
+    if action.switch_keyboard_layout { self.platform.switch_keyboard_layout()?; }
+
+    Self::prepare_selection(action).await?;
+
+    keyboard::utils::copy().await?;
+
+    let value = self.transform_clipboard(action)?;
+
+    keyboard::utils::paste().await?;
+
+    if action.keep_selection { keyboard::utils::select_chars(value.len()).await?; }
+
+    self.clipboard.restore();
+
+    Ok(())
+  }
+
+  async fn prepare_selection(action: &ActionConfig) -> Result<(), Box<dyn std::error::Error>> {
+    match action.target {
+      ActionTarget::All => keyboard::utils::select_all().await?,
+      ActionTarget::Line => keyboard::utils::select_line().await?,
+      ActionTarget::Word => keyboard::utils::select_word().await?,
+      _ => (),
     }
 
     Ok(())
   }
 
-  async fn switch_language(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-    self.platform.switch_keyboard_layout()?;
-
-    self.clipboard.save();
-
-    keyboard::utils::select_word().await?;
-    keyboard::utils::copy().await?;
-
+  fn transform_clipboard(&self, action: &ActionConfig) -> Result<String, Box<dyn std::error::Error>> {
     let value = Clipboard::get_clipboard_text()?;
 
-    if value.is_none() { return Ok(()); }
+    if value.is_none() { return Ok("".to_string()); }
 
-    let value = utils::convert_language(value.unwrap());
+    let value = self.transform_value(value.unwrap(), action)?;
 
     Clipboard::set_clipboard_text(&value)?;
 
-    keyboard::utils::paste().await?;
+    Ok(value)
+  }
 
-    self.clipboard.restore();
+  fn transform_value(&self, value: String, action: &ActionConfig) -> Result<String, Box<dyn std::error::Error>> {
+    let result = self.apply_handler(&value, action)?;
 
-    Ok(())
+    if result.is_some() { return Ok(result.unwrap()); }
+
+    let result = self.apply_plugin(&value, action)?;
+
+    if result.is_some() { return Ok(result.unwrap()); }
+
+    Ok(value)
+  }
+
+  fn apply_handler(&self, value: &str, action: &ActionConfig) -> Result<Option<String>, Box<dyn std::error::Error>> {
+    match action.handler.as_str() {
+      "convert_char_layout" => Ok(Some(utils::convert_char_layout(value))),
+      "invert_case" => Ok(Some(utils::invert_case(value))),
+      _ => Ok(None),
+    }
+  }
+
+  fn apply_plugin(&self, value: &str, action: &ActionConfig) -> Result<Option<String>, Box<dyn std::error::Error>> {
+    self.plugins.run(value, action).map_err(|e| Box::new(e) as Box<dyn std::error::Error>)
   }
 }

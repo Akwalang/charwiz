@@ -42,13 +42,23 @@ impl Keyboard {
     loop {
       if let Ok(event) = self.receiver.recv().await {
         match event {
-          KeyEvent::KeyDown(key) => { self.active.insert(key); },
-          KeyEvent::KeyUp(key) => { self.active.remove(&key); },
+          KeyEvent::KeyDown(key) => {
+            if let Key::Unknown(_) = key { continue; }
+            self.active.insert(key);
+          },
+          KeyEvent::KeyUp(key) => {
+            if let Key::Unknown(_) = key { continue; }
+            self.active.remove(&key);
+          },
         }
 
         return self.active.clone();
       }
     }
+  }
+
+  pub async fn drop_input(&mut self) {
+    while let Ok(_) = self.receiver.try_recv() {}
   }
 
   fn convert(event: Event) -> Option<KeyEvent> {

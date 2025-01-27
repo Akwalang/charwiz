@@ -1,0 +1,16 @@
+[[actions]]
+keys = ["Ctrl", "Shift", "Alt"]
+target = "word"
+switch_keyboard_layout = true
+handler = "convert_char_layout"
+
+[[actions]]
+keys = ["Ctrl", "Shift", "KeyZ"]
+target = "selection"
+keep_selection = true
+handler = "invert_case"
+
+[[actions]]
+keys = ["Ctrl", "Shift", "KeyB"]
+target = "word"
+handler = "greet"
