@@ -13,19 +13,23 @@ handler = "invert_case"
 [[actions]]
 keys = ["Ctrl", "Alt", "KeyV"]
 target = "selection"
+keep_selection = true
 handler = "to_snake_case"
 
 [[actions]]
 keys = ["Ctrl", "Alt", "KeyB"]
 target = "selection"
+keep_selection = true
 handler = "to_pascal_case"
 
 [[actions]]
 keys = ["Ctrl", "Alt", "KeyN"]
 target = "selection"
+keep_selection = true
 handler = "to_camel_case"
 
 [[actions]]
 keys = ["Ctrl", "Alt", "KeyM"]
 target = "selection"
+keep_selection = true
 handler = "to_kebab_case"
