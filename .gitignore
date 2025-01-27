@@ -1,6 +1,8 @@
-/target
+/apps/*/target
 
 /.devcontainer/logs/*
 !/.devcontainer/logs/.gitkeep
+
+/release/*
 
 /dump
