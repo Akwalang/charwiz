@@ -19,13 +19,13 @@ local function split_into_words(input)
 end
 
 function to_snake_case(input)
-    local words = split_into_words(input)
+    local words = split_into_words(input.value)
 
     return table.concat(words, "_"):lower()
 end
 
 function to_pascal_case(input)
-    local words = split_into_words(input)
+    local words = split_into_words(input.value)
 
     for i, word in ipairs(words) do
         words[i] = word:sub(1, 1):upper() .. word:sub(2):lower()
@@ -35,7 +35,7 @@ function to_pascal_case(input)
 end
 
 function to_camel_case(input)
-    local words = split_into_words(input)
+    local words = split_into_words(input.value)
 
     for i, word in ipairs(words) do
         if i > 1 then
@@ -49,7 +49,7 @@ function to_camel_case(input)
 end
 
 function to_kebab_case(input)
-    local words = split_into_words(input)
+    local words = split_into_words(input.value)
 
     return table.concat(words, "-"):lower()
 end

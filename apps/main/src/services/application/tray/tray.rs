@@ -1,5 +1,3 @@
-use std::time::Duration;
-
 use tray_item::{TrayItem, IconSource};
 use async_std::{channel, task};
 

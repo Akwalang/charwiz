@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::sync::OnceLock;
 
+use crate::services::KeyboardLayout;
+
 static MAPPING: OnceLock<HashMap<char, char>> = OnceLock::new();
 
 fn init_mapping() -> HashMap<char, char> {
@@ -20,7 +22,7 @@ fn init_mapping() -> HashMap<char, char> {
   mapping
 }
 
-pub fn convert_char_layout(value: &str) -> String {
+pub fn convert_char_layout(value: &str, _before: &KeyboardLayout, _after: &KeyboardLayout) -> String {
   let mapping = MAPPING.get_or_init(init_mapping);
 
   let mut result = String::with_capacity(value.len());

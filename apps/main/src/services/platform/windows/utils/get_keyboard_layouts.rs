@@ -4,7 +4,7 @@ use std::os::windows::ffi::OsStringExt;
 use windows::Win32::UI::Input::KeyboardAndMouse::*;
 use windows::Win32::Globalization::*;
 
-use crate::services::platform::KeyboardLayout;
+use crate::services::platform::{normalize_language_name, KeyboardLayout};
 
 const MAX_LAYOUTS_COUNT: usize = 16;
 const MAX_LANG_NAME_SIZE: usize = 85;
@@ -33,7 +33,7 @@ pub fn get_keyboard_layouts() -> Vec<KeyboardLayout> {
 
     let layout_id = format!("{:08X}", (hkl.0 as usize) & 0x0000FFFF);
 
-    result.push(KeyboardLayout::new(layout_id, layout_name));
+    result.push(KeyboardLayout::new(layout_id, normalize_language_name(layout_name)));
   }
 
   result

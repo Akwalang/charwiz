@@ -1,4 +1,6 @@
-pub fn invert_case(input: &str) -> String {
+use crate::services::KeyboardLayout;
+
+pub fn invert_case(input: &str, _before: &KeyboardLayout, _after: &KeyboardLayout) -> String {
   input.chars()
     .map(|c| {
       if c.is_uppercase() {

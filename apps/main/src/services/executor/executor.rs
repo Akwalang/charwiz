@@ -2,9 +2,8 @@ use std::collections::HashSet;
 
 use rdev::Key;
 
-use crate::services::{keyboard, Config, ActionConfig, ActionTarget, Clipboard, Plugins, Platform, PlatformTrait};
+use crate::services::{keyboard, KeyboardLayout, Config, ActionConfig, ActionTarget, Clipboard, Plugins, Platform, PlatformTrait};
 
-// use super::enums::Command;
 use super::utils;
 
 pub struct Executor {
@@ -39,13 +38,17 @@ impl Executor {
   pub async fn apply(&mut self, action: &ActionConfig) -> Result<(), Box<dyn std::error::Error>> {
     self.clipboard.save();
 
+    let kbl_before = self.platform.get_current_keyboard_layout();
+
     if action.switch_keyboard_layout { self.platform.switch_keyboard_layout()?; }
+
+    let kbl_after = self.platform.get_current_keyboard_layout();
 
     Self::prepare_selection(action).await?;
 
     keyboard::utils::copy().await?;
 
-    let value = self.transform_clipboard(action)?;
+    let value = self.transform_clipboard(action, kbl_before, kbl_after)?;
 
     keyboard::utils::paste().await?;
 
@@ -67,39 +70,64 @@ impl Executor {
     Ok(())
   }
 
-  fn transform_clipboard(&self, action: &ActionConfig) -> Result<String, Box<dyn std::error::Error>> {
+  fn transform_clipboard(
+    &self,
+    action: &ActionConfig,
+    kbl_before: &KeyboardLayout,
+    kbl_after: &KeyboardLayout,
+  ) -> Result<String, Box<dyn std::error::Error>> {
     let value = Clipboard::get_clipboard_text()?;
 
     if value.is_none() { return Ok("".to_string()); }
 
-    let value = self.transform_value(value.unwrap(), action)?;
+    let value = self.transform_value(value.unwrap(), action, kbl_before, kbl_after)?;
 
     Clipboard::set_clipboard_text(&value)?;
 
     Ok(value)
   }
 
-  fn transform_value(&self, value: String, action: &ActionConfig) -> Result<String, Box<dyn std::error::Error>> {
-    let result = self.apply_handler(&value, action)?;
+  fn transform_value(
+    &self,
+    value: String,
+    action: &ActionConfig,
+    kbl_before: &KeyboardLayout,
+    kbl_after: &KeyboardLayout,
+  ) -> Result<String, Box<dyn std::error::Error>> {
+    let result = self.apply_handler(&value, action, kbl_before, kbl_after)?;
 
     if result.is_some() { return Ok(result.unwrap()); }
 
-    let result = self.apply_plugin(&value, action)?;
+    let result = self.apply_plugin(&value, action, kbl_before, kbl_after)?;
 
     if result.is_some() { return Ok(result.unwrap()); }
 
     Ok(value)
   }
 
-  fn apply_handler(&self, value: &str, action: &ActionConfig) -> Result<Option<String>, Box<dyn std::error::Error>> {
+  fn apply_handler(
+    &self,
+    value: &str,
+    action: &ActionConfig,
+    kbl_before: &KeyboardLayout,
+    kbl_after: &KeyboardLayout,
+  ) -> Result<Option<String>, Box<dyn std::error::Error>> {
     match action.handler.as_str() {
-      "convert_char_layout" => Ok(Some(utils::convert_char_layout(value))),
-      "invert_case" => Ok(Some(utils::invert_case(value))),
+      "convert_char_layout" => Ok(Some(utils::convert_char_layout(value, kbl_before, kbl_after))),
+      "invert_case" => Ok(Some(utils::invert_case(value, kbl_before, kbl_after))),
       _ => Ok(None),
     }
   }
 
-  fn apply_plugin(&self, value: &str, action: &ActionConfig) -> Result<Option<String>, Box<dyn std::error::Error>> {
-    self.plugins.run(value, action).map_err(|e| Box::new(e) as Box<dyn std::error::Error>)
+  fn apply_plugin(
+    &self,
+    value: &str,
+    action: &ActionConfig,
+    kbl_before: &KeyboardLayout,
+    kbl_after: &KeyboardLayout,
+  ) -> Result<Option<String>, Box<dyn std::error::Error>> {
+    self.plugins
+      .run(value, action, kbl_before, kbl_after)
+      .map_err(|e| Box::new(e) as Box<dyn std::error::Error>)
   }
 }

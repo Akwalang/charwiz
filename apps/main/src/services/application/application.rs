@@ -30,8 +30,6 @@ impl Application {
 
       let action = Executor::find_action(keys);
 
-      println!("Action: {:?}", action);
-
       match action {
         Some(action) => {
           self.keyboard.block_until_empty_input().await;

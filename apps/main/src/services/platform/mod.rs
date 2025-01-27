@@ -4,8 +4,8 @@ pub use structs::KeyboardLayout;
 mod traits;
 pub use traits::{Platform as PlatformTrait};
 
-// mod utils;
-// use utils::replace_languages;
+mod utils;
+pub use utils::normalize_language_name;
 
 #[cfg(target_os = "windows")]
 mod windows;

@@ -1,10 +1,10 @@
 use std::fs;
 use std::path::Path;
 
-use rlua::{Lua, LuaOptions, StdLib, Result};
+use rlua::{Lua, LuaOptions, Table, StdLib, Result};
 
 use crate::constants::PLUGINS_FOLDER;
-use crate::services::ActionConfig;
+use crate::services::{ActionConfig, KeyboardLayout};
 
 pub struct Plugins {
   lua: Option<Lua>,
@@ -52,7 +52,13 @@ impl Plugins {
     Ok(Some(lua))
   }
 
-  pub fn run(&self, value: &str, action: &ActionConfig) -> Result<Option<String>> {
+  pub fn run(
+    &self,
+    value: &str,
+    action: &ActionConfig,
+    before: &KeyboardLayout,
+    after: &KeyboardLayout,
+  ) -> Result<Option<String>> {
     if self.lua.is_none() { return Ok(None); }
 
     let lua = self.lua.as_ref().unwrap();
@@ -61,8 +67,39 @@ impl Plugins {
 
     if handler.is_err() { return Ok(None); }
 
-    let result: String = handler.unwrap().call(value)?;
+    let data = self.prepare_data(value, before, after)?;
+
+    let result: String = handler.unwrap().call(data)?;
 
     Ok(Some(result))
+  }
+
+  fn prepare_data(
+    &self,
+    value: &str,
+    before: &KeyboardLayout,
+    after: &KeyboardLayout,
+  ) -> Result<Table<'_>> {
+    let lua = self.lua.as_ref().unwrap();
+
+    let data = lua.create_table()?;
+
+    data.set("value", value)?;
+
+    let kbl_before = lua.create_table()?;
+
+    kbl_before.set("id", before.id.clone())?;
+    kbl_before.set("name", before.name.clone())?;
+
+    data.set("kbl_before", kbl_before)?;
+
+    let kbl_after = lua.create_table()?;
+
+    kbl_after.set("id", after.id.clone())?;
+    kbl_after.set("name", after.name.clone())?;
+
+    data.set("kbl_after", kbl_after)?;
+
+    Ok(data)
   }
 }
