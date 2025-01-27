@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use rlua::{Lua, Result};
+use rlua::{Lua, LuaOptions, StdLib, Result};
 
 use crate::constants::PLUGINS_FOLDER;
 use crate::services::ActionConfig;
@@ -23,7 +23,9 @@ impl Plugins {
   }
 
   fn initialize_lua_scripts() -> Result<Option<Lua>> {
-    let lua = Lua::new();
+    let safe_libs = StdLib::ALL ^ (StdLib::OS | StdLib::IO | StdLib::DEBUG | StdLib::PACKAGE);
+
+    let lua = Lua::new_with(safe_libs, LuaOptions::new())?;
 
     let dir = Path::new(PLUGINS_FOLDER);
 
