@@ -26,17 +26,19 @@ impl Application {
 
       let action = Executor::find_action(keys);
 
-      // println!("Action: {:?}", action);
+      println!("Action: {:?}", action);
 
       match action {
         Some(action) => {
           self.block_until_empty_input().await;
 
+          self.keyboard.lock();
+
           if let Err(_) = self.executor.apply(action).await {
             println!("Failed to apply command");
           }
 
-          self.keyboard.drop_input().await;
+          self.keyboard.unlock();
         },
         None => { continue; },
       };

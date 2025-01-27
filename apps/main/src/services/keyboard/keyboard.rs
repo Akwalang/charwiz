@@ -1,6 +1,7 @@
 use super::KeyEvent;
 
 use std::collections::HashSet;
+use std::sync::{Arc, Mutex};
 
 use async_std::{channel, task};
 use async_std::channel::{Receiver, Sender};
@@ -8,6 +9,7 @@ use async_std::channel::{Receiver, Sender};
 use rdev::{listen, Event, EventType, Key};
 
 pub struct Keyboard {
+  is_locked: Arc<Mutex<bool>>,
   active: HashSet<Key>,
   sender: Sender<KeyEvent>,
   receiver: Receiver<KeyEvent>,
@@ -15,18 +17,31 @@ pub struct Keyboard {
 
 impl Keyboard {
   pub fn new() -> Self {
+    let is_locked = Arc::new(Mutex::new(false));
     let active = HashSet::new();
 
     let (sender, receiver) = channel::unbounded::<KeyEvent>();
 
-    Self { active, sender, receiver }
+    Self { is_locked, active, sender, receiver }
+  }
+
+  pub fn lock(&mut self) {
+    *self.is_locked.lock().unwrap() = true;
+  }
+
+  pub fn unlock(&mut self) {
+    *self.is_locked.lock().unwrap() = false;
   }
 
   pub fn listen(&mut self) {
     let sender = self.sender.clone();
 
+    let arc_clone = self.is_locked.clone();
+
     task::spawn(async move {
       let callback = move |event| {
+        if *arc_clone.lock().unwrap() { return; }
+
         if let Some(event) = Self::convert(event) {
           sender.send_blocking(event).unwrap();
         }
@@ -55,10 +70,6 @@ impl Keyboard {
         return self.active.clone();
       }
     }
-  }
-
-  pub async fn drop_input(&mut self) {
-    while let Ok(_) = self.receiver.try_recv() {}
   }
 
   fn convert(event: Event) -> Option<KeyEvent> {
