@@ -79,4 +79,12 @@ impl Keyboard {
       _ => None,
     }
   }
+
+  pub async fn block_until_empty_input(&mut self) {
+    loop {
+      let keys = self.get_input().await;
+
+      if keys.is_empty() { break; }
+    }
+  }
 }

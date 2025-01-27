@@ -30,7 +30,7 @@ impl Application {
 
       match action {
         Some(action) => {
-          self.block_until_empty_input().await;
+          self.keyboard.block_until_empty_input().await;
 
           self.keyboard.lock();
 
@@ -42,14 +42,6 @@ impl Application {
         },
         None => { continue; },
       };
-    }
-  }
-
-  async fn block_until_empty_input(&mut self) {
-    loop {
-      let keys = self.keyboard.get_input().await;
-
-      if keys.is_empty() { break; }
     }
   }
 }
