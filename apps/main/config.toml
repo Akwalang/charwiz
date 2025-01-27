@@ -11,6 +11,21 @@ keep_selection = true
 handler = "invert_case"
 
 [[actions]]
-keys = ["Ctrl", "Shift", "KeyB"]
-target = "word"
-handler = "greet"
+keys = ["Ctrl", "Alt", "KeyV"]
+target = "selection"
+handler = "to_snake_case"
+
+[[actions]]
+keys = ["Ctrl", "Alt", "KeyB"]
+target = "selection"
+handler = "to_pascal_case"
+
+[[actions]]
+keys = ["Ctrl", "Alt", "KeyN"]
+target = "selection"
+handler = "to_camel_case"
+
+[[actions]]
+keys = ["Ctrl", "Alt", "KeyM"]
+target = "selection"
+handler = "to_kebab_case"
