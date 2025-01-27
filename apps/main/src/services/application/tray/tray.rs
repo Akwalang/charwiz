@@ -55,10 +55,4 @@ impl Tray {
 
     tray
   }
-
-  pub async fn run(&mut self) {
-    loop {
-      task::sleep(Duration::from_secs(1)).await;
-    }
-  }
 }
