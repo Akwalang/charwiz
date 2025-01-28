@@ -52,7 +52,7 @@ impl Executor {
 
     keyboard::utils::paste().await?;
 
-    if action.keep_selection { keyboard::utils::select_chars(value.len()).await?; }
+    if action.keep_selection { keyboard::utils::select_chars(value.chars().count()).await?; }
 
     self.clipboard.restore();
 
