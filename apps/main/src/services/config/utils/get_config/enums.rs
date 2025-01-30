@@ -4,4 +4,5 @@ pub enum ActionTarget {
   Line,
   Word,
   Selection,
+  Clipboard,
 }

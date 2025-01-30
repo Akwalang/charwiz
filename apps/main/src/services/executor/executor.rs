@@ -46,7 +46,7 @@ impl Executor {
 
     Self::prepare_selection(action).await?;
 
-    keyboard::utils::copy().await?;
+    Self::copy_to_clipboard(action).await?;
 
     let value = self.transform_clipboard(action, kbl_before, kbl_after)?;
 
@@ -65,6 +65,15 @@ impl Executor {
       ActionTarget::Line => keyboard::utils::select_line().await?,
       ActionTarget::Word => keyboard::utils::select_word().await?,
       _ => (),
+    }
+
+    Ok(())
+  }
+
+  async fn copy_to_clipboard(action: &ActionConfig) -> Result<(), Box<dyn std::error::Error>> {
+    match action.target {
+      ActionTarget::Clipboard => (),
+      _ => keyboard::utils::copy().await?,
     }
 
     Ok(())
