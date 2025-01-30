@@ -61,6 +61,7 @@ impl Executor {
   async fn copy_to_clipboard(&self, action: &ActionConfig) -> Result<(), Box<dyn std::error::Error>> {
     match action.target {
       ActionTarget::Clipboard => (),
+      ActionTarget::None => (),
       _ => keyboard::utils::copy().await?,
     }
 
@@ -68,42 +69,42 @@ impl Executor {
   }
 
   async fn use_transformation(&self, action: &ActionConfig) -> Result<(), Box<dyn std::error::Error>> {
-    let (kbl_before, kbl_after) = self.switch_keyboard_layout().await?;
+    let (kbl_before, kbl_after) = self.switch_keyboard_layout(action).await?;
 
-    let value = self.transform_clipboard(action, kbl_before, kbl_after)?;
+    let income = self.get_value(action)?;
+    let outcome = self.transform_value(income, action, kbl_before, kbl_after)?;
 
+    Clipboard::set_clipboard_text(&outcome)?;
     keyboard::utils::paste().await?;
 
-    if action.keep_selection { keyboard::utils::select_chars(value.chars().count()).await?; }
+    if action.keep_selection { keyboard::utils::select_chars(outcome.chars().count()).await?; }
 
     Ok(())
   }
 
-  async fn switch_keyboard_layout(&self) -> Result<(&KeyboardLayout, &KeyboardLayout), Box<dyn std::error::Error>> {
+  async fn switch_keyboard_layout(&self, action: &ActionConfig) -> Result<(&KeyboardLayout, &KeyboardLayout), Box<dyn std::error::Error>> {
     let before = self.platform.get_current_keyboard_layout();
 
-    self.platform.switch_keyboard_layout()?;
+    if action.switch_keyboard_layout {
+      self.platform.switch_keyboard_layout()?;
+    }
 
     let after = self.platform.get_current_keyboard_layout();
 
     Ok((before, after))
   }
 
-  fn transform_clipboard(
-    &self,
-    action: &ActionConfig,
-    kbl_before: &KeyboardLayout,
-    kbl_after: &KeyboardLayout,
-  ) -> Result<String, Box<dyn std::error::Error>> {
+  fn get_value(&self, action: &ActionConfig) -> Result<String, Box<dyn std::error::Error>> {
+    match action.target {
+      ActionTarget::None => { return Ok("".to_string()); },
+      _ => (),
+    }
+
     let value = Clipboard::get_clipboard_text()?;
 
     if value.is_none() { return Ok("".to_string()); }
 
-    let value = self.transform_value(value.unwrap(), action, kbl_before, kbl_after)?;
-
-    Clipboard::set_clipboard_text(&value)?;
-
-    Ok(value)
+    Ok(value.unwrap())
   }
 
   fn transform_value(

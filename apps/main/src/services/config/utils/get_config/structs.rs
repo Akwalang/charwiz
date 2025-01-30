@@ -47,6 +47,8 @@ where
     "line" => Ok(ActionTarget::Line),
     "word" => Ok(ActionTarget::Word),
     "selection" => Ok(ActionTarget::Selection),
+    "clipboard" => Ok(ActionTarget::Clipboard),
+    "none" => Ok(ActionTarget::None),
     _ => Err(serde::de::Error::custom(format!("Unknown target: {}", target_str))),
   }
 }

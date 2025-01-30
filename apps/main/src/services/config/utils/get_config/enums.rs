@@ -5,4 +5,5 @@ pub enum ActionTarget {
   Word,
   Selection,
   Clipboard,
+  None,
 }
