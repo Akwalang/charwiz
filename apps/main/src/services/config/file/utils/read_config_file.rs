@@ -1,12 +1,8 @@
-use std::sync::OnceLock;
-
 use crate::constants::CONFIG_FILE;
 
-use super::ConfigFile;
+use crate::services::config::file::TomlFile;
 
-static CONFIG: OnceLock<ConfigFile> = OnceLock::new();
-
-fn init_get_config() -> ConfigFile {
+pub fn read_config_file() -> TomlFile {
   let content = std::fs::read_to_string(CONFIG_FILE);
 
   if let Err(error) = content {
@@ -20,8 +16,4 @@ fn init_get_config() -> ConfigFile {
   }
 
   config.unwrap()
-}
-
-pub fn get_config() -> &'static ConfigFile {
-  CONFIG.get_or_init(init_get_config)
 }

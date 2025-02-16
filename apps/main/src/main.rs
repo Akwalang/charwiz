@@ -3,9 +3,9 @@
 mod constants;
 mod services;
 
-use services::Application;
+use crate::services::application::Application;
 
 #[async_std::main]
 async fn main() {
-  Application::new().run().await;
+  Application::run().await;
 }

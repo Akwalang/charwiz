@@ -1,102 +1,105 @@
 use std::collections::HashSet;
+use std::error::Error;
 
 use rdev::Key;
 
-use crate::services::{keyboard, KeyboardLayout, Config, ActionConfig, ActionTarget, Clipboard, Plugins, Platform, PlatformTrait};
+use crate::services::transform::Transform;
+use crate::services::keyboard::KeyboardEmulator;
+use crate::services::platform::{Clipboard, KeyboardLayout, Platform, PlatformTrait};
 
-use super::utils;
+use crate::services::config::settings::{SettingsAction, SettingsActionTarget};
+use crate::services::config::Config;
 
-pub struct Executor {
-  platform: Platform,
-  clipboard: Clipboard,
-  plugins: Plugins,
-}
+pub struct Executor;
 
 impl Executor {
-  pub fn new() -> Self {
-    let platform = Platform::new();
-    let clipboard = Clipboard::new();
-    let plugins = Plugins::new();
+  pub fn find_action(keys: HashSet<Key>) -> Option<SettingsAction> {
+    let config = Config::get_instance();
+    let actions = config.get_actions();
 
-    println!("");
-    platform.log_state();
-    println!("");
-
-    Self { platform, clipboard, plugins }
-  }
-
-  pub fn find_action(keys: HashSet<Key>) -> Option<&'static ActionConfig> {
-    let actions = Config::get_actions();
-
-    actions.iter().find(|action| {
+    let action = actions.iter().find(|action| {
       if action.keys.len() != keys.len() { return false; }
 
       action.keys.iter().all(|key| keys.contains(key))
-    })
+    });
+
+    if let Some(action) = action {
+      Some(action.clone())
+    } else {
+      None
+    }
   }
 
-  pub async fn apply(&mut self, action: &ActionConfig) -> Result<(), Box<dyn std::error::Error>> {
-    self.clipboard.save();
+  pub async fn execute_action(action: &SettingsAction) -> Result<(), Box<dyn Error + 'static>> {
+    let backup = Clipboard::backup();
 
-    self.prepare_selection(action).await?;
-    self.copy_to_clipboard(action).await?;
-    self.use_transformation(action).await?;
+    let emulator = KeyboardEmulator::new();
 
-    self.clipboard.restore();
+    Self::prepare_selection(&emulator, action).await?;
+    Self::copy_to_clipboard(&emulator, action).await?;
+    Self::replace(&emulator, action).await?;
+
+    backup.restore();
 
     Ok(())
   }
 
-  async fn prepare_selection(&self, action: &ActionConfig) -> Result<(), Box<dyn std::error::Error>> {
+  async fn prepare_selection(emulator: &KeyboardEmulator, action: &SettingsAction) -> Result<(), Box<dyn Error + 'static>> {
     match action.target {
-      ActionTarget::All => keyboard::utils::select_all().await?,
-      ActionTarget::Line => keyboard::utils::select_line().await?,
-      ActionTarget::Word => keyboard::utils::select_word().await?,
+      SettingsActionTarget::All => emulator.select_all().await?,
+      SettingsActionTarget::Line => emulator.select_line().await?,
+      SettingsActionTarget::Word => emulator.select_word().await?,
       _ => (),
     }
 
     Ok(())
   }
 
-  async fn copy_to_clipboard(&self, action: &ActionConfig) -> Result<(), Box<dyn std::error::Error>> {
+  async fn copy_to_clipboard(emulator: &KeyboardEmulator, action: &SettingsAction) -> Result<(), Box<dyn Error>> {
     match action.target {
-      ActionTarget::Clipboard => (),
-      ActionTarget::None => (),
-      _ => keyboard::utils::copy().await?,
+      SettingsActionTarget::Clipboard => (),
+      SettingsActionTarget::None => (),
+      _ => emulator.copy().await?,
     }
 
     Ok(())
   }
 
-  async fn use_transformation(&self, action: &ActionConfig) -> Result<(), Box<dyn std::error::Error>> {
-    let (kbl_before, kbl_after) = self.switch_keyboard_layout(action).await?;
+  async fn replace(emulator: &KeyboardEmulator, action: &SettingsAction) -> Result<(), Box<dyn Error>> {
+    let (kbl_before, kbl_after) = Self::switch_keyboard_layout(action).await?;
 
-    let income = self.get_value(action)?;
-    let outcome = self.transform_value(income, action, kbl_before, kbl_after)?;
+    let income = Self::get_value(action)?;
+    let outcome = Transform::execute(income, action, &kbl_before, &kbl_after)?;
 
     Clipboard::set_clipboard_text(&outcome)?;
-    keyboard::utils::paste().await?;
+    emulator.paste().await?;
 
-    if action.keep_selection { keyboard::utils::select_chars(outcome.chars().count()).await?; }
+    if action.keep_selection {
+      emulator.select_chars(outcome.chars().count()).await?;
+    }
 
     Ok(())
   }
 
-  async fn switch_keyboard_layout(&self, action: &ActionConfig) -> Result<(&KeyboardLayout, &KeyboardLayout), Box<dyn std::error::Error>> {
-    let before = self.platform.get_current_keyboard_layout();
+  async fn switch_keyboard_layout(action: &SettingsAction) -> Result<(KeyboardLayout, KeyboardLayout), Box<dyn Error>> {
+    let platform = Platform::get_instance();
 
-    if action.switch_keyboard_layout {
-      self.platform.switch_keyboard_layout()?;
-    }
+    let before = platform.get_current_keyboard_layout().clone();
 
-    let after = self.platform.get_current_keyboard_layout();
+    let after = if action.switch_keyboard_layout {
+      let after = platform.switch_keyboard_layout()?;
+
+      after.unwrap_or(before.clone())
+    } else {
+      before.clone()
+    };
 
     Ok((before, after))
   }
 
-  fn get_value(&self, action: &ActionConfig) -> Result<String, Box<dyn std::error::Error>> {
+  fn get_value(action: &SettingsAction) -> Result<String, Box<dyn Error>> {
     match action.target {
-      ActionTarget::None => { return Ok("".to_string()); },
+      SettingsActionTarget::None => { return Ok("".to_string()); },
       _ => (),
     }
 
@@ -105,49 +108,5 @@ impl Executor {
     if value.is_none() { return Ok("".to_string()); }
 
     Ok(value.unwrap())
-  }
-
-  fn transform_value(
-    &self,
-    value: String,
-    action: &ActionConfig,
-    kbl_before: &KeyboardLayout,
-    kbl_after: &KeyboardLayout,
-  ) -> Result<String, Box<dyn std::error::Error>> {
-    let result = self.apply_handler(&value, action, kbl_before, kbl_after)?;
-
-    if result.is_some() { return Ok(result.unwrap()); }
-
-    let result = self.apply_plugin(&value, action, kbl_before, kbl_after)?;
-
-    if result.is_some() { return Ok(result.unwrap()); }
-
-    Ok(value)
-  }
-
-  fn apply_handler(
-    &self,
-    value: &str,
-    action: &ActionConfig,
-    kbl_before: &KeyboardLayout,
-    kbl_after: &KeyboardLayout,
-  ) -> Result<Option<String>, Box<dyn std::error::Error>> {
-    match action.handler.as_str() {
-      "convert_char_layout" => Ok(Some(utils::convert_char_layout(value, kbl_before, kbl_after))),
-      "invert_case" => Ok(Some(utils::invert_case(value, kbl_before, kbl_after))),
-      _ => Ok(None),
-    }
-  }
-
-  fn apply_plugin(
-    &self,
-    value: &str,
-    action: &ActionConfig,
-    kbl_before: &KeyboardLayout,
-    kbl_after: &KeyboardLayout,
-  ) -> Result<Option<String>, Box<dyn std::error::Error>> {
-    self.plugins
-      .run(value, action, kbl_before, kbl_after)
-      .map_err(|e| Box::new(e) as Box<dyn std::error::Error>)
   }
 }

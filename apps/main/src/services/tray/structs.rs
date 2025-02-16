@@ -1,4 +1,4 @@
-use super::enums::TrayAction;
+use crate::services::tray::enums::TrayAction;
 
 pub struct MenuItem {
   pub name: &'static str,

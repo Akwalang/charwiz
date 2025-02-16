@@ -1,7 +1,7 @@
-mod enums;
-pub use enums::KeyEvent;
+pub mod enums;
 
 mod keyboard;
 pub use keyboard::Keyboard;
 
-pub mod utils;
+mod keyboard_emulator;
+pub use keyboard_emulator::KeyboardEmulator;

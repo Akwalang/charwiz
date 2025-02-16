@@ -5,17 +5,10 @@ pub struct Clipboard {
 }
 
 impl Clipboard {
-  pub fn new() -> Clipboard {
-    Clipboard { buffer: None }
-  }
+  pub fn backup() -> Clipboard {
+    let buffer = Self::get_clipboard_text().or::<String>(Ok(None)).unwrap();
 
-  pub fn save(&mut self) {
-    let result = Self::get_clipboard_text();
-
-    match result {
-      Ok(buffer) => self.buffer = buffer,
-      Err(_) => println!("Failed to save clipboard buffer"),
-    }
+    Clipboard { buffer }
   }
 
   pub fn restore(&self) {

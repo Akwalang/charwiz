@@ -1,13 +1,21 @@
+use std::sync::OnceLock;
+
 use super::utils;
 
-use crate::services::{KeyboardLayout, PlatformTrait};
+use crate::services::platform::{KeyboardLayout, PlatformTrait};
+
+static WINDOWS: OnceLock<Windows> = OnceLock::new();
+
+fn init_windows() -> Windows {
+  Windows::new()
+}
 
 pub struct Windows {
   keyboard_layouts: Vec<KeyboardLayout>,
 }
 
 impl Windows {
-  pub fn new() -> Windows {
+  fn new() -> Windows {
     let keyboard_layouts = utils::get_keyboard_layouts();
 
     Windows { keyboard_layouts }
@@ -27,6 +35,10 @@ impl Windows {
 }
 
 impl PlatformTrait for Windows {
+  fn get_instance() -> &'static Windows {
+    WINDOWS.get_or_init(init_windows)
+  }
+
   fn get_keyboard_layout_by_id(&self, id: &str) -> Option<&KeyboardLayout> {
     let lts = &self.keyboard_layouts;
 

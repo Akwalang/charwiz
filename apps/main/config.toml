@@ -1,3 +1,12 @@
+[delay]
+long = 150
+medium = 8
+short = 2
+
+[keyboard_layouts]
+ru-RU = "йцукенгшщзхъфывапролджэячсмитьбю.ёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё!@#$%^&*()"
+en-US = "qwertyuiop[]asdfghjkl;'zxcvbnm,./`QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?~!@#$%^&*()"
+
 [[actions]]
 keys = ["Ctrl", "Shift", "Alt"]
 target = "word"

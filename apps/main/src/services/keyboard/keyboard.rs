@@ -1,28 +1,31 @@
-use super::KeyEvent;
+use crate::services::keyboard::enums::KeyEvent;
 
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 
-use async_std::{channel, task};
-use async_std::channel::{Receiver, Sender};
+use async_std::{task, channel};
 
 use rdev::{listen, Event, EventType, Key};
 
 pub struct Keyboard {
   is_locked: Arc<Mutex<bool>>,
-  active: HashSet<Key>,
-  sender: Sender<KeyEvent>,
-  receiver: Receiver<KeyEvent>,
+  active: Arc<Mutex<HashSet<Key>>>,
+  sender: channel::Sender<HashSet<Key>>,
+  receiver: channel::Receiver<HashSet<Key>>,
 }
 
 impl Keyboard {
   pub fn new() -> Self {
     let is_locked = Arc::new(Mutex::new(false));
-    let active = HashSet::new();
+    let active = Arc::new(Mutex::new(HashSet::new()));
 
-    let (sender, receiver) = channel::unbounded::<KeyEvent>();
+    let (sender, receiver) = channel::unbounded::<HashSet<Key>>();
 
-    Self { is_locked, active, sender, receiver }
+    let keyboard = Self { is_locked, active, sender, receiver };
+
+    keyboard.listen();
+
+    keyboard
   }
 
   pub fn lock(&mut self) {
@@ -33,41 +36,43 @@ impl Keyboard {
     *self.is_locked.lock().unwrap() = false;
   }
 
-  pub fn listen(&mut self) {
+  pub fn listen(&self) {
     let sender = self.sender.clone();
+    let locked = self.is_locked.clone();
+    let active = self.active.clone();
 
-    let arc_clone = self.is_locked.clone();
+    let callback = move |event| {
+      if *locked.lock().unwrap() { return; }
+
+      if let Some(event) = Self::convert(event) {
+        let mut active = active.lock().unwrap();
+
+        match event {
+          KeyEvent::KeyDown(key) => {
+            if let Key::Unknown(_) = key { return; }
+            active.insert(key);
+          },
+          KeyEvent::KeyUp(key) => {
+            if let Key::Unknown(_) = key { return; }
+            active.remove(&key);
+          },
+        }
+
+        sender.send_blocking(active.clone()).unwrap();
+      }
+    };
 
     task::spawn(async move {
-      let callback = move |event| {
-        if *arc_clone.lock().unwrap() { return; }
-
-        if let Some(event) = Self::convert(event) {
-          sender.send_blocking(event).unwrap();
-        }
-      };
-
       if let Err(error) = listen(callback) {
         panic!("Can't start listen keyboard actions.\nError: {:?}", error);
       }
     });
   }
 
-  pub async fn get_input(&mut self) -> HashSet<Key> {
+  pub async fn get_input(&self) -> HashSet<Key> {
     loop {
       if let Ok(event) = self.receiver.recv().await {
-        match event {
-          KeyEvent::KeyDown(key) => {
-            if let Key::Unknown(_) = key { continue; }
-            self.active.insert(key);
-          },
-          KeyEvent::KeyUp(key) => {
-            if let Key::Unknown(_) = key { continue; }
-            self.active.remove(&key);
-          },
-        }
-
-        return self.active.clone();
+        return event;
       }
     }
   }

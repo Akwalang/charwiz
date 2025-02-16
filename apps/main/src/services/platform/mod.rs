@@ -2,7 +2,7 @@ mod structs;
 pub use structs::KeyboardLayout;
 
 mod traits;
-pub use traits::{Platform as PlatformTrait};
+pub use traits::PlatformTrait;
 
 mod utils;
 pub use utils::normalize_language_name;

@@ -1,2 +1,2 @@
-mod get_config;
-pub use get_config::{get_config, ActionConfig, ActionTarget};
+mod str_to_key;
+pub use str_to_key::str_to_key;
