@@ -3,8 +3,6 @@ use std::collections::HashSet;
 use rdev::Key;
 
 use async_std::task;
-use futures::future::FutureExt;
-use futures::select;
 
 use crate::services::executor::Executor;
 use crate::services::keyboard::Keyboard;
@@ -19,28 +17,26 @@ pub struct Application;
 impl Application {
   pub async fn run() {
     let mut keyboard = Keyboard::new();
-    let mut tray = Tray::new();
+    let executor = Executor::new();
 
     println!("Application is running...");
 
-    task::spawn(async move {
+    task::spawn(async {
+      let tray = Tray::new();
+
       loop {
         let action = tray.get_input().await;
-        Self::on_tray_input(&mut tray, action).await;
+        Self::on_tray_input(&tray, action).await;
       }
     });
 
-    task::spawn(async move {
-      loop {
-        let action = keyboard.get_input().await;
-        Self::on_keyboard_input(&mut keyboard, action).await;
-      }
-    });
-
-    Self::keep_alive().await;
+    loop {
+      let action = keyboard.get_input().await;
+      Self::on_keyboard_input(&mut keyboard, &executor, action).await;
+    }
   }
 
-  async fn on_tray_input(tray: &mut Tray, action: TrayAction) {
+  async fn on_tray_input(_tray: &Tray, action: TrayAction) {
     match action {
       TrayAction::Reload => {
         println!("Reloading settings...");
@@ -54,7 +50,7 @@ impl Application {
     }
   }
 
-  async fn on_keyboard_input(keyboard: &mut Keyboard, keys: HashSet<Key>) {
+  async fn on_keyboard_input(keyboard: &mut Keyboard, executor: &Executor, keys: HashSet<Key>) {
     let action = Executor::find_action(keys);
 
     match action {
@@ -65,7 +61,7 @@ impl Application {
 
         keyboard.lock();
 
-        if let Err(_) = Executor::execute_action(&action).await {
+        if let Err(_) = executor.execute_action(&action).await {
           println!("Failed to apply command");
         }
 
@@ -75,11 +71,5 @@ impl Application {
       },
       None => {},
     };
-  }
-
-  async fn keep_alive() {
-    loop {
-      task::sleep(std::time::Duration::from_secs(1)).await;
-    }
   }
 }

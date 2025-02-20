@@ -1,7 +1,7 @@
 [delay]
 long = 150
 medium = 8
-short = 2
+short = 1
 
 [keyboard_layouts]
 ru-RU = "йцукенгшщзхъфывапролджэячсмитьбю.ёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё!@#$%^&*()"
@@ -26,24 +26,30 @@ handler = "invert_case"
 
 [[actions]]
 keys = ["Ctrl", "Alt", "KeyV"]
-target = "selection"
-keep_selection = true
+target = "clipboard"
 handler = "to_snake_case"
 
 [[actions]]
 keys = ["Ctrl", "Alt", "KeyB"]
-target = "selection"
-keep_selection = true
+target = "clipboard"
 handler = "to_pascal_case"
 
 [[actions]]
 keys = ["Ctrl", "Alt", "KeyN"]
-target = "selection"
-keep_selection = true
+target = "clipboard"
 handler = "to_camel_case"
 
 [[actions]]
 keys = ["Ctrl", "Alt", "KeyM"]
-target = "selection"
-keep_selection = true
+target = "clipboard"
 handler = "to_kebab_case"
+
+[[actions]]
+keys = ["Ctrl", "Alt", "KeyP"]
+target = "clipboard"
+handler = "json_log"
+
+[[actions]]
+keys = ["Ctrl", "Alt", "KeyO"]
+target = "clipboard"
+handler = "js_breakpoints"

@@ -41,7 +41,17 @@ impl Keyboard {
     let locked = self.is_locked.clone();
     let active = self.active.clone();
 
-    let callback = move |event| {
+    let callback = move |event: Event| {
+      match event.event_type {
+        EventType::KeyPress(key) => {
+          println!("Key pressed: {:?}", key);
+        },
+        EventType::KeyRelease(key) => {
+          println!("Key released: {:?}", key);
+        },
+        _ => {},
+      }
+
       if *locked.lock().unwrap() { return; }
 
       if let Some(event) = Self::convert(event) {

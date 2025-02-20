@@ -8,6 +8,10 @@ use crate::services::platform::KeyboardLayout;
 pub struct Native;
 
 impl Native {
+  pub fn new() -> Self {
+    Self
+  }
+
   pub fn is_applicable(action: &SettingsAction) -> bool {
     match action.handler.as_str() {
       "convert_char_layout" => true,
@@ -17,19 +21,21 @@ impl Native {
   }
 
   pub fn apply(
+    &self,
     value: &str,
+    index: usize,
     action: &SettingsAction,
     kbl_before: &KeyboardLayout,
     kbl_after: &KeyboardLayout,
   ) -> Result<String, Box<dyn Error>> {
     match action.handler.as_str() {
-      "convert_char_layout" => Ok(Self::convert_char_layout(value, kbl_before, kbl_after)),
-      "invert_case" => Ok(Self::invert_case(value, kbl_before, kbl_after)),
+      "convert_char_layout" => Ok(Self::convert_char_layout(value, index, kbl_before, kbl_after)),
+      "invert_case" => Ok(Self::invert_case(value, index, kbl_before, kbl_after)),
       _ => Err(Box::<dyn Error>::from("Handler not found")),
     }
   }
 
-  fn convert_char_layout(value: &str, before: &KeyboardLayout, after: &KeyboardLayout) -> String {
+  fn convert_char_layout(value: &str, _index: usize, before: &KeyboardLayout, after: &KeyboardLayout) -> String {
     let config: std::sync::MutexGuard<'_, Config> = Config::get_instance();
 
     let mapping = config.get_keyboard_layouts();
@@ -69,6 +75,7 @@ impl Native {
 
   fn invert_case(
     input: &str,
+    _index: usize,
     _before: &KeyboardLayout,
     _after: &KeyboardLayout,
   ) -> String {

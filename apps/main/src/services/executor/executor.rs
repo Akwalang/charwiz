@@ -3,16 +3,24 @@ use std::error::Error;
 
 use rdev::Key;
 
-use crate::services::transform::Transform;
+use crate::services::transformer::Transformer;
 use crate::services::keyboard::KeyboardEmulator;
 use crate::services::platform::{Clipboard, KeyboardLayout, Platform, PlatformTrait};
 
 use crate::services::config::settings::{SettingsAction, SettingsActionTarget};
 use crate::services::config::Config;
 
-pub struct Executor;
+pub struct Executor {
+  transformer: Transformer,
+}
 
 impl Executor {
+  pub fn new() -> Self {
+    let transformer = Transformer::new();
+
+    Self { transformer }
+  }
+
   pub fn find_action(keys: HashSet<Key>) -> Option<SettingsAction> {
     let config = Config::get_instance();
     let actions = config.get_actions();
@@ -30,14 +38,14 @@ impl Executor {
     }
   }
 
-  pub async fn execute_action(action: &SettingsAction) -> Result<(), Box<dyn Error + 'static>> {
+  pub async fn execute_action(&self, action: &SettingsAction) -> Result<(), Box<dyn Error + 'static>> {
     let backup = Clipboard::backup();
 
     let emulator = KeyboardEmulator::new();
 
     Self::prepare_selection(&emulator, action).await?;
     Self::copy_to_clipboard(&emulator, action).await?;
-    Self::replace(&emulator, action).await?;
+    Self::replace(&emulator, &self.transformer, action).await?;
 
     backup.restore();
 
@@ -65,11 +73,15 @@ impl Executor {
     Ok(())
   }
 
-  async fn replace(emulator: &KeyboardEmulator, action: &SettingsAction) -> Result<(), Box<dyn Error>> {
+  async fn replace(
+    emulator: &KeyboardEmulator,
+    transformer: &Transformer,
+    action: &SettingsAction,
+  ) -> Result<(), Box<dyn Error>> {
     let (kbl_before, kbl_after) = Self::switch_keyboard_layout(action).await?;
 
     let income = Self::get_value(action)?;
-    let outcome = Transform::execute(income, action, &kbl_before, &kbl_after)?;
+    let outcome = transformer.execute(income, action, &kbl_before, &kbl_after)?;
 
     Clipboard::set_clipboard_text(&outcome)?;
     emulator.paste().await?;
