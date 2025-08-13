@@ -10,4 +10,4 @@ pub use utils::normalize_language_name;
 #[cfg(target_os = "windows")]
 mod windows;
 #[cfg(target_os = "windows")]
-pub use windows::{Windows as Platform, Clipboard};
+pub use windows::{Windows as Platform, Clipboard, get_banned_hotkeys};

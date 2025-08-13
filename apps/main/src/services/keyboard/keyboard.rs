@@ -1,4 +1,5 @@
 use crate::services::keyboard::enums::KeyEvent;
+use crate::services::platform::get_banned_hotkeys;
 
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
@@ -68,7 +69,15 @@ impl Keyboard {
           },
         }
 
-        sender.send_blocking(active.clone()).unwrap();
+        let banned_hotkeys = get_banned_hotkeys();
+
+        if banned_hotkeys.iter().any(|set| set.is_subset(&active)) {
+          println!("Banned hotkey pressed: {:?}", active);
+          active.clear();
+          println!("Active keys were cleared");
+        } else {
+          sender.send_blocking(active.clone()).unwrap();
+        }
       }
     };
 
