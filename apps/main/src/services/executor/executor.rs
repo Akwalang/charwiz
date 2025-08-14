@@ -21,6 +21,11 @@ impl Executor {
     Self { transformer }
   }
 
+  pub fn copy_diagnostic(diagnostic: String) {
+    Clipboard::set_clipboard_text(&diagnostic).unwrap();
+    println!("Diagnostic data copied to clipboard: {}", diagnostic);
+  }
+
   pub fn find_action(keys: HashSet<Key>) -> Option<SettingsAction> {
     let config = Config::get_instance();
     let actions = config.get_actions();

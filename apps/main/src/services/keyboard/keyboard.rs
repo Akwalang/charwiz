@@ -111,4 +111,11 @@ impl Keyboard {
       if keys.is_empty() { break; }
     }
   }
+
+  pub fn get_diagnostic(&self) -> String {
+    let active = self.active.lock().unwrap();
+    let keys: String = active.iter().map(|key| format!("{:?}", key)).collect::<Vec<String>>().join(", ");
+
+    format!("Active keys: [{}]", keys)
+  }
 }

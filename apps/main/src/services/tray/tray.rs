@@ -41,6 +41,7 @@ impl Tray {
 
   fn add_menu_items(tray: &mut TrayItem, sender: &channel::Sender<TrayAction>) {
     let items = vec![
+      MenuItem::new("Diagnostic", TrayAction::Diagnostic),
       MenuItem::new("Reload", TrayAction::Reload),
       MenuItem::new("Exit", TrayAction::Exit),
     ];
