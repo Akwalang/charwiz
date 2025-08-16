@@ -23,16 +23,20 @@ impl Windows {
     Windows { keyboard_layouts }
   }
 
-  pub fn log_state(&self) {
+  pub fn get_diagnostic(&self) -> String{
     let id = utils::get_current_keyboard_layout_id();
 
-    log!("Keyboard layouts:");
+    let mut result = String::new();
+
+    result.push_str("Keyboard layouts:\n");
 
     for lt in &self.keyboard_layouts {
       let marker = if lt.id == id { "+" } else { " " };
 
-      log!(" {} {} ({})", marker, lt.name, lt.id);
+      result.push_str(&format!(" {} {} ({})\n", marker, lt.name, lt.id));
     }
+
+    result
   }
 }
 

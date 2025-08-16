@@ -9,6 +9,7 @@ use async_std::task;
 
 use crate::services::executor::Executor;
 use crate::services::keyboard::Keyboard;
+use crate::services::platform::{Platform, PlatformTrait};
 
 use crate::services::tray::Tray;
 use crate::services::tray::enums::TrayAction;
@@ -54,8 +55,9 @@ impl Application {
         log!("<green>Reloading completed</>");
       },
       TrayAction::Diagnostic => {
-        log!("Coping diagnostic info to clipboard...");
-        Executor::copy_diagnostic(keyboard.read().unwrap().get_diagnostic());
+        log!("Copying diagnostic info to clipboard...");
+        Executor::copy_diagnostic(Self::get_diagnostic(&keyboard.read().unwrap()));
+        log!("Diagnostic data <green>copied to clipboard</>");
       },
       TrayAction::Exit => {
         log!("Application is closing...");
@@ -87,5 +89,18 @@ impl Application {
       },
       None => {},
     };
+  }
+
+  fn get_diagnostic(keyboard: &Keyboard) -> String {
+    let platform = Platform::get_instance();
+
+    let mut info = String::new();
+
+    info.push_str("Diagnostic info:\n\n");
+    info.push_str(&platform.get_diagnostic());
+    info.push_str("\n");
+    info.push_str(&keyboard.get_diagnostic());
+
+    info
   }
 }

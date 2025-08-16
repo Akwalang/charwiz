@@ -24,7 +24,6 @@ impl Executor {
 
   pub fn copy_diagnostic(diagnostic: String) {
     Clipboard::set_clipboard_text(&diagnostic).unwrap();
-    log!("Diagnostic data <green>copied to clipboard</>: {}", diagnostic);
   }
 
   pub fn find_action(keys: HashSet<Key>) -> Option<SettingsAction> {
