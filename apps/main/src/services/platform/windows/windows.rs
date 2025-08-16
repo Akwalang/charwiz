@@ -1,5 +1,7 @@
 use std::sync::OnceLock;
 
+use rust_logger::*;
+
 use super::utils;
 
 use crate::services::platform::{KeyboardLayout, PlatformTrait};
@@ -24,12 +26,12 @@ impl Windows {
   pub fn log_state(&self) {
     let id = utils::get_current_keyboard_layout_id();
 
-    println!("Keyboard layouts:");
+    log!("Keyboard layouts:");
 
     for lt in &self.keyboard_layouts {
       let marker = if lt.id == id { "+" } else { " " };
 
-      println!(" {} {} ({})", marker, lt.name, lt.id);
+      log!(" {} {} ({})", marker, lt.name, lt.id);
     }
   }
 }
@@ -70,7 +72,7 @@ impl PlatformTrait for Windows {
 
     utils::switch_global_keyboard_layout(layout_id)?;
 
-    println!(" + {} ({})", lt.name, layout_id);
+    log!(" + <green>{}</> ({})", lt.name, layout_id);
 
     Ok(Some(lt))
   }

@@ -1,6 +1,8 @@
 use tray_item::{TrayItem, IconSource};
 use async_std::channel;
 
+use rust_logger::*;
+
 use crate::constants::APP_NAME;
 
 use crate::services::tray::enums::TrayAction;
@@ -54,7 +56,7 @@ impl Tray {
       };
 
       if let Err(_) = tray.add_menu_item(item.name, callback) {
-        println!("Can't add menu item: {}", item.name);
+        warn!("Can't add menu item: {}", item.name);
       }
     }
   }

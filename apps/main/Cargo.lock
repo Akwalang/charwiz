@@ -12,6 +12,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.99"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b0674a1ddeecb70197781e945de4b3b8ffb61fa939a5597bcf48503737663100"
+
+[[package]]
 name = "async-attributes"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -213,11 +219,13 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 name = "charwiz"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "async-std",
  "clipboard-win",
  "embed-resource",
  "rdev",
  "rlua",
+ "rust_logger",
  "serde",
  "serde_derive",
  "toml 0.8.19",
@@ -892,6 +900,11 @@ checksum = "d43f01c44a4ea0d2c7faadac231a0fd906a438723aa4ee26599e71fa7b915abd"
 dependencies = [
  "mlua",
 ]
+
+[[package]]
+name = "rust_logger"
+version = "1.0.0"
+source = "git+https://github.com/Akwalang/rust_logger.git?tag=1.0.0#a12f586e7a95ba63922d05eb1f922d726c4d8046"
 
 [[package]]
 name = "rustc-hash"

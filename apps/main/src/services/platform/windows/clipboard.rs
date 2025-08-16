@@ -1,5 +1,7 @@
 use clipboard_win::{get_clipboard, set_clipboard, formats};
 
+use rust_logger::*;
+
 pub struct Clipboard {
   buffer: Option<String>,
 }
@@ -14,7 +16,7 @@ impl Clipboard {
   pub fn restore(&self) {
     if let Some(buffer) = &self.buffer {
       if let Err(_) = Self::set_clipboard_text(buffer) {
-        println!("Failed to restore clipboard buffer");
+        warn!("Failed to restore clipboard buffer");
       }
     }
   }

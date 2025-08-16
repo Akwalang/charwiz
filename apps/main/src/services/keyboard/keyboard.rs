@@ -4,6 +4,8 @@ use crate::services::platform::get_banned_hotkeys;
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 
+use rust_logger::*;
+
 use async_std::{task, channel};
 
 use rdev::{listen, Event, EventType, Key};
@@ -45,10 +47,10 @@ impl Keyboard {
     let callback = move |event: Event| {
       match event.event_type {
         EventType::KeyPress(key) => {
-          println!("Key pressed: {:?}", key);
+          debug!("Key pressed: {:?}", key);
         },
         EventType::KeyRelease(key) => {
-          println!("Key released: {:?}", key);
+          debug!("Key released: {:?}", key);
         },
         _ => {},
       }
@@ -72,9 +74,9 @@ impl Keyboard {
         let banned_hotkeys = get_banned_hotkeys();
 
         if banned_hotkeys.iter().any(|set| set.is_subset(&active)) {
-          println!("Banned hotkey pressed: {:?}", active);
+          log!("Banned hotkey pressed: {:?}", active);
           active.clear();
-          println!("Active keys were cleared");
+          log!("Active keys were cleared");
         } else {
           sender.send_blocking(active.clone()).unwrap();
         }

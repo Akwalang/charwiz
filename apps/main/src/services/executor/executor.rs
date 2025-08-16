@@ -1,6 +1,8 @@
 use std::collections::HashSet;
 use std::error::Error;
 
+use rust_logger::*;
+
 use rdev::Key;
 
 use crate::services::transformer::Transformer;
@@ -23,7 +25,7 @@ impl Executor {
 
   pub fn copy_diagnostic(diagnostic: String) {
     Clipboard::set_clipboard_text(&diagnostic).unwrap();
-    println!("Diagnostic data copied to clipboard: {}", diagnostic);
+    log!("Diagnostic data <green>copied to clipboard</>: {}", diagnostic);
   }
 
   pub fn find_action(keys: HashSet<Key>) -> Option<SettingsAction> {

@@ -1,6 +1,8 @@
 use std::collections::HashSet;
 use std::sync::{Arc, RwLock};
 
+use rust_logger::*;
+
 use rdev::Key;
 
 use async_std::task;
@@ -20,7 +22,7 @@ impl Application {
     let keyboard = Arc::new(RwLock::new(Keyboard::new()));
     let executor = Executor::new();
 
-    println!("Application is running...");
+    log!("Application is running...");
 
     let keyboard_tray_clone = Arc::clone(&keyboard);
 
@@ -47,16 +49,16 @@ impl Application {
   async fn on_tray_input(_tray: &Tray, keyboard: &Arc<RwLock<Keyboard>>, action: TrayAction) {
     match action {
       TrayAction::Reload => {
-        println!("Reloading settings...");
+        log!("Reloading settings...");
         Config::get_instance().reload_settings();
-        println!("Reloading completed");
+        log!("<green>Reloading completed</>");
       },
       TrayAction::Diagnostic => {
-        println!("Coping diagnostic info to clipboard...");
+        log!("Coping diagnostic info to clipboard...");
         Executor::copy_diagnostic(keyboard.read().unwrap().get_diagnostic());
       },
       TrayAction::Exit => {
-        println!("Application is closing...");
+        log!("Application is closing...");
         std::process::exit(0);
       }
     }
@@ -71,15 +73,15 @@ impl Application {
 
         keyboard.block_until_empty_input().await;
 
-        println!("=> Lock keyboard...");
+        debug!("=> Lock keyboard...");
 
         keyboard.lock();
 
         if let Err(_) = executor.execute_action(&action).await {
-          println!("Failed to apply command");
+          error!("Failed to apply command");
         }
 
-        println!("=> Unlock keyboard...");
+        debug!("=> Unlock keyboard...");
 
         keyboard.unlock();
       },

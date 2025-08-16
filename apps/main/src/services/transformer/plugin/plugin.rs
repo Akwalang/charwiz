@@ -1,6 +1,8 @@
 use std::fs;
 use std::path::Path;
 
+use rust_logger::*;
+
 use rlua::{Lua, LuaOptions, Table, StdLib};
 
 use crate::constants::PLUGINS_FOLDER;
@@ -22,7 +24,7 @@ impl Plugin {
     let lua = lua.or::<Option<Lua>>(Ok(None)).unwrap();
 
     if lua.is_none() {
-      println!("Error: Lua scripts could not be loaded");
+      error!("Error: Lua scripts could not be loaded");
     }
 
     Plugin { lua }
@@ -35,10 +37,11 @@ impl Plugin {
 
     let dir = Path::new(PLUGINS_FOLDER);
 
-    println!("Loading Lua scripts from: {:?}\n", dir);
+    log!("Loading Lua scripts from: <cyan,i>{:?}</>", dir);
+    new_line!();
 
     if !dir.exists() {
-      println!("Error: Lua scripts directory does not exist");
+      warn!("Error: Lua scripts directory does not exist");
       return Ok(None);
     }
 
@@ -47,13 +50,15 @@ impl Plugin {
       let path = entry.path();
 
       if path.extension().and_then(|s| s.to_str()) == Some("lua") {
-        println!("Loading: {:?}", path);
+        log!("Loading: <cyan,i>{:?}</>", path);
 
         let script = fs::read_to_string(&path)?;
 
         lua.load(&script).exec()?;
       }
     }
+
+    new_line!();
 
     Ok(Some(lua))
   }

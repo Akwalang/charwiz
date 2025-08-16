@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+anyhow = "1.0.99"
 async-std = { version = "1.13", features = ["attributes"] }
 clipboard-win = "5.4.0"
 embed-resource = "3.0.1"
@@ -13,6 +14,7 @@ serde = { version = "1.0", features = ["derive"] }
 serde_derive = "1.0"
 toml = "0.8.19"
 tray-item = "0.10.0"
+rust_logger = { git = "https://github.com/Akwalang/rust_logger.git", tag = "1.0.0" }
 
 [dependencies.windows]
 version = "0.59"
@@ -21,7 +23,12 @@ features = [
     "Win32_System_LibraryLoader",
     "Win32_System_Threading",
     "Win32_UI_Input_KeyboardAndMouse",
-    "Win32_UI_WindowsAndMessaging"
+    "Win32_UI_WindowsAndMessaging",
+
+    "Win32_UI_Shell",
+    "Win32_UI_Controls",
+    "Win32_Foundation",
+    "Win32_System_SystemServices"
 ]
 
 [build-dependencies]

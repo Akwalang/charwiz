@@ -1,5 +1,7 @@
 use std::error::Error;
 
+use rust_logger::*;
+
 use crate::services::platform::KeyboardLayout;
 
 use crate::services::transformer::native::Native;
@@ -33,7 +35,7 @@ impl Transformer {
     let lines = value.split("\r\n")
       .enumerate()
       .map(|(idx, line)| {
-        println!("line: {}", line);
+        debug!("line: {}", line);
 
         if is_native {
           self.native.apply(&line, idx, action, kbl_before, kbl_after)
