@@ -63,7 +63,7 @@ impl PlatformTrait for Windows {
     &lts.get(next_idx).unwrap()
   }
 
-  fn set_keyboard_layouts(&self, layout_id: &str) -> Result<Option<KeyboardLayout>, Box<dyn std::error::Error + 'static>> {
+  fn set_keyboard_layouts(&self, layout_id: &str) -> anyhow::Result<Option<KeyboardLayout>> {
     let lt = self.get_keyboard_layout_by_id(layout_id);
 
     if lt.is_none() { return Ok(None); }
@@ -77,7 +77,7 @@ impl PlatformTrait for Windows {
     Ok(Some(lt))
   }
 
-  fn switch_keyboard_layout(&self) -> Result<Option<KeyboardLayout>, Box<dyn std::error::Error + 'static>> {
+  fn switch_keyboard_layout(&self) -> anyhow::Result<Option<KeyboardLayout>> {
     let next_id = self.get_next_keyboard_layout().id.clone();
 
     self.set_keyboard_layouts(&next_id)

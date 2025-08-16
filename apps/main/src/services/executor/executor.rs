@@ -1,5 +1,4 @@
 use std::collections::HashSet;
-use std::error::Error;
 
 use rust_logger::*;
 
@@ -45,7 +44,7 @@ impl Executor {
     }
   }
 
-  pub async fn execute_action(&self, action: &SettingsAction) -> Result<(), Box<dyn Error + 'static>> {
+  pub async fn execute_action(&self, action: &SettingsAction) -> anyhow::Result<()> {
     let backup = Clipboard::backup();
 
     let emulator = KeyboardEmulator::new();
@@ -59,18 +58,18 @@ impl Executor {
     Ok(())
   }
 
-  async fn prepare_selection(emulator: &KeyboardEmulator, action: &SettingsAction) -> Result<(), Box<dyn Error + 'static>> {
+  async fn prepare_selection(emulator: &KeyboardEmulator, action: &SettingsAction) -> anyhow::Result<()> {
     match action.target {
       SettingsActionTarget::All => emulator.select_all().await?,
       SettingsActionTarget::Line => emulator.select_line().await?,
       SettingsActionTarget::Word => emulator.select_word().await?,
-      _ => (),
+      _ => {},
     }
 
     Ok(())
   }
 
-  async fn copy_to_clipboard(emulator: &KeyboardEmulator, action: &SettingsAction) -> Result<(), Box<dyn Error>> {
+  async fn copy_to_clipboard(emulator: &KeyboardEmulator, action: &SettingsAction) -> anyhow::Result<()> {
     match action.target {
       SettingsActionTarget::Clipboard => (),
       SettingsActionTarget::None => (),
@@ -84,7 +83,7 @@ impl Executor {
     emulator: &KeyboardEmulator,
     transformer: &Transformer,
     action: &SettingsAction,
-  ) -> Result<(), Box<dyn Error>> {
+  ) -> anyhow::Result<()> {
     let (kbl_before, kbl_after) = Self::switch_keyboard_layout(action).await?;
 
     let income = Self::get_value(action)?;
@@ -100,7 +99,7 @@ impl Executor {
     Ok(())
   }
 
-  async fn switch_keyboard_layout(action: &SettingsAction) -> Result<(KeyboardLayout, KeyboardLayout), Box<dyn Error>> {
+  async fn switch_keyboard_layout(action: &SettingsAction) -> anyhow::Result<(KeyboardLayout, KeyboardLayout)> {
     let platform = Platform::get_instance();
 
     let before = platform.get_current_keyboard_layout().clone();
@@ -116,7 +115,7 @@ impl Executor {
     Ok((before, after))
   }
 
-  fn get_value(action: &SettingsAction) -> Result<String, Box<dyn Error>> {
+  fn get_value(action: &SettingsAction) -> anyhow::Result<String> {
     match action.target {
       SettingsActionTarget::None => { return Ok("".to_string()); },
       _ => (),

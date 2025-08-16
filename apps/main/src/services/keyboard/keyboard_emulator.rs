@@ -24,7 +24,7 @@ impl KeyboardEmulator {
     }
   }
 
-  pub async fn copy(&self) -> Result<(), Box<dyn std::error::Error>> {
+  pub async fn copy(&self) -> anyhow::Result<()> {
     // Trigger copy [Ctrl + C]
 
     self.trigger_medium_event(Key::ControlLeft, true).await?;
@@ -35,7 +35,7 @@ impl KeyboardEmulator {
     Ok(())
   }
 
-  pub async fn paste(&self) -> Result<(), Box<dyn std::error::Error>> {
+  pub async fn paste(&self) -> anyhow::Result<()> {
     // Trigger paste [Ctrl + V]
 
     self.trigger_medium_event(Key::ControlLeft, true).await?;
@@ -46,7 +46,7 @@ impl KeyboardEmulator {
     Ok(())
   }
 
-  pub async fn select_all(&self) -> Result<(), Box<dyn std::error::Error>> {
+  pub async fn select_all(&self) -> anyhow::Result<()> {
     // Trigger select all [Ctrl + A]
 
     self.trigger_medium_event(Key::ControlLeft, true).await?;
@@ -57,7 +57,7 @@ impl KeyboardEmulator {
     Ok(())
   }
 
-  pub async fn select_line(&self) -> Result<(), Box<dyn std::error::Error>> {
+  pub async fn select_line(&self) -> anyhow::Result<()> {
     // Trigger move to line start [Home]
 
     self.trigger_medium_event(Key::Home, true).await?;
@@ -73,7 +73,7 @@ impl KeyboardEmulator {
     Ok(())
   }
 
-  pub async fn select_word(&self) -> Result<(), Box<dyn std::error::Error>> {
+  pub async fn select_word(&self) -> anyhow::Result<()> {
     // Trigger move to word start [Control + LeftArrow]
 
     self.trigger_medium_event(Key::ControlLeft, true).await?;
@@ -94,11 +94,11 @@ impl KeyboardEmulator {
     Ok(())
   }
 
-  pub async fn select_chars(&self, count: usize) -> Result<(), Box<dyn std::error::Error>> {
+  pub async fn select_chars(&self, count: usize) -> anyhow::Result<()> {
     self.select_chars_limited(count, 100usize).await
   }
 
-  pub async fn select_chars_limited(&self, count: usize, limit: usize) -> Result<(), Box<dyn std::error::Error>> {
+  pub async fn select_chars_limited(&self, count: usize, limit: usize) -> anyhow::Result<()> {
     // Trigger select and move to left char [Shift + LeftArrow]
 
     if count == 0 { return Ok(()); }

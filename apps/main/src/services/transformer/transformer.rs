@@ -1,5 +1,3 @@
-use std::error::Error;
-
 use rust_logger::*;
 
 use crate::services::platform::KeyboardLayout;
@@ -28,7 +26,7 @@ impl Transformer {
     action: &SettingsAction,
     kbl_before: &KeyboardLayout,
     kbl_after: &KeyboardLayout,
-  ) -> Result<String, Box<dyn Error>> {
+  ) -> anyhow::Result<String> {
     let is_native = Native::is_applicable(action);
     let is_plugin = Plugin::is_applicable(action);
 
@@ -39,13 +37,15 @@ impl Transformer {
 
         if is_native {
           self.native.apply(&line, idx, action, kbl_before, kbl_after)
+            .map_err(|e| anyhow::anyhow!("{e}"))
         } else if is_plugin {
           self.plugin.apply(&line, idx, action, kbl_before, kbl_after)
+            .map_err(|e| anyhow::anyhow!("{e}"))
         } else {
-          Err(Box::<dyn Error>::from("Handler not found"))
+          Err(anyhow::anyhow!("Handler not found"))
         }
       })
-      .collect::<Result<Vec<String>, Box<dyn Error>>>()?;
+      .collect::<anyhow::Result<Vec<String>>>()?;
 
     Ok(lines.join("\r\n"))
   }

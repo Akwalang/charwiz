@@ -30,7 +30,7 @@ impl Plugin {
     Plugin { lua }
   }
 
-  fn initialize_lua_scripts() -> Result<Option<Lua>, Box<dyn std::error::Error>> {
+  fn initialize_lua_scripts() -> anyhow::Result<Option<Lua>> {
     let safe_libs = StdLib::ALL ^ (StdLib::OS | StdLib::IO | StdLib::DEBUG | StdLib::PACKAGE);
 
     let lua = Lua::new_with(safe_libs, LuaOptions::new())?;
@@ -70,7 +70,7 @@ impl Plugin {
     action: &SettingsAction,
     kbl_before: &KeyboardLayout,
     kbl_after: &KeyboardLayout,
-  ) -> Result<String, Box<dyn std::error::Error>> {
+  ) -> anyhow::Result<String> {
     if self.lua.is_none() { return Ok(value.to_owned()); }
 
     let lua = self.lua.as_ref().unwrap();
@@ -92,7 +92,7 @@ impl Plugin {
     index: usize,
     before: &KeyboardLayout,
     after: &KeyboardLayout,
-  ) -> Result<Table<'_>, Box<dyn std::error::Error>> {
+  ) -> anyhow::Result<Table<'_>> {
     let lua = self.lua.as_ref().unwrap();
 
     let data = lua.create_table()?;

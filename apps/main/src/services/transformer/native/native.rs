@@ -1,5 +1,3 @@
-use std::error::Error;
-
 use crate::services::config::Config;
 use crate::services::config::settings::{SettingsAction, SettingsKeyboardLayout};
 
@@ -27,11 +25,11 @@ impl Native {
     action: &SettingsAction,
     kbl_before: &KeyboardLayout,
     kbl_after: &KeyboardLayout,
-  ) -> Result<String, Box<dyn Error>> {
+  ) -> anyhow::Result<String> {
     match action.handler.as_str() {
       "convert_char_layout" => Ok(Self::convert_char_layout(value, index, kbl_before, kbl_after)),
       "invert_case" => Ok(Self::invert_case(value, index, kbl_before, kbl_after)),
-      _ => Err(Box::<dyn Error>::from("Handler not found")),
+      _ => Err(anyhow::anyhow!("Handler not found")),
     }
   }
 

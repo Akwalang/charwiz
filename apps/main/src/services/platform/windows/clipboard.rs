@@ -21,17 +21,17 @@ impl Clipboard {
     }
   }
 
-  pub fn get_clipboard_text() -> Result<Option<String>, Box<dyn std::error::Error + 'static>> {
+  pub fn get_clipboard_text() -> anyhow::Result<Option<String>> {
     match get_clipboard(formats::Unicode) {
       Ok(buffer) => Ok(Some(buffer)),
-      Err(_) => Err(Box::new(std::io::Error::last_os_error())),
+      Err(_) => Err(anyhow::anyhow!("Failed to get clipboard text")),
     }
   }
 
-  pub fn set_clipboard_text(text: &str) -> Result<(), Box<dyn std::error::Error + 'static>> {
+  pub fn set_clipboard_text(text: &str) -> anyhow::Result<()> {
     match set_clipboard(formats::Unicode, text) {
       Ok(_) => Ok(()),
-      Err(_) => Err(Box::new(std::io::Error::last_os_error())),
+      Err(_) => Err(anyhow::anyhow!("Failed to set clipboard text")),
     }
   }
 }
