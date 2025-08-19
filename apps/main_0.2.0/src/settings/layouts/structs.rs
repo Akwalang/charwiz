@@ -1,0 +1,54 @@
+use rdev::Key;
+
+use serde::de::{Error as DeError, Deserializer};
+use serde::Deserialize;
+
+use crate::utils::str_to_key;
+
+#[derive(Debug, Deserialize)]
+pub struct KeyItem {
+  #[serde(deserialize_with = "deserialize_key")]
+  pub key: Key,
+
+  #[serde(default)]
+  pub invertible: bool,
+
+  pub insert: Vec<KeyInsert>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct KeyInsert {
+  pub r#char: char,
+
+  #[serde(default, deserialize_with = "deserialize_modifiers")]
+  pub modifiers: Vec<Key>,
+}
+
+fn deserialize_key<'de, D>(deserializer: D) -> Result<Key, D::Error>
+where
+  D: Deserializer<'de>,
+{
+  let s = String::deserialize(deserializer)?;
+  
+  str_to_key(&s)
+    .ok_or_else(|| D::Error::custom(format!("unknown key: {}", s)))
+}
+
+fn deserialize_modifiers<'de, D>(deserializer: D) -> Result<Vec<Key>, D::Error>
+where
+  D: Deserializer<'de>,
+{
+  let maybe_list = Option::<Vec<String>>::deserialize(deserializer)?;
+ 
+  let list = maybe_list.unwrap_or_default();
+ 
+  let mut result = Vec::with_capacity(list.len());
+ 
+  for s in list {
+    let key = str_to_key(&s)
+      .ok_or_else(|| D::Error::custom(format!("unknown modifier key: {}", s)))?;
+    result.push(key);
+  }
+ 
+  Ok(result)
+}
