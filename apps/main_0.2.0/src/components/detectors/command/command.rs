@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use rust_logger::*;
 
-use crate::event_hub::{EventHub, InputEvent};
+use crate::components::event_hub::{EventHub, InputEvent};
 
 pub struct CommandDetector {
   event_hub: Arc<EventHub>,

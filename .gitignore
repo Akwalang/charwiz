@@ -1,5 +1,7 @@
 /apps/*/target
 
+.idea
+
 /.devcontainer/logs/*
 !/.devcontainer/logs/.gitkeep
 

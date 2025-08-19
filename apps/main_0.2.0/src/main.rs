@@ -1,18 +1,13 @@
 // #![windows_subsystem = "windows"]
 
-mod constants;
-
 mod app;
-mod event_hub;
+mod components;
 
 mod platform;
 mod settings;
 
-mod controllers;
-mod detectors;
-mod executor;
-
 mod utils;
+mod constants;
 
 use app::Application;
 

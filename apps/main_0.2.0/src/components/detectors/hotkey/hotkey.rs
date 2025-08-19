@@ -5,7 +5,7 @@ use rust_logger::*;
 
 use rdev::{EventType, Key};
 
-use crate::event_hub::{EventHub, InputEvent, CommandEvent};
+use crate::components::event_hub::{EventHub, InputEvent, CommandEvent};
 
 use crate::settings::Settings;
 

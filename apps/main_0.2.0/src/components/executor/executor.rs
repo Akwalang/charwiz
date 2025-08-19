@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use rust_logger::*;
 
-use crate::event_hub::EventHub;
+use crate::components::event_hub::EventHub;
 
 pub struct Executor {
   event_hub: Arc<EventHub>,

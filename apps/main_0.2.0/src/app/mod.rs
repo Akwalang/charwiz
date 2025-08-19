@@ -3,11 +3,13 @@ use std::sync::Arc;
 use rust_logger::*;
 
 use crate::platform::Platform;
-use crate::event_hub::EventHub;
 
-use crate::controllers::UserInputController;
-use crate::detectors::{CommandDetector, HotkeyDetector};
-use crate::executor::Executor;
+use crate::components::{
+  event_hub::EventHub,
+  controllers::UserInputController,
+  detectors::{CommandDetector, HotkeyDetector},
+  executor::Executor,
+};
 
 use crate::settings::Layouts;
 

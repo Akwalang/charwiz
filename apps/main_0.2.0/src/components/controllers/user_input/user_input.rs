@@ -5,7 +5,7 @@ use rust_logger::*;
 
 use rdev::{listen, Event, EventType, Key};
 
-use crate::event_hub::{EventHub, InputEvent};
+use crate::components::event_hub::{EventHub, InputEvent};
 
 const STICKY_KEYS: [Key; 13] = [
   Key::MetaLeft,
