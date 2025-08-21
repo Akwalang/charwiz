@@ -373,7 +373,8 @@
     "insert": [
       { "char": "8" },
       { "char": "*", "modifiers": ["ShiftLeft"] },
-      { "char": "*", "modifiers": ["ShiftRight"] }
+      { "char": "*", "modifiers": ["ShiftRight"] },
+      { "char": "₽", "modifiers": ["ControlLeft", "Alt"] }
     ]
   },
   {

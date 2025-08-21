@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use rdev::Key;
 
 use serde::de::{Error as DeError, Deserializer};
@@ -21,7 +23,7 @@ pub struct KeyInsert {
   pub r#char: char,
 
   #[serde(default, deserialize_with = "deserialize_modifiers")]
-  pub modifiers: Vec<Key>,
+  pub modifiers: HashSet<Key>,
 }
 
 fn deserialize_key<'de, D>(deserializer: D) -> Result<Key, D::Error>
@@ -34,7 +36,7 @@ where
     .ok_or_else(|| D::Error::custom(format!("unknown key: {}", s)))
 }
 
-fn deserialize_modifiers<'de, D>(deserializer: D) -> Result<Vec<Key>, D::Error>
+fn deserialize_modifiers<'de, D>(deserializer: D) -> Result<HashSet<Key>, D::Error>
 where
   D: Deserializer<'de>,
 {
@@ -42,12 +44,13 @@ where
  
   let list = maybe_list.unwrap_or_default();
  
-  let mut result = Vec::with_capacity(list.len());
+  let mut result = HashSet::with_capacity(list.len());
  
   for s in list {
     let key = str_to_key(&s)
       .ok_or_else(|| D::Error::custom(format!("unknown modifier key: {}", s)))?;
-    result.push(key);
+
+    result.insert(key);
   }
  
   Ok(result)

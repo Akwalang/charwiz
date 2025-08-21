@@ -9,14 +9,14 @@ pub struct Executor {
 }
 
 impl Executor {
-  pub fn new(event_hub: Arc<EventHub>) -> Self {
+  pub fn new(event_hub: &Arc<EventHub>) -> Self {
     Executor {
-      event_hub,
+      event_hub: event_hub.clone(),
     }
   }
 
-  pub fn start(&self) {
-    log!("<purple>Executor</>: Initialize");
+  pub fn init(&self) {
+    log!("<purple>Executor</>: Init");
 
     self.subscribe();
   }

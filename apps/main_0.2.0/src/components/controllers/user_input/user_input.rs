@@ -7,12 +7,15 @@ use rdev::{listen, Event, EventType, Key};
 
 use crate::components::event_hub::{EventHub, InputEvent};
 
-const STICKY_KEYS: [Key; 13] = [
+const STICKY_KEYS: [Key; 16] = [
   Key::MetaLeft,
   Key::MetaRight,
   Key::ControlLeft,
+  Key::ControlRight,
   Key::ShiftLeft,
+  Key::ShiftRight,
   Key::Alt,
+  Key::AltGr,
   Key::UpArrow,
   Key::DownArrow,
   Key::LeftArrow,
@@ -30,16 +33,16 @@ pub struct UserInputController {
 }
 
 impl UserInputController {
-  pub fn new(event_hub: Arc<EventHub>) -> Self {
+  pub fn new(event_hub: &Arc<EventHub>) -> Self {
     UserInputController {
-      event_hub,
+      event_hub: event_hub.clone(),
       locked: Arc::new(AtomicBool::new(false)),
       sticked_keys: Arc::new(Mutex::new(HashSet::new())),
     }
   }
 
-  pub fn start(&self) {
-    log!("<purple>UserInputController</>: Initialize");
+  pub fn init(&self) {
+    log!("<purple>UserInputController</>: Init");
 
     self.subscribe();
     self.listen();

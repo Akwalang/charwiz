@@ -11,7 +11,7 @@ use crate::components::{
   executor::Executor,
 };
 
-use crate::settings::Layouts;
+use crate::settings::Settings;
 
 pub struct Application {
   event_hub: Arc<EventHub>,
@@ -29,20 +29,15 @@ impl Application {
 
     let hub = &self.event_hub;
 
-    let platform = Platform::get_instance();
+    Platform::init();
+    Settings::init();
 
-    UserInputController::new(hub.clone()).start();
+    UserInputController::new(hub).init();
 
-    CommandDetector::new(hub.clone()).start();
-    HotkeyDetector::new(hub.clone()).start();
+    CommandDetector::new(hub).init();
+    HotkeyDetector::new(hub).init();
 
-    Executor::new(hub.clone()).start();
-
-    let mut layouts = Layouts::new();
-
-    for layout in &platform.keyboard_layouts.items {
-      layouts.add(&layout.name);
-    }
+    Executor::new(hub).init();
 
     log!("<purple>Application</>: Ready");
 

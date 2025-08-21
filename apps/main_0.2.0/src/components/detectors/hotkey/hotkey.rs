@@ -16,16 +16,16 @@ pub struct HotkeyDetector {
 }
 
 impl HotkeyDetector {
-  pub fn new(event_hub: Arc<EventHub>) -> Arc<Self> {
+  pub fn new(event_hub: &Arc<EventHub>) -> Arc<Self> {
     Arc::new(HotkeyDetector {
-      event_hub,
+      event_hub: event_hub.clone(),
       current_keys: Mutex::new(HashSet::new()),
       captured_keys: Mutex::new(HashSet::new()),
     })
   }
 
-  pub fn start(self: &Arc<Self>) {
-    log!("<purple>HotKeyDetector</>: Initialize");
+  pub fn init(self: &Arc<Self>) {
+    log!("<purple>HotKeyDetector</>: Init");
 
     self.subscribe();
   }

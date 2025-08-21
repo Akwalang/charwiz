@@ -10,18 +10,22 @@ pub struct KeyboardLayouts {
 
 impl KeyboardLayouts {
   pub fn new() -> Self {
-    let items = utils::get_keyboard_layouts();
-
-    KeyboardLayouts { items }
+    KeyboardLayouts { items: vec![] }
   }
 
-  pub fn print_items(&self) {
+  pub fn init(&mut self) {
+    log!("<purple>Windows::KeyboardLayouts</>: Init");
+
+    for layout in utils::get_keyboard_layouts() {
+      self.items.push(layout);
+    }
+
     let names = self.items.iter()
       .map(|lt| format!("<cyan>{} ({})</>", lt.name, lt.id))
       .collect::<Vec<String>>()
       .join(", ");
 
-    log!("<purple>Windows::KeyboardLayouts</>: available keyboard layouts: {}", names);
+    log!("<purple>Windows::KeyboardLayouts</>: Available keyboard layouts: {}", names);
   }
 
   pub fn get_keyboard_layout_by_id(&self, id: &str) -> Option<&KeyboardLayoutItem> {
