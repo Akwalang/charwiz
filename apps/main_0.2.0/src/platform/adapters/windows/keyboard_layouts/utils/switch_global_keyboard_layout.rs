@@ -12,11 +12,9 @@ pub fn switch_global_keyboard_layout(layout_code: &str) -> anyhow::Result<()> {
 
     let hkl = LoadKeyboardLayoutA(layout_pcstr, KLF_ACTIVATE);
 
-    if hkl.is_err() {
+    let Ok(hkl) = hkl else {
       return Err(anyhow::anyhow!("Failed to load keyboard layout"));
-    }
-
-    let hkl = hkl.unwrap();
+    };
 
     PostMessageA(
       Some(HWND_BROADCAST),

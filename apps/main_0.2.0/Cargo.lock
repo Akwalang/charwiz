@@ -923,7 +923,7 @@ dependencies = [
 [[package]]
 name = "rust_logger"
 version = "1.0.0"
-source = "git+https://github.com/Akwalang/rust_logger.git?tag=1.0.0#a12f586e7a95ba63922d05eb1f922d726c4d8046"
+source = "git+https://github.com/Akwalang/rust_logger.git?tag=1.1.0#7363cdc21bbbc7716097fd68437f34adc0ea5422"
 
 [[package]]
 name = "rustc-hash"

@@ -2,29 +2,9 @@ use std::collections::HashSet;
 use std::sync::{Arc, Mutex, atomic::AtomicBool};
 
 use rust_logger::*;
-
 use rdev::{listen, Event, EventType, Key};
 
 use crate::components::event_hub::{EventHub, InputEvent};
-
-const STICKY_KEYS: [Key; 16] = [
-  Key::MetaLeft,
-  Key::MetaRight,
-  Key::ControlLeft,
-  Key::ControlRight,
-  Key::ShiftLeft,
-  Key::ShiftRight,
-  Key::Alt,
-  Key::AltGr,
-  Key::UpArrow,
-  Key::DownArrow,
-  Key::LeftArrow,
-  Key::RightArrow,
-  Key::Home,
-  Key::End,
-  Key::PageUp,
-  Key::PageDown,
-];
 
 pub struct UserInputController {
   event_hub: Arc<EventHub>,
@@ -42,7 +22,7 @@ impl UserInputController {
   }
 
   pub fn init(&self) {
-    log!("<purple>UserInputController</>: Init");
+    log!("<$>UserInputController</>: Init");
 
     self.subscribe();
     self.listen();
@@ -75,7 +55,7 @@ impl UserInputController {
       };
 
       if let Err(err) = hub.publish_input(event) {
-        warn!("Failed to publish input event: {:?}", err);
+        warn!("<$>UserInputController</>: Failed to publish input event: {:?}", err);
       }
     };
 
@@ -113,7 +93,7 @@ impl UserInputController {
       _ => return false,
     };
 
-    if !STICKY_KEYS.contains(&key) { return false; }
+    if !Self::is_sticky_keys(&key) { return false; }
 
     let mut keys = sticked_keys.lock().unwrap();
 
@@ -129,6 +109,20 @@ impl UserInputController {
         is_sticked
       },
       _ => false
+    }
+  }
+
+  fn is_sticky_keys(key: &Key) -> bool {
+    match key {
+      Key::MetaLeft | Key::MetaRight => true,
+      Key::ControlLeft | Key::ControlRight => true,
+      Key::ShiftLeft | Key::ShiftRight => true,
+      Key::Alt | Key::AltGr => true,
+      Key::UpArrow | Key::DownArrow => true,
+      Key::LeftArrow | Key::RightArrow => true,
+      Key::PageUp | Key::PageDown => true,
+      Key::Home | Key::End => true,
+      _ => false,
     }
   }
 }

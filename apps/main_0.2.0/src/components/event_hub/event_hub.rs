@@ -12,7 +12,7 @@ pub struct EventHub {
 
 impl EventHub {
   pub fn new() -> Self {
-    let (input_tx, input_rx) = broadcast(32);
+    let (input_tx, input_rx) = broadcast(8);
     let (command_tx, command_rx) = broadcast(8);
     let (status_tx, status_rx) = broadcast(8);
 
@@ -28,11 +28,11 @@ impl EventHub {
       Ok(_) => Ok(()),
       Err(TrySendError::Inactive(_msg)) => Ok(()),
       Err(TrySendError::Full(_msg)) => {
-        error!("<purple>EventHub</>: Channel \"<cyan>{}</>\" is full, dropping event", channel_name);
+        error!("<$>EventHub</>: Channel \"<&>{}</>\" is full, dropping event", channel_name);
         anyhow::bail!("Channel full")
       },
       Err(TrySendError::Closed(_msg)) => {
-        error!("<purple>EventHub</>: Channel \"<cyan>{}</>\" is closed, dropping event", channel_name);
+        error!("<$>EventHub</>: Channel \"<&>{}</>\" is closed, dropping event", channel_name);
         anyhow::bail!("Channel closed")
       },
     }

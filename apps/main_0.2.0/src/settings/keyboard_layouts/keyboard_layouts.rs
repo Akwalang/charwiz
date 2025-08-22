@@ -1,7 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
 use rust_logger::*;
-
 use rdev::Key;
 
 use crate::settings::keyboard_layouts::LayoutItem;
@@ -20,7 +19,7 @@ impl KeyboardLayouts {
   }
 
   pub fn init(&mut self) {
-    log!("<purple>Settings::KeyboardLayouts</>: Init");
+    log!("<$>Settings::KeyboardLayouts</>: Init");
   }
 
   pub fn add(&mut self, name: &str) {
@@ -43,6 +42,7 @@ impl KeyboardLayouts {
 
       if name == layout_name {
         char = Some(insert.r#char);
+        break;
       }
     }
 

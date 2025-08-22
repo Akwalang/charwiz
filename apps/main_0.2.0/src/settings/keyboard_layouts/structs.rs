@@ -31,9 +31,12 @@ where
   D: Deserializer<'de>,
 {
   let s = String::deserialize(deserializer)?;
-  
-  str_to_key(&s)
-    .ok_or_else(|| D::Error::custom(format!("unknown key: {}", s)))
+
+  let Some(key) = str_to_key(&s) else {
+    return Err(D::Error::custom(format!("unknown key: {}", s)));
+  };
+
+  Ok(key)
 }
 
 fn deserialize_modifiers<'de, D>(deserializer: D) -> Result<HashSet<Key>, D::Error>
@@ -47,8 +50,9 @@ where
   let mut result = HashSet::with_capacity(list.len());
  
   for s in list {
-    let key = str_to_key(&s)
-      .ok_or_else(|| D::Error::custom(format!("unknown modifier key: {}", s)))?;
+    let Some(key) = str_to_key(&s) else {
+      return Err(D::Error::custom(format!("unknown modifier key: {}", s)));
+    };
 
     result.insert(key);
   }

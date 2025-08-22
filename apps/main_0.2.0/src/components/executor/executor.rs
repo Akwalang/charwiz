@@ -16,7 +16,7 @@ impl Executor {
   }
 
   pub fn init(&self) {
-    log!("<purple>Executor</>: Init");
+    log!("<$>Executor</>: Init");
 
     self.subscribe();
   }
@@ -26,7 +26,7 @@ impl Executor {
 
     async_std::task::spawn(async move {
       while let Ok(command) = command_rx.recv().await {
-        log!("<purple>Executor</>: Received command event: {:?}", command);
+        log!("<$>Executor</>: Received command event: {:?}", command);
       }
     });
   }

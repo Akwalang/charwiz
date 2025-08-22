@@ -3,7 +3,6 @@ use std::path::Path;
 use std::collections::HashMap;
 
 use rust_logger::*;
-
 use rdev::Key;
 
 use crate::settings::keyboard_layouts::KeyItem;
@@ -24,7 +23,6 @@ impl LayoutItem {
   }
 
   fn load(name: &str) -> anyhow::Result<HashMap<Key, KeyItem>> {
-
     let content = Self::read_file(name)?;
     let items = Self::parse_json(name, content)?;
     let map = Self::convert_to_map(items);
@@ -35,14 +33,14 @@ impl LayoutItem {
   fn read_file(name: &str) -> anyhow::Result<String> {
     let src = format!("{}/{}.json", LAYOUTS_FOLDER, name);
 
-    log!("<purple>Settings::KeyboardLayouts</>: Loading keyboard layout for \"<cyan>{}</>\": <cyan,i>{}</>", name, src);
+    log!("<$>Settings::KeyboardLayouts</>: Loading keyboard layout for \"<&>{}</>\": <i&>{}</>", name, src);
 
     let path = Path::new(&src);
 
     let content = fs::read_to_string(&path);
 
     if let Err(e) = content {
-      error!("<purple>Settings::KeyboardLayouts</>: Failed to load keyboard layout for \"<cyan>{}</>\": <cyan,i>{}</>", name, src);
+      error!("<$>Settings::KeyboardLayouts</>: Failed to load keyboard layout for \"<&>{}</>\": <i&>{}</>", name, src);
       return Err(anyhow::anyhow!(e.to_string()));
     }
     
@@ -53,7 +51,7 @@ impl LayoutItem {
     let items = serde_json::from_str::<Vec<KeyItem>>(&content);
 
     if let Err(e) = items {
-      error!("<purple>Settings::KeyboardLayouts</>: Invalid keyboard layout JSON for \"<cyan>{}</>\": <cyan,i>{}</> -> <red>{}</>", name, content, e);
+      error!("<$>Settings::KeyboardLayouts</>: Invalid keyboard layout JSON for \"<&>{}</>\": <i&>{}</> -> <->{}</>", name, content, e);
       return Err(anyhow::anyhow!(e.to_string()));
     }
 

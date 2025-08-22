@@ -3,6 +3,7 @@ use std::sync::Arc;
 use rust_logger::*;
 
 use crate::platform::Platform;
+use crate::settings::Settings;
 
 use crate::components::{
   event_hub::EventHub,
@@ -10,8 +11,6 @@ use crate::components::{
   detectors::{CommandDetector, HotkeyDetector},
   executor::Executor,
 };
-
-use crate::settings::Settings;
 
 pub struct Application {
   event_hub: Arc<EventHub>,
@@ -25,7 +24,7 @@ impl Application {
   }
 
   pub fn run(&self) -> anyhow::Result<()> {
-    log!("<purple>Application</>: Starting...");
+    log!("<$>Application</>: Starting...");
 
     let hub = &self.event_hub;
 
@@ -39,7 +38,7 @@ impl Application {
 
     Executor::new(hub).init();
 
-    log!("<purple>Application</>: Ready");
+    log!("<$>Application</>: Ready");
 
     Ok(())
   }

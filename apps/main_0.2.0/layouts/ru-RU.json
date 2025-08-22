@@ -510,7 +510,7 @@
   {
     "key": "Space",
     "insert": [
-      { "char": "\b" }
+      { "char": " " }
     ]
   },
   {

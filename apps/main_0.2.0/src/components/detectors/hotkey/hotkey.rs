@@ -2,7 +2,6 @@ use std::sync::{Arc, Mutex};
 use std::collections::HashSet;
 
 use rust_logger::*;
-
 use rdev::{EventType, Key};
 
 use crate::components::event_hub::{EventHub, InputEvent, CommandEvent};
@@ -25,7 +24,7 @@ impl HotkeyDetector {
   }
 
   pub fn init(self: &Arc<Self>) {
-    log!("<purple>HotKeyDetector</>: Init");
+    log!("<$>HotKeyDetector</>: Init");
 
     self.subscribe();
   }
@@ -90,7 +89,7 @@ impl HotkeyDetector {
       .collect::<Vec<_>>()
       .join(", ");
 
-    log!("<purple>HotKeyDetector</>: Event: {}", keys);
+    log!("<$>HotKeyDetector</>: Event: {}", keys);
 
     let command = CommandEvent {
       command: format!("Captured keys: {}", keys),

@@ -1,8 +1,7 @@
-use std::sync::{OnceLock, Mutex};
+use std::sync::{OnceLock, Mutex, MutexGuard};
 use std::collections::HashSet;
 
 use rust_logger::*;
-
 use rdev::Key;
 
 use crate::platform::Platform;
@@ -28,26 +27,20 @@ impl Settings {
   }
 
   pub fn init() {
-    log!("<purple>Settings</>: Init");
+    log!("<$>Settings</>: Init");
 
-    let this = Self::get_instance();
-    let platform = Platform::get_instance();
+    let mut settings_kl = Self::get_keyboard_layouts();
+    let platform_kl = Platform::get_keyboard_layouts();
 
-    let mut keyboard_layouts = this.keyboard_layouts.lock().unwrap();
+    settings_kl.init();
 
-    keyboard_layouts.init();
-
-    let items = &platform.keyboard_layouts.lock().unwrap().items;
-
-    for layout in items {
-      keyboard_layouts.add(&layout.name);
+    for layout in &platform_kl.items {
+      settings_kl.add(&layout.name);
     }
   }
 
-  pub fn get_keyboard_layouts<'a>() -> std::sync::MutexGuard<'a, KeyboardLayouts> {
-    let this = Self::get_instance();
-    
-    this.keyboard_layouts.lock().unwrap()
+  pub fn get_keyboard_layouts<'a>() -> MutexGuard<'a, KeyboardLayouts> {
+    Self::get_instance().keyboard_layouts.lock().unwrap()
   }
 
   // test method

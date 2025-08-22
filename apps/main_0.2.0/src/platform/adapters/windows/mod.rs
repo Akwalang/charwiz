@@ -1,4 +1,4 @@
-use std::sync::{OnceLock, Mutex};
+use std::sync::{OnceLock, Mutex, MutexGuard};
 
 use rust_logger::*;
 
@@ -21,7 +21,7 @@ impl Platform {
   }
 
   pub fn init() {
-    log!("<purple>Windows</>: Init");
+    log!("<$>Windows</>: Init");
 
     let this = Self::get_instance();
 
@@ -34,9 +34,7 @@ impl Platform {
     PLATFORM.get_or_init(|| Platform::new())
   }
 
-  pub fn get_keyboard_layouts<'a>() -> std::sync::MutexGuard<'a, KeyboardLayouts> {
-    let this = Self::get_instance();
-    
-    this.keyboard_layouts.lock().unwrap()
+  pub fn get_keyboard_layouts<'a>() -> MutexGuard<'a, KeyboardLayouts> {
+    Self::get_instance().keyboard_layouts.lock().unwrap()
   }
 }

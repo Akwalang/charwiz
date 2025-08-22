@@ -14,7 +14,7 @@ impl KeyboardLayouts {
   }
 
   pub fn init(&mut self) {
-    log!("<purple>Windows::KeyboardLayouts</>: Init");
+    log!("<$>Windows::KeyboardLayouts</>: Init");
 
     for layout in utils::get_keyboard_layouts() {
       self.items.push(layout);
@@ -25,13 +25,11 @@ impl KeyboardLayouts {
       .collect::<Vec<String>>()
       .join(", ");
 
-    log!("<purple>Windows::KeyboardLayouts</>: Available keyboard layouts: {}", names);
+    log!("<$>Windows::KeyboardLayouts</>: Available keyboard layouts: {}", names);
   }
 
   pub fn get_keyboard_layout_by_id(&self, id: &str) -> Option<&KeyboardLayoutItem> {
-    let lts = &self.items;
-
-    lts.iter().find(|lt| lt.id == id)
+    self.items.iter().find(|lt| lt.id == id)
   }
 
   pub fn get_current_keyboard_layout(&self) -> &KeyboardLayoutItem {
@@ -51,22 +49,19 @@ impl KeyboardLayouts {
   }
 
   pub fn set_keyboard_layouts(&self, layout_id: &str) -> anyhow::Result<Option<KeyboardLayoutItem>> {
-    let lt = self.get_keyboard_layout_by_id(layout_id);
-
-    if lt.is_none() { return Ok(None); }
-
-    let lt = lt.unwrap().clone();
+    let Some(lt) = self.get_keyboard_layout_by_id(layout_id) else {
+      log!(" - <->Keyboard layout not found</>");
+      return Ok(None);
+    };
 
     utils::switch_global_keyboard_layout(layout_id)?;
 
-    log!(" + <green>{}</> ({})", lt.name, layout_id);
+    log!(" + <+>{}</> ({})", lt.name, layout_id);
 
-    Ok(Some(lt))
+    Ok(Some(lt.clone()))
   }
 
   pub fn switch_keyboard_layout(&self) -> anyhow::Result<Option<KeyboardLayoutItem>> {
-    let next_id = self.get_next_keyboard_layout().id.clone();
-
-    self.set_keyboard_layouts(&next_id)
+    self.set_keyboard_layouts(&self.get_next_keyboard_layout().id)
   }
 }
