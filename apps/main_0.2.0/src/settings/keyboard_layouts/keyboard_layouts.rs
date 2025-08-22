@@ -3,6 +3,7 @@ use std::collections::{HashMap, HashSet};
 use rust_logger::*;
 use rdev::Key;
 
+use crate::common::structs::KeyboardModifiers;
 use crate::settings::keyboard_layouts::LayoutItem;
 
 use super::KeyInsert;
@@ -28,17 +29,17 @@ impl KeyboardLayouts {
     self.items.insert(name.to_owned(), layout);
   }
 
-  pub fn find_combination(&self, layout_name: &str, key: &Key, modifiers: &HashSet<Key>) -> (Option<char>, bool) {
+  pub fn find_combination(&self, layout_name: &str, key: &Key, modifiers: KeyboardModifiers) -> (Option<char>, bool) {
     let mut char = None;
-    let mut is_combination_exists = false;
+    let mut is_exists = false;
 
-    let compare = |item: &&KeyInsert| item.modifiers == *modifiers;
+    let compare = |item: &&KeyInsert| item.modifiers == modifiers;
 
     for (name, layout_item) in &self.items {
       let Some(setup) = layout_item.keys.get(key) else { continue; };
       let Some(insert) = setup.insert.iter().find(compare) else { continue; };
 
-      is_combination_exists = true;
+      is_exists = true;
 
       if name == layout_name {
         char = Some(insert.r#char);
@@ -46,6 +47,6 @@ impl KeyboardLayouts {
       }
     }
 
-    (char, is_combination_exists)
+    (char, is_exists)
   }
 }

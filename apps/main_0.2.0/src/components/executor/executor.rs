@@ -3,14 +3,17 @@ use std::sync::Arc;
 use rust_logger::*;
 
 use crate::components::event_hub::EventHub;
+use crate::components::state::State;
 
 pub struct Executor {
+  state: Arc<State>,
   event_hub: Arc<EventHub>,
 }
 
 impl Executor {
-  pub fn new(event_hub: &Arc<EventHub>) -> Self {
+  pub fn new(state: &Arc<State>, event_hub: &Arc<EventHub>) -> Self {
     Executor {
+      state: state.clone(),
       event_hub: event_hub.clone(),
     }
   }

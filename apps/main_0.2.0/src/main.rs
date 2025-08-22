@@ -1,14 +1,15 @@
 // #![windows_subsystem = "windows"]
 
-mod app;
-mod components;
+mod setup;
+mod common;
+mod utils;
+mod constants;
 
 mod platform;
 mod settings;
 
-mod setup;
-mod utils;
-mod constants;
+mod app;
+mod components;
 
 use app::Application;
 

@@ -1,22 +1,23 @@
 use std::collections::HashSet;
-use std::sync::{Arc, Mutex, atomic::AtomicBool};
+use std::sync::{Arc, Mutex};
 
 use rust_logger::*;
 use rdev::{listen, Event, EventType, Key};
 
 use crate::components::event_hub::{EventHub, InputEvent};
+use crate::components::state::State;
 
 pub struct UserInputController {
+  state: Arc<State>,
   event_hub: Arc<EventHub>,
-  locked: Arc<AtomicBool>,
   sticked_keys: Arc<Mutex<HashSet<Key>>>,
 }
 
 impl UserInputController {
-  pub fn new(event_hub: &Arc<EventHub>) -> Self {
+  pub fn new(state: &Arc<State>, event_hub: &Arc<EventHub>) -> Self {
     UserInputController {
+      state: state.clone(),
       event_hub: event_hub.clone(),
-      locked: Arc::new(AtomicBool::new(false)),
       sticked_keys: Arc::new(Mutex::new(HashSet::new())),
     }
   }
@@ -40,11 +41,12 @@ impl UserInputController {
 
   fn listen(&self) {
     let hub = self.event_hub.clone();
-    let locked = self.locked.clone();
+    let state = self.state.clone();
     let sticked_keys = self.sticked_keys.clone();
 
     let callback = move |event: Event| {
-      if locked.load(std::sync::atomic::Ordering::SeqCst) { return; }
+      if state.is_executing() { return; }
+
       if !Self::is_trackable_event(&event) { return; }
       if Self::mute_sticky_keys(&event, &sticked_keys) { return; }
 

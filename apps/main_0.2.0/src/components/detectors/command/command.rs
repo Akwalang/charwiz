@@ -9,19 +9,24 @@ use crate::settings::Settings;
 
 use crate::components::event_hub::{EventHub, InputEvent};
 use crate::components::executor::PrintCharCommand;
+use crate::components::state::State;
+
+use crate::common::structs::KeyboardModifiers;
 
 pub struct CommandDetector {
+  state: Arc<State>,
   event_hub: Arc<EventHub>,
-  modifiers: Mutex<HashSet<Key>>,
+  modifiers: Mutex<KeyboardModifiers>,
   char_stack: Mutex<Vec<char>>,
   print_stack: Mutex<Vec<PrintCharCommand>>,
 }
 
 impl CommandDetector {
-  pub fn new(event_hub: &Arc<EventHub>) -> Arc<Self> {
-    let modifiers = HashSet::with_capacity(6);
+  pub fn new(state: &Arc<State>, event_hub: &Arc<EventHub>) -> Arc<Self> {
+    let modifiers = KeyboardModifiers::new();
 
     let this = CommandDetector {
+      state: state.clone(),
       event_hub: event_hub.clone(),
       modifiers: Mutex::new(modifiers),
       char_stack: Mutex::new(Vec::with_capacity(10)),
@@ -85,9 +90,9 @@ impl CommandDetector {
     let mut modifiers = self.modifiers.lock().unwrap();
 
     if state {
-      modifiers.insert(key);
+      modifiers.add_key(&key);
     } else {
-      modifiers.remove(&key);
+      modifiers.remove_key(&key);
     }
   }
 
@@ -110,7 +115,7 @@ impl CommandDetector {
 
     let cur_layout = platform_kl.get_current_keyboard_layout();
 
-    let (char, is_exists) = settings_kl.find_combination(&cur_layout.name, &key, &modifiers);
+    let (char, is_exists) = settings_kl.find_combination(&cur_layout.name, &key, *modifiers);
 
     if !is_exists { return; }
 
@@ -118,7 +123,7 @@ impl CommandDetector {
       char_stack.push(char);
     }
 
-    print_stack.push(Self::create_print_command(&key, &modifiers));
+    print_stack.push(Self::create_print_command(&key, *modifiers));
 
     println!("Stack: {:?}", char_stack.iter().collect::<String>());
   }
@@ -163,17 +168,13 @@ impl CommandDetector {
       _ => {
         let modifiers = self.modifiers.lock().unwrap();
 
-        *key == Key::KeyA && (false
-          || *modifiers == HashSet::from([Key::ControlLeft])
-          || *modifiers == HashSet::from([Key::ControlRight])
-        )
+        *key == Key::KeyA && modifiers.is_any_pressed(KeyboardModifiers::CONTROL_LEFT | KeyboardModifiers::CONTROL_RIGHT)
       },
     }
   }
 
-  fn create_print_command(key: &Key, modifiers: &HashSet<Key>) -> PrintCharCommand {
+  fn create_print_command(key: &Key, modifiers: KeyboardModifiers) -> PrintCharCommand {
     let key = *key;
-    let modifiers = modifiers.clone();
 
     PrintCharCommand::new(key, modifiers)
   }

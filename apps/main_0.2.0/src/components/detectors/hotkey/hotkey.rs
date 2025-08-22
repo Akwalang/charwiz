@@ -5,18 +5,21 @@ use rust_logger::*;
 use rdev::{EventType, Key};
 
 use crate::components::event_hub::{EventHub, InputEvent, CommandEvent};
+use crate::components::state::State;
 
 use crate::settings::Settings;
 
 pub struct HotkeyDetector {
+  state: Arc<State>,
   event_hub: Arc<EventHub>,
   current_keys: Mutex<HashSet<Key>>,
   captured_keys: Mutex<HashSet<Key>>,
 }
 
 impl HotkeyDetector {
-  pub fn new(event_hub: &Arc<EventHub>) -> Arc<Self> {
+  pub fn new(state: &Arc<State>, event_hub: &Arc<EventHub>) -> Arc<Self> {
     Arc::new(HotkeyDetector {
+      state: state.clone(),
       event_hub: event_hub.clone(),
       current_keys: Mutex::new(HashSet::new()),
       captured_keys: Mutex::new(HashSet::new()),
@@ -85,7 +88,7 @@ impl HotkeyDetector {
 
   fn publish_command(&self, cap: &mut HashSet<Key>) {
     let keys = cap.iter()
-      .map(|k| format!("<yellow>{:?}</>", k))
+      .map(|k| format!("<!>{:?}</>", k))
       .collect::<Vec<_>>()
       .join(", ");
 

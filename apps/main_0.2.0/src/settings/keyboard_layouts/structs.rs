@@ -6,6 +6,7 @@ use serde::de::{Error as DeError, Deserializer};
 use serde::Deserialize;
 
 use crate::utils::str_to_key;
+use crate::common::structs::KeyboardModifiers;
 
 #[derive(Debug, Deserialize)]
 pub struct KeyItem {
@@ -23,7 +24,7 @@ pub struct KeyInsert {
   pub r#char: char,
 
   #[serde(default, deserialize_with = "deserialize_modifiers")]
-  pub modifiers: HashSet<Key>,
+  pub modifiers: KeyboardModifiers,
 }
 
 fn deserialize_key<'de, D>(deserializer: D) -> Result<Key, D::Error>
@@ -39,7 +40,7 @@ where
   Ok(key)
 }
 
-fn deserialize_modifiers<'de, D>(deserializer: D) -> Result<HashSet<Key>, D::Error>
+fn deserialize_modifiers<'de, D>(deserializer: D) -> Result<KeyboardModifiers, D::Error>
 where
   D: Deserializer<'de>,
 {
@@ -47,14 +48,14 @@ where
  
   let list = maybe_list.unwrap_or_default();
  
-  let mut result = HashSet::with_capacity(list.len());
- 
+  let mut result = KeyboardModifiers::new();
+
   for s in list {
     let Some(key) = str_to_key(&s) else {
       return Err(D::Error::custom(format!("unknown modifier key: {}", s)));
     };
 
-    result.insert(key);
+    result.add_key(&key);
   }
  
   Ok(result)
