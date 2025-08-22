@@ -168,7 +168,7 @@ impl CommandDetector {
       _ => {
         let modifiers = self.modifiers.lock().unwrap();
 
-        *key == Key::KeyA && modifiers.is_any_pressed(KeyboardModifiers::CONTROL_LEFT | KeyboardModifiers::CONTROL_RIGHT)
+        *key == Key::KeyA && modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY)
       },
     }
   }

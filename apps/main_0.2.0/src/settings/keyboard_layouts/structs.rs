@@ -1,11 +1,9 @@
-use std::collections::HashSet;
-
 use rdev::Key;
 
 use serde::de::{Error as DeError, Deserializer};
 use serde::Deserialize;
 
-use crate::utils::str_to_key;
+use crate::utils::{str_to_key, str_to_modifier};
 use crate::common::structs::KeyboardModifiers;
 
 #[derive(Debug, Deserialize)]
@@ -51,7 +49,7 @@ where
   let mut result = KeyboardModifiers::new();
 
   for s in list {
-    let Some(key) = str_to_key(&s) else {
+    let Some(key) = str_to_modifier(&s) else {
       return Err(D::Error::custom(format!("unknown modifier key: {}", s)));
     };
 

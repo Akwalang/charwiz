@@ -11,6 +11,10 @@ impl KeyboardModifiers {
   pub const ALT: u8 = 1 << 4;
   pub const ALT_GR: u8 = 1 << 5;
 
+  pub const CONTROL_ANY: u8 = Self::CONTROL_LEFT | Self::CONTROL_RIGHT;
+  pub const SHIFT_ANY: u8 = Self::SHIFT_LEFT | Self::SHIFT_RIGHT;
+
+  #[inline(always)]
   pub fn new() -> Self {
     KeyboardModifiers(0)
   }
@@ -55,6 +59,7 @@ impl KeyboardModifiers {
     }
   }
 
+  #[inline(always)]
   pub fn is_any_pressed(&self, modifiers: u8) -> bool {
     (self.0 & modifiers) != 0
   }
