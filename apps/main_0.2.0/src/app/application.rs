@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use rust_logger::*;
 
@@ -14,13 +14,13 @@ use crate::components::{
 };
 
 pub struct Application {
-  status: Arc<State>,
+  status: Arc<Mutex<State>>,
   event_hub: Arc<EventHub>,
 }
 
 impl Application {
   pub fn new() -> Self {
-    let status = Arc::new(State::new());
+    let status = Arc::new(Mutex::new(State::new()));
     let event_hub = Arc::new(EventHub::new());
 
     Application { status, event_hub }

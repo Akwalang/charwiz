@@ -1,8 +1,8 @@
-mod enums;
-pub use enums::Status;
+mod application_state;
+use application_state::ApplicationState;
 
-mod structs;
-pub use structs::KeyboardEventSnapshot;
+mod keyboard_state;
+use keyboard_state::KeyboardState;
 
 mod state;
 pub use state::State;

@@ -10,14 +10,14 @@ use crate::components::state::State;
 use crate::settings::Settings;
 
 pub struct HotkeyDetector {
-  state: Arc<State>,
+  state: Arc<Mutex<State>>,
   event_hub: Arc<EventHub>,
   current_keys: Mutex<HashSet<Key>>,
   captured_keys: Mutex<HashSet<Key>>,
 }
 
 impl HotkeyDetector {
-  pub fn new(state: &Arc<State>, event_hub: &Arc<EventHub>) -> Arc<Self> {
+  pub fn new(state: &Arc<Mutex<State>>, event_hub: &Arc<EventHub>) -> Arc<Self> {
     Arc::new(HotkeyDetector {
       state: state.clone(),
       event_hub: event_hub.clone(),

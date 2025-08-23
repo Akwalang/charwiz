@@ -510,7 +510,9 @@
   {
     "key": "Space",
     "insert": [
-      { "char": " " }
+      { "char": " " },
+      { "char": " ", "modifiers": ["ShiftLeft"] },
+      { "char": " ", "modifiers": ["ShiftRight"] }
     ]
   },
   {

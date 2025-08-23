@@ -7,18 +7,20 @@ use rdev::{listen, Event, EventType, Key};
 use crate::components::event_hub::{EventHub, InputEvent};
 use crate::components::state::State;
 
+use super::StickyKeys;
+
 pub struct UserInputController {
-  state: Arc<State>,
+  state: Arc<Mutex<State>>,
   event_hub: Arc<EventHub>,
-  sticked_keys: Arc<Mutex<HashSet<Key>>>,
+  sticked_keys: Arc<Mutex<StickyKeys>>,
 }
 
 impl UserInputController {
-  pub fn new(state: &Arc<State>, event_hub: &Arc<EventHub>) -> Self {
+  pub fn new(state: &Arc<Mutex<State>>, event_hub: &Arc<EventHub>) -> Self {
     UserInputController {
       state: state.clone(),
       event_hub: event_hub.clone(),
-      sticked_keys: Arc::new(Mutex::new(HashSet::new())),
+      sticked_keys: Arc::new(Mutex::new(StickyKeys::new())),
     }
   }
 
@@ -45,16 +47,22 @@ impl UserInputController {
     let sticked_keys = self.sticked_keys.clone();
 
     let callback = move |event: Event| {
-      if state.is_executing() { return; }
+      let mut state = state.lock().unwrap();
+
+      if state.application.is_executing() { return; }
 
       if !Self::is_trackable_event(&event) { return; }
       if Self::mute_sticky_keys(&event, &sticked_keys) { return; }
 
       Self::write_debug_info(&event);
 
+      state.keyboard.apply_key_event(&event);
+
       let event = InputEvent {
         r#type: event.event_type,
       };
+
+      drop(state);
 
       if let Err(err) = hub.publish_input(event) {
         warn!("<$>UserInputController</>: Failed to publish input event: {:?}", err);
@@ -86,45 +94,29 @@ impl UserInputController {
     }
   }
 
-  fn mute_sticky_keys(event: &Event, sticked_keys: &Arc<Mutex<HashSet<Key>>>) -> bool {
-    let sticked_keys = sticked_keys.clone();
-
+  fn mute_sticky_keys(event: &Event, sticked_keys: &Arc<Mutex<StickyKeys>>) -> bool {
     let key = match event.event_type {
       EventType::KeyPress(key) => key,
       EventType::KeyRelease(key) => key,
       _ => return false,
     };
 
-    if !Self::is_sticky_keys(&key) { return false; }
+    if !StickyKeys::is_sticky_key(&key) { return false; }
 
     let mut keys = sticked_keys.lock().unwrap();
 
     match event.event_type {
       EventType::KeyPress(_) => {
-        let is_sticked = keys.contains(&key);
-        keys.insert(key);
+        let is_sticked = keys.is_pressed(&key);
+        keys.add_key(&key);
         is_sticked
       },
       EventType::KeyRelease(_) => {
-        let is_sticked = !keys.contains(&key);
-        keys.remove(&key);
+        let is_sticked = !keys.is_pressed(&key);
+        keys.remove_key(&key);
         is_sticked
       },
       _ => false
-    }
-  }
-
-  fn is_sticky_keys(key: &Key) -> bool {
-    match key {
-      Key::MetaLeft | Key::MetaRight => true,
-      Key::ControlLeft | Key::ControlRight => true,
-      Key::ShiftLeft | Key::ShiftRight => true,
-      Key::Alt | Key::AltGr => true,
-      Key::UpArrow | Key::DownArrow => true,
-      Key::LeftArrow | Key::RightArrow => true,
-      Key::PageUp | Key::PageDown => true,
-      Key::Home | Key::End => true,
-      _ => false,
     }
   }
 }

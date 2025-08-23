@@ -19,7 +19,7 @@ impl KeyboardModifiers {
     KeyboardModifiers(0)
   }
 
-  pub fn add_key(&mut self, key: &Key) -> Self {
+  pub fn add_key(&mut self, key: &Key) {
     match key {
       Key::ControlLeft => self.0 |= Self::CONTROL_LEFT,
       Key::ControlRight => self.0 |= Self::CONTROL_RIGHT,
@@ -29,11 +29,9 @@ impl KeyboardModifiers {
       Key::AltGr => self.0 |= Self::ALT_GR,
       _ => {},
     }
-
-    *self
   }
 
-  pub fn remove_key(&mut self, key: &Key) -> Self {
+  pub fn remove_key(&mut self, key: &Key) {
     match key {
       Key::ControlLeft => self.0 &= !Self::CONTROL_LEFT,
       Key::ControlRight => self.0 &= !Self::CONTROL_RIGHT,
@@ -43,8 +41,6 @@ impl KeyboardModifiers {
       Key::AltGr => self.0 &= !Self::ALT_GR,
       _ => {},
     }
-
-    *self
   }
 
   pub fn is_pressed(&self, key: &Key) -> bool {
@@ -62,5 +58,14 @@ impl KeyboardModifiers {
   #[inline(always)]
   pub fn is_any_pressed(&self, modifiers: u8) -> bool {
     (self.0 & modifiers) != 0
+  }
+
+  pub fn is_modifier(key: &Key) -> bool {
+    match key {
+      Key::ControlLeft | Key::ControlRight => true,
+      Key::ShiftLeft | Key::ShiftRight => true,
+      Key::Alt | Key::AltGr => true,
+      _ => false,
+    }
   }
 }
