@@ -21,7 +21,7 @@ pub struct SettingsRaw {
   pub tooltips: Vec<Tooltip>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Settings {
   pub timings: Timings,
   pub executors: Vec<Executor>,

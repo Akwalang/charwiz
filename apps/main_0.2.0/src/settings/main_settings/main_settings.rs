@@ -8,21 +8,23 @@ use crate::constants::MAIN_SETTINGS_FILE;
 use crate::settings::main_settings::structs::{SettingsRaw, Settings};
 
 pub struct MainSettings {
-  // hotkeys: Vec<Hotkey>,
+  pub settings: Settings,
 }
 
 impl MainSettings {
   pub fn new() -> Self {
-    Self {}
+    Self { settings: Settings::default() }
   }
 
   pub fn init(&mut self) {
     log!("<$>Settings::MainSettings</>: Init");
 
-    let Ok(sets) = Self::load() else {
+    let Ok(settings) = Self::load() else {
       error!("<$>Settings::MainSettings</>: Can't load config json");
       panic!("Can't load config json");
     };
+
+    self.settings = settings;
   }
 
   fn load() -> anyhow::Result<Settings> {

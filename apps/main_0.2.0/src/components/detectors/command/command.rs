@@ -9,13 +9,16 @@ use crate::components::event_hub::{EventHub, InputEvent, CommandEvent};
 use crate::components::state::State;
 
 pub struct CommandDetector {
+  settings: &'static Settings,
+
   state: Arc<Mutex<State>>,
   event_hub: Arc<EventHub>,
 }
 
 impl CommandDetector {
-  pub fn new(state: &Arc<Mutex<State>>, event_hub: &Arc<EventHub>) -> Arc<Self> {
+  pub fn new(settings: &'static Settings, state: &Arc<Mutex<State>>, event_hub: &Arc<EventHub>) -> Arc<Self> {
     Arc::new(CommandDetector {
+      settings,
       state: state.clone(),
       event_hub: event_hub.clone(),
     })
@@ -45,7 +48,7 @@ impl CommandDetector {
     let EventType::KeyPress(_) = event.r#type else { return; };
 
     let str = state.keyboard.get_string();
-    let commands = Settings::get_commands();
+    let commands = self.settings.get_commands();
 
     for command in commands {
       if str.ends_with(&command) {

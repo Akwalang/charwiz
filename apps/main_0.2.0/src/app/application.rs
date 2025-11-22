@@ -14,6 +14,9 @@ use crate::components::{
 };
 
 pub struct Application {
+  platform: &'static Platform,
+  settings: &'static Settings,
+
   state: Arc<Mutex<State>>,
   event_hub: Arc<EventHub>,
 }
@@ -26,7 +29,7 @@ impl Application {
     let state = Arc::new(Mutex::new(state));
     let event_hub = Arc::new(event_hub);
 
-    Application { state, event_hub }
+    Application { platform, settings, state, event_hub }
   }
 
   pub fn run(&self) -> anyhow::Result<()> {
@@ -37,7 +40,7 @@ impl Application {
 
     UserInputController::new(state, event_hub).init();
 
-    CommandDetector::new(state, event_hub).init();
+    CommandDetector::new(self.settings, state, event_hub).init();
     HotkeyDetector::new(state, event_hub).init();
 
     Executor::new(state, event_hub).init();

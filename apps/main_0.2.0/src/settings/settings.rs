@@ -8,6 +8,7 @@ use crate::platform::Platform;
 use crate::platform::common::structs::KeyboardLayoutItem;
 
 use crate::settings::{MainSettings, KeyboardLayouts};
+use crate::settings::main_settings::structs::Command;
 
 pub struct Settings {
   platform: &'static Platform,
@@ -61,11 +62,7 @@ impl Settings {
   }
 
   // test method
-  pub fn get_commands() -> Vec<String> {
-    vec![
-      "cmd1".into(),
-      "cmd2".into(),
-      "cmd3".into(),
-    ]
+  pub fn get_commands(&self) -> Vec<String> {
+    self.main_settings.lock().unwrap().settings.commands.iter().map(|c| c.cmd.clone()).collect()
   }
 }

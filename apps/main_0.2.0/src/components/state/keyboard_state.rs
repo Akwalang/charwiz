@@ -136,8 +136,8 @@ impl KeyboardState {
       Key::PageUp | Key::PageDown => true,
       Key::Home | Key::End => true,
       _ => false
-        || *key == Key::KeyA && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY)
-        || *key == Key::KeyC && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY)
+        || (*key == Key::KeyA && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyC && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
       ,
     }
   }
