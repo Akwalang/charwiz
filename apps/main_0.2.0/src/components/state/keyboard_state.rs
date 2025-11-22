@@ -6,14 +6,20 @@ use crate::settings::Settings;
 use crate::common::structs::{KeyboardEventSnapshot, KeyboardModifiers};
 
 pub struct KeyboardState {
+  platform: &'static Platform,
+  settings: &'static Settings,
+
   pub char_stack: Vec<char>,
   pub event_stack: Vec<KeyboardEventSnapshot>,
   pub modifiers: KeyboardModifiers,
 }
 
 impl KeyboardState {
-  pub fn new() -> Self {
+  pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
     Self {
+      platform,
+      settings,
+
       char_stack: Vec::with_capacity(20),
       event_stack: Vec::with_capacity(20),
       modifiers: KeyboardModifiers::new(),
@@ -79,8 +85,8 @@ impl KeyboardState {
   fn handle_insert(&mut self, key: Key) {
     let modifiers = &self.modifiers;
 
-    let settings_kl = Settings::get_keyboard_layouts();
-    let platform_kl = Platform::get_keyboard_layouts();
+    let settings_kl = self.settings.get_keyboard_layouts();
+    let platform_kl = self.platform.get_keyboard_layouts();
 
     let cur_layout = platform_kl.get_current_keyboard_layout();
 

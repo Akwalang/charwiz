@@ -1,8 +1,7 @@
-use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 
 use rust_logger::*;
-use rdev::{listen, Event, EventType, Key};
+use rdev::{listen, Event, EventType};
 
 use crate::components::event_hub::{EventHub, InputEvent};
 use crate::components::state::State;
