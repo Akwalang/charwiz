@@ -95,6 +95,10 @@ impl KeyboardState {
     if !is_exists { return; }
 
     if let Some(char) = char {
+      if self.char_stack.last() == Some(&' ') {
+        self.stack_clear();
+      }
+
       self.char_stack.push(char);
     }
 
