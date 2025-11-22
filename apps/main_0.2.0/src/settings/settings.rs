@@ -7,18 +7,20 @@ use rdev::Key;
 use crate::platform::Platform;
 use crate::platform::common::structs::KeyboardLayoutItem;
 
-use crate::settings::KeyboardLayouts;
+use crate::settings::{MainSettings, KeyboardLayouts};
 
 static SETTINGS: OnceLock<Settings> = OnceLock::new();
 
 pub struct Settings {
   pub keyboard_layouts: Mutex<KeyboardLayouts>,
+  pub main_settings: Mutex<MainSettings>,
 }
 
 impl Settings {
   fn new() -> Self {
     Settings {
       keyboard_layouts: Mutex::new(KeyboardLayouts::new()),
+      main_settings: Mutex::new(MainSettings::new()),
     }
   }
 
@@ -29,18 +31,30 @@ impl Settings {
   pub fn init() {
     log!("<$>Settings</>: Init");
 
-    let mut settings_kl = Self::get_keyboard_layouts();
-    let platform_kl = Platform::get_keyboard_layouts();
+    {
+      let mut settings_kl = Self::get_keyboard_layouts();
+      let platform_kl = Platform::get_keyboard_layouts();
 
-    settings_kl.init();
+      settings_kl.init();
 
-    for layout in &platform_kl.items {
-      settings_kl.add(&layout.name);
+      for layout in &platform_kl.items {
+        settings_kl.add(&layout.name);
+      }
+    }
+
+    {
+      let mut settings_main = Self::get_main_settings();
+      
+      settings_main.init();
     }
   }
 
   pub fn get_keyboard_layouts<'a>() -> MutexGuard<'a, KeyboardLayouts> {
     Self::get_instance().keyboard_layouts.lock().unwrap()
+  }
+
+  pub fn get_main_settings<'a>() -> MutexGuard<'a, MainSettings> {
+    Self::get_instance().main_settings.lock().unwrap()
   }
 
   // test method

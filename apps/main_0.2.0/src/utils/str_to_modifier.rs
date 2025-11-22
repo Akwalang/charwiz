@@ -8,6 +8,8 @@ pub fn str_to_modifier(s: &str) -> Option<Key> {
     "controlright" => Some(Key::ControlRight),
     "shiftleft" => Some(Key::ShiftLeft),
     "shiftright" => Some(Key::ShiftRight),
+    "metaleft" => Some(Key::MetaLeft),
+    "metaright" => Some(Key::MetaRight),
     _ => None,
   }
 }

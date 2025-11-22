@@ -10,6 +10,8 @@ impl KeyboardModifiers {
   pub const SHIFT_RIGHT: u8 = 1 << 3;
   pub const ALT: u8 = 1 << 4;
   pub const ALT_GR: u8 = 1 << 5;
+  pub const META_LEFT: u8 = 1 << 6;
+  pub const META_RIGHT: u8 = 1 << 7;
 
   pub const CONTROL_ANY: u8 = Self::CONTROL_LEFT | Self::CONTROL_RIGHT;
   pub const SHIFT_ANY: u8 = Self::SHIFT_LEFT | Self::SHIFT_RIGHT;
@@ -27,6 +29,8 @@ impl KeyboardModifiers {
       Key::ShiftRight => self.0 |= Self::SHIFT_RIGHT,
       Key::Alt => self.0 |= Self::ALT,
       Key::AltGr => self.0 |= Self::ALT_GR,
+      Key::MetaLeft => self.0 |= Self::META_LEFT,
+      Key::MetaRight => self.0 |= Self::META_RIGHT,
       _ => {},
     }
   }
@@ -39,6 +43,8 @@ impl KeyboardModifiers {
       Key::ShiftRight => self.0 &= !Self::SHIFT_RIGHT,
       Key::Alt => self.0 &= !Self::ALT,
       Key::AltGr => self.0 &= !Self::ALT_GR,
+      Key::MetaLeft => self.0 &= !Self::META_LEFT,
+      Key::MetaRight => self.0 &= !Self::META_RIGHT,
       _ => {},
     }
   }
@@ -51,6 +57,8 @@ impl KeyboardModifiers {
       Key::ShiftRight => (self.0 & Self::SHIFT_RIGHT) != 0,
       Key::Alt => (self.0 & Self::ALT) != 0,
       Key::AltGr => (self.0 & Self::ALT_GR) != 0,
+      Key::MetaLeft => (self.0 & Self::META_LEFT) != 0,
+      Key::MetaRight => (self.0 & Self::META_RIGHT) != 0,
       _ => false,
     }
   }
@@ -65,6 +73,7 @@ impl KeyboardModifiers {
       Key::ControlLeft | Key::ControlRight => true,
       Key::ShiftLeft | Key::ShiftRight => true,
       Key::Alt | Key::AltGr => true,
+      Key::MetaLeft | Key::MetaRight => true,
       _ => false,
     }
   }

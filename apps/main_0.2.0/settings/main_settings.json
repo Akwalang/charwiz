@@ -1,0 +1,177 @@
+{
+  "timings": {
+    "forget_timeout": 10000,
+    "long_delay": 30,
+    "medium_delay": 8,
+    "short_delay": 1
+  },
+  "executors": [
+    {
+      "type": "native",
+      "value": "switch_layout"
+    },
+    {
+      "type": "native",
+      "value": "convert_layout"
+    },
+    {
+      "type": "native",
+      "value": "invert_case"
+    },
+    {
+      "type": "native",
+      "value": "disable"
+    },
+    {
+      "type": "native",
+      "value": "enable"
+    },
+    {
+      "type": "native",
+      "value": "show_popup"
+    },
+    {
+      "type": "native",
+      "value": "close_popup"
+    },
+    {
+      "type": "native",
+      "value": "close_application"
+    },
+    {
+      "type": "plugin",
+      "value": "to_text_case"
+    },
+    {
+      "type": "plugin",
+      "value": "to_snake_case"
+    },
+    {
+      "type": "plugin",
+      "value": "to_pascal_case"
+    },
+    {
+      "type": "plugin",
+      "value": "to_camel_case"
+    },
+    {
+      "type": "plugin",
+      "value": "to_kebab_case"
+    },
+    {
+      "type": "plugin",
+      "value": "random_uuid"
+    }
+  ],
+  "autoConverts": [
+    {
+      "text": "сфкпщ",
+      "method": "type",
+      "layout": "en-US"
+    },
+    {
+      "text": "вщслук",
+      "method": "type",
+      "layout": "en-US"
+    },
+    {
+      "text": "нфкт",
+      "method": "type",
+      "layout": "en-US"
+    }
+  ],
+  "hotkeys": [
+    {
+      "keys": {
+        "key": null,
+        "modifiers": ["ControlLeft", "ShiftLeft", "Alt"]
+      },
+      "target": "input",
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyZ",
+        "modifiers": ["ControlLeft", "ShiftLeft", "Alt"]
+      },
+      "target": "input",
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      }
+    }
+  ],
+  "commands": [
+    {
+      "cmd": ":uuid",
+      "method": "paste",
+      "executor": {
+        "type": "plugin",
+        "value": "random_uuid"
+      }
+    },
+    {
+      "cmd": "ёёё",
+      "method": "type",
+      "executor": {
+        "type": "static",
+        "value": "```"
+      }
+    }
+  ],
+  "tooltips": [
+    {
+      "id": "paste_convert",
+      "items": [
+        {
+          "type": "option",
+          "label": "to text",
+          "target": "selection",
+          "executor": {
+            "type": "plugin",
+            "value": "to_text_case"
+          }
+        },
+        {
+          "type": "option",
+          "label": "to snake case",
+          "target": "selection",
+          "executor": {
+            "type": "plugin",
+            "value": "to_snake_case"
+          }
+        },
+        {
+          "type": "option",
+          "label": "to pascal case",
+          "target": "selection",
+          "executor": {
+            "type": "plugin",
+            "value": "to_pascal_case"
+          }
+        },
+        {
+          "type": "option",
+          "label": "to camel case",
+          "target": "selection",
+          "executor": {
+            "type": "plugin",
+            "value": "to_camel_case"
+          }
+        },
+        {
+          "type": "option",
+          "label": "to kebab case",
+          "target": "selection",
+          "executor": {
+            "type": "plugin",
+            "value": "to_kebab_case"
+          }
+        }
+      ]
+    }
+  ]
+}

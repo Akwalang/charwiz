@@ -18,6 +18,12 @@ local function split_into_words(input)
     return words
 end
 
+function to_text_case(input)
+    local words = split_into_words(input.value)
+
+    return table.concat(words, " "):lower()
+end
+
 function to_snake_case(input)
     local words = split_into_words(input.value)
 

@@ -92,7 +92,7 @@ impl KeyboardState {
       self.char_stack.push(char);
     }
 
-    self.event_stack.push(KeyboardEventSnapshot::new(key, self.modifiers));
+    self.event_stack.push(KeyboardEventSnapshot::new(Some(key), self.modifiers));
 
     println!("Stack: {:?}", self.char_stack.iter().collect::<String>());
   }

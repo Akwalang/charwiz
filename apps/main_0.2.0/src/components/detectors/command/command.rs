@@ -3,9 +3,10 @@ use std::sync::{Arc, Mutex};
 use rust_logger::*;
 use rdev::EventType;
 
-use crate::components::event_hub::{EventHub, InputEvent};
-use crate::components::state::State;
 use crate::settings::Settings;
+
+use crate::components::event_hub::{EventHub, InputEvent, CommandEvent};
+use crate::components::state::State;
 
 pub struct CommandDetector {
   state: Arc<Mutex<State>>,
@@ -41,14 +42,18 @@ impl CommandDetector {
   fn process_event(self: &Arc<Self>, event: InputEvent) {
     let state = self.state.lock().unwrap();
 
-    if let EventType::KeyPress(_) = event.r#type {
-      let str = state.keyboard.get_string();
-      let commands = Settings::get_commands();
+    let EventType::KeyPress(_) = event.r#type else { return; };
 
-      for command in commands {
-        if str.ends_with(&command) {
-          log!("<$>CommandDetector</>: Detected command: {:?}", command);
-        }
+    let str = state.keyboard.get_string();
+    let commands = Settings::get_commands();
+
+    for command in commands {
+      if str.ends_with(&command) {
+        let command = CommandEvent {
+          command: format!("Captured command: <!>{}</>", str),
+        };
+
+        self.event_hub.publish_command(command).ok();
       }
     }
   }
