@@ -8,7 +8,7 @@ use crate::settings::Settings;
 use crate::components::{
   event_hub::EventHub,
   controllers::UserInputController,
-  detectors::{CommandDetector, HotkeyDetector},
+  detectors::{AutoConvertDetector, CommandDetector, HotkeyDetector},
   executor::Executor,
   state::State,
 };
@@ -40,6 +40,7 @@ impl Application {
 
     UserInputController::new(state, event_hub).init();
 
+    AutoConvertDetector::new(self.settings, state.clone(), event_hub.clone()).init();
     CommandDetector::new(self.settings, state.clone(), event_hub.clone()).init();
     HotkeyDetector::new(self.settings, state.clone(), event_hub.clone()).init();
 
