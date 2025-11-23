@@ -8,7 +8,7 @@ use crate::platform::Platform;
 use crate::platform::common::structs::KeyboardLayoutItem;
 
 use crate::settings::{MainSettings, KeyboardLayouts};
-use crate::settings::main_settings::structs::Command;
+use crate::settings::main_settings::structs::{Command, Hotkey};
 
 pub struct Settings {
   platform: &'static Platform,
@@ -54,15 +54,16 @@ impl Settings {
   }
 
   // test method
-  pub fn get_hotkeys() -> Vec<HashSet<Key>> {
-    vec![
-      HashSet::from([Key::ControlLeft, Key::ShiftLeft, Key::Alt]),
-      HashSet::from([Key::ControlLeft, Key::ShiftLeft, Key::Alt, Key::KeyZ]),
-    ]
+  pub fn get_hotkeys(&self) -> Vec<Hotkey> {
+    let main = self.main_settings.lock().unwrap();
+
+    main.settings.hotkeys.iter().cloned().collect()
   }
 
   // test method
-  pub fn get_commands(&self) -> Vec<String> {
-    self.main_settings.lock().unwrap().settings.commands.iter().map(|c| c.cmd.clone()).collect()
+  pub fn get_commands(&self) -> Vec<Command> {
+    let main = self.main_settings.lock().unwrap();
+    
+    main.settings.commands.iter().cloned().collect()
   }
 }

@@ -1,7 +1,7 @@
 use rdev::Key;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-pub struct KeyboardModifiers(u8);
+pub struct KeyboardModifiers(pub u8);
 
 impl KeyboardModifiers {
   pub const CONTROL_LEFT: u8 = 1 << 0;

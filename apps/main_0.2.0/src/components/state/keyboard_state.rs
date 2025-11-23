@@ -9,9 +9,11 @@ pub struct KeyboardState {
   platform: &'static Platform,
   settings: &'static Settings,
 
+  pub key: Option<Key>,
+  pub modifiers: KeyboardModifiers,
+
   pub char_stack: Vec<char>,
   pub event_stack: Vec<KeyboardEventSnapshot>,
-  pub modifiers: KeyboardModifiers,
 }
 
 impl KeyboardState {
@@ -20,9 +22,11 @@ impl KeyboardState {
       platform,
       settings,
 
+      key: None,
+      modifiers: KeyboardModifiers::new(),
+
       char_stack: Vec::with_capacity(20),
       event_stack: Vec::with_capacity(20),
-      modifiers: KeyboardModifiers::new(),
     }
   }
 
@@ -54,9 +58,13 @@ impl KeyboardState {
     if KeyboardModifiers::is_modifier(&key) {
       self.handle_modifier_update(key, state);
     }
-    
+
+    if !KeyboardModifiers::is_modifier(&key) {
+      self.key = if state { Some(key) } else { None };
+    }
+
     if !state { return; }
-    
+
     if Self::is_backspace(&key) {
       self.handle_backspace(key);
     } else if self.is_stack_breaker(&key) {
@@ -83,19 +91,21 @@ impl KeyboardState {
   }
 
   fn handle_insert(&mut self, key: Key) {
-    let modifiers = &self.modifiers;
-
     let settings_kl = self.settings.get_keyboard_layouts();
     let platform_kl = self.platform.get_keyboard_layouts();
 
     let cur_layout = platform_kl.get_current_keyboard_layout();
 
-    let (char, is_exists) = settings_kl.find_combination(&cur_layout.name, &key, *modifiers);
+    let (char, is_exists) = settings_kl.find_combination(&cur_layout.name, &key, self.modifiers);
 
     if !is_exists { return; }
 
     if let Some(char) = char {
-      if self.char_stack.last() == Some(&' ') {
+      if false
+        || self.char_stack.last() == Some(&' ')
+        || self.char_stack.last() == Some(&'\n')
+        || self.char_stack.last() == Some(&'\t')
+      {
         self.stack_clear();
       }
 

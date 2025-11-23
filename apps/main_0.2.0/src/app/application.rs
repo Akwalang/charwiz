@@ -40,8 +40,8 @@ impl Application {
 
     UserInputController::new(state, event_hub).init();
 
-    CommandDetector::new(self.settings, state, event_hub).init();
-    HotkeyDetector::new(state, event_hub).init();
+    CommandDetector::new(self.settings, state.clone(), event_hub.clone()).init();
+    HotkeyDetector::new(self.settings, state.clone(), event_hub.clone()).init();
 
     Executor::new(state, event_hub).init();
 

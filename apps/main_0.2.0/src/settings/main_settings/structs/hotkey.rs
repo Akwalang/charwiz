@@ -1,7 +1,8 @@
-use serde::Deserialize;
+use serde::{de::Error, Deserialize, Deserializer};
+use rdev::Key;
 
 use crate::common::enums::TransformTarget;
-use crate::common::structs::KeyboardEventSnapshot;
+use crate::common::structs::{KeyboardEventSnapshot, KeyboardModifiers};
 
 use crate::settings::main_settings::structs::Executor;
 
@@ -20,7 +21,7 @@ pub struct HotkeyKeysRaw {
   pub modifiers: Vec<String>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Hotkey {
   pub keys: KeyboardEventSnapshot,
   pub target: TransformTarget,
@@ -40,7 +41,7 @@ impl Into<Hotkey> for HotkeyRaw {
     }
 
     Hotkey {
-      keys: KeyboardEventSnapshot::new(key, modifiers),
+      keys: KeyboardEventSnapshot{ key, modifiers },
       target: self.target,
       executor: self.executor,
     }

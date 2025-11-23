@@ -9,20 +9,23 @@ use crate::components::state::State;
 
 use crate::settings::Settings;
 
+use crate::common::structs::KeyboardEventSnapshot;
+
 pub struct HotkeyDetector {
+  settings: &'static Settings,
+  
   state: Arc<Mutex<State>>,
   event_hub: Arc<EventHub>,
-  current_keys: Mutex<HashSet<Key>>,
-  captured_keys: Mutex<HashSet<Key>>,
+  captured_keys: Mutex<KeyboardEventSnapshot>,
 }
 
 impl HotkeyDetector {
-  pub fn new(state: &Arc<Mutex<State>>, event_hub: &Arc<EventHub>) -> Arc<Self> {
+  pub fn new(settings: &'static Settings, state: Arc<Mutex<State>>, event_hub: Arc<EventHub>) -> Arc<Self> {
     Arc::new(HotkeyDetector {
-      state: state.clone(),
-      event_hub: event_hub.clone(),
-      current_keys: Mutex::new(HashSet::new()),
-      captured_keys: Mutex::new(HashSet::new()),
+      settings,
+      state: state,
+      event_hub: event_hub,
+      captured_keys: Mutex::new(KeyboardEventSnapshot::default()),
     })
   }
 
@@ -47,14 +50,10 @@ impl HotkeyDetector {
   fn process_event(&self, event: InputEvent) {
     if !Self::is_trackable_event(&event) { return; }
     
-    let mut cur = self.current_keys.lock().unwrap();
-    let mut cap = self.captured_keys.lock().unwrap();
+    let state: std::sync::MutexGuard<'_, State> = self.state.lock().unwrap();
 
-    match event.r#type {
-      EventType::KeyPress(key) => { cur.insert(key); },
-      EventType::KeyRelease(key) => { cur.remove(&key); },
-      _ => {},
-    }
+    let cur = KeyboardEventSnapshot::new(state.keyboard.key, state.keyboard.modifiers);
+    let mut cap = self.captured_keys.lock().unwrap();
 
     if Self::is_event_ready(&cur, &cap) {
       self.publish_command(&mut cap);
@@ -70,36 +69,29 @@ impl HotkeyDetector {
     }
   }
 
-  fn is_event_ready(cur: &HashSet<Key>, cap: &HashSet<Key>) -> bool {
+  fn is_event_ready(cur: &KeyboardEventSnapshot, cap: &KeyboardEventSnapshot) -> bool {
     cur.len() == 0 && cap.len() != 0
   }
 
-  fn check_hotkeys(&self, cur: &HashSet<Key>, cap: &mut HashSet<Key>) {
-    let hotkeys = Settings::get_hotkeys();
+  fn check_hotkeys(&self, cur: &KeyboardEventSnapshot, cap: &mut KeyboardEventSnapshot) {
+    let hotkeys = self.settings.get_hotkeys();
 
-    for keys in hotkeys.iter() {
-      if keys.len() <= cap.len() { continue; }
-      if !keys.eq(cur) { continue; }
+    for hotkey in hotkeys.iter() {
+      if hotkey.keys <= *cap || hotkey.keys != *cur { continue; }
 
-      cap.clear();
-      cap.extend(cur.iter().cloned());
+      *cap = cur.clone();
     }
   }
 
-  fn publish_command(&self, cap: &mut HashSet<Key>) {
-    let keys = cap.iter()
-      .map(|k| format!("<!>{:?}</>", k))
-      .collect::<Vec<_>>()
-      .join(", ");
-
-    log!("<$>HotKeyDetector</>: Event: {}", keys);
+  fn publish_command(&self, cap: &mut KeyboardEventSnapshot) {
+    log!("<$>HotKeyDetector</>: Event: {:?}", cap);
 
     let command = CommandEvent {
-      command: format!("Captured keys: {}", keys),
+      command: format!("Captured keys: {:?}", cap),
     };
 
     self.event_hub.publish_command(command).ok();
 
-    cap.clear();
+    *cap = KeyboardEventSnapshot::default();
   }
 }

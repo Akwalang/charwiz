@@ -16,11 +16,11 @@ pub struct CommandDetector {
 }
 
 impl CommandDetector {
-  pub fn new(settings: &'static Settings, state: &Arc<Mutex<State>>, event_hub: &Arc<EventHub>) -> Arc<Self> {
+  pub fn new(settings: &'static Settings, state: Arc<Mutex<State>>, event_hub: Arc<EventHub>) -> Arc<Self> {
     Arc::new(CommandDetector {
       settings,
-      state: state.clone(),
-      event_hub: event_hub.clone(),
+      state: state,
+      event_hub: event_hub,
     })
   }
 
@@ -51,7 +51,7 @@ impl CommandDetector {
     let commands = self.settings.get_commands();
 
     for command in commands {
-      if str.ends_with(&command) {
+      if str.ends_with(&command.cmd) {
         let command = CommandEvent {
           command: format!("Captured command: <!>{}</>", str),
         };
