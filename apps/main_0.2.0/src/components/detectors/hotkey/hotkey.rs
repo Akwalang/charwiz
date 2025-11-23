@@ -1,14 +1,14 @@
 use std::sync::{Arc, Mutex};
-use std::collections::HashSet;
 
 use rust_logger::*;
-use rdev::{EventType, Key};
+use rdev::EventType;
 
-use crate::components::event_hub::{EventHub, InputEvent, CommandEvent};
+use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
-use crate::settings::Settings;
+use crate::settings::{Settings, structs::HotKey};
 
+use crate::common::events::{CommandData, CommandEvent, InputEvent};
 use crate::common::structs::KeyboardEventSnapshot;
 
 pub struct HotkeyDetector {
@@ -16,7 +16,7 @@ pub struct HotkeyDetector {
   
   state: Arc<Mutex<State>>,
   event_hub: Arc<EventHub>,
-  captured_keys: Mutex<KeyboardEventSnapshot>,
+  captured_keys: Mutex<Option<HotKey>>,
 }
 
 impl HotkeyDetector {
@@ -25,7 +25,7 @@ impl HotkeyDetector {
       settings,
       state: state,
       event_hub: event_hub,
-      captured_keys: Mutex::new(KeyboardEventSnapshot::default()),
+      captured_keys: Mutex::new(None),
     })
   }
 
@@ -69,29 +69,37 @@ impl HotkeyDetector {
     }
   }
 
-  fn is_event_ready(cur: &KeyboardEventSnapshot, cap: &KeyboardEventSnapshot) -> bool {
-    cur.len() == 0 && cap.len() != 0
+  fn is_event_ready(cur: &KeyboardEventSnapshot, cap: &Option<HotKey>) -> bool {
+    let Some(hot_key) = cap else { return false; };
+
+    cur.len() == 0 && hot_key.keys.len() != 0
   }
 
-  fn check_hotkeys(&self, cur: &KeyboardEventSnapshot, cap: &mut KeyboardEventSnapshot) {
+  fn check_hotkeys(&self, cur: &KeyboardEventSnapshot, cap: &mut Option<HotKey>) {
     let hotkeys = self.settings.get_hotkeys();
 
     for hotkey in hotkeys.iter() {
-      if hotkey.keys <= *cap || hotkey.keys != *cur { continue; }
+      if cap.is_some() && hotkey.keys <= cap.as_ref().unwrap().keys { continue; }
+      if hotkey.keys != *cur { continue; }
 
-      *cap = cur.clone();
+      *cap = Some(hotkey.clone());
     }
   }
 
-  fn publish_command(&self, cap: &mut KeyboardEventSnapshot) {
-    log!("<$>HotKeyDetector</>: Event: {:?}", cap);
+  fn publish_command(&self, cap: &mut Option<HotKey>) {
+    let Some(hot_key) = cap else {
+      error!("Unexpected empty captured hotkey");
+      return;
+    };
+
+    log!("<$>HotKeyDetector</>: Executor: {:?}", hot_key.executor);
 
     let command = CommandEvent {
-      command: format!("Captured keys: {:?}", cap),
+      command: CommandData::HotKey(Box::new(hot_key.clone())),
     };
 
     self.event_hub.publish_command(command).ok();
 
-    *cap = KeyboardEventSnapshot::default();
+    *cap = None;
   }
 }

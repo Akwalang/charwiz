@@ -1,5 +1,5 @@
 mod main_settings;
-pub use main_settings::MainSettings;
+pub use main_settings::{structs, MainSettings};
 
 mod keyboard_layouts;
 pub use keyboard_layouts::{KeyboardLayouts, LayoutItem, KeyItem};

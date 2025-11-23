@@ -7,8 +7,8 @@ pub use command::Command;
 mod executor;
 pub use executor::Executor;
 
-mod hotkey;
-pub use hotkey::{HotkeyRaw, Hotkey};
+mod hot_key;
+pub use hot_key::{HotkeyRaw, HotKey};
 
 mod timings;
 pub use timings::Timings;

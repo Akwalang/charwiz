@@ -5,8 +5,10 @@ use rdev::EventType;
 
 use crate::settings::Settings;
 
-use crate::components::event_hub::{EventHub, InputEvent, CommandEvent};
+use crate::components::event_hub::EventHub;
 use crate::components::state::State;
+
+use crate::common::events::{InputEvent, CommandEvent, CommandData};
 
 pub struct AutoConvertDetector {
   settings: &'static Settings,
@@ -53,7 +55,7 @@ impl AutoConvertDetector {
     for converter in converters {
       if str.ends_with(&converter.text) {
         let converter = CommandEvent {
-          command: format!("Captured auto converter: <!>{}</>", str),
+          command: CommandData::AutoConvert(Box::new(converter)),
         };
 
         self.event_hub.publish_command(converter).ok();

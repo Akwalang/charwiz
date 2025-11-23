@@ -8,7 +8,7 @@ use crate::platform::Platform;
 use crate::platform::common::structs::KeyboardLayoutItem;
 
 use crate::settings::{MainSettings, KeyboardLayouts};
-use crate::settings::main_settings::structs::{AutoConvert, Command, Hotkey};
+use crate::settings::main_settings::structs::{AutoConvert, Command, HotKey};
 
 pub struct Settings {
   platform: &'static Platform,
@@ -68,7 +68,7 @@ impl Settings {
   }
 
   // TODO: optimize
-  pub fn get_hotkeys(&self) -> Vec<Hotkey> {
+  pub fn get_hotkeys(&self) -> Vec<HotKey> {
     let main = self.main_settings.lock().unwrap();
 
     main.settings.hotkeys.clone()

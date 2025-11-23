@@ -5,8 +5,10 @@ use rdev::EventType;
 
 use crate::settings::Settings;
 
-use crate::components::event_hub::{EventHub, InputEvent, CommandEvent};
+use crate::components::event_hub::EventHub;
 use crate::components::state::State;
+
+use crate::common::events::{CommandData, CommandEvent, InputEvent};
 
 pub struct CommandDetector {
   settings: &'static Settings,
@@ -53,7 +55,7 @@ impl CommandDetector {
     for command in commands {
       if str.ends_with(&command.cmd) {
         let command = CommandEvent {
-          command: format!("Captured command: <!>{}</>", str),
+          command: CommandData::Command(Box::new(command)),
         };
 
         self.event_hub.publish_command(command).ok();

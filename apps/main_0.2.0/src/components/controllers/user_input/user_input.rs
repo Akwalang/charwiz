@@ -3,8 +3,10 @@ use std::sync::{Arc, Mutex};
 use rust_logger::*;
 use rdev::{listen, Event, EventType};
 
-use crate::components::event_hub::{EventHub, InputEvent};
+use crate::components::event_hub::EventHub;
 use crate::components::state::State;
+
+use crate::common::events::InputEvent;
 
 use super::StickyKeys;
 

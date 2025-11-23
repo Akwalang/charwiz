@@ -3,7 +3,7 @@ use serde::Deserialize;
 use crate::settings::main_settings::structs::{
   Timings,
   Executor,
-  HotkeyRaw, Hotkey,
+  HotkeyRaw, HotKey,
   AutoConvert,
   Command,
   Tooltip,
@@ -25,7 +25,7 @@ pub struct Settings {
   pub timings: Timings,
   pub executors: Vec<Executor>,
   pub auto_converts: Vec<AutoConvert>,
-  pub hotkeys: Vec<Hotkey>,
+  pub hotkeys: Vec<HotKey>,
   pub commands: Vec<Command>,
   pub tooltips: Vec<Tooltip>,
 }
