@@ -16,9 +16,11 @@ use app::Application;
 use platform::Platform;
 use settings::Settings;
 
-#[async_std::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() -> anyhow::Result<()> {
   setup::setup();
+
+  let local = tokio::task::LocalSet::new();
 
   let platform = Platform::new();
   let settings = Settings::new(&platform);
@@ -28,9 +30,9 @@ async fn main() -> anyhow::Result<()> {
 
   let application = Application::new(&platform, &settings);
 
-  application.run()?;
+  local.run_until(async move {
+    application.run().await;
+  }).await;
 
-  loop {
-    async_std::task::sleep(std::time::Duration::from_secs(1)).await;
-  }
+  Ok(())
 }

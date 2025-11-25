@@ -35,7 +35,7 @@ impl UserInputController {
   fn subscribe(&self) {
     let mut status_rx = self.event_hub.status_stream();
 
-    async_std::task::spawn(async move {
+    tokio::task::spawn_local(async move {
       while let Ok(event) = status_rx.recv().await {
         log!("Received status event: {:?}", event);
       }
@@ -70,9 +70,9 @@ impl UserInputController {
       }
     };
 
-    async_std::task::spawn(async move {
+    tokio::task::spawn_blocking(move || {
       if let Err(error) = listen(callback) {
-        panic!("Can't start listen keyboard events.\nError: {:?}", error);
+        error!("<$>UserInputController</>: Can't start listen keyboard events. Error: {:?}", error);
       }
     });
   }

@@ -33,7 +33,7 @@ impl Application {
     Application { platform, settings, state, event_hub }
   }
 
-  pub fn run(&self) -> anyhow::Result<()> {
+  pub async fn run(&self) {
     log!("<$>Application</>: Starting...");
 
     let state = &self.state;
@@ -60,7 +60,7 @@ impl Application {
       event_hub.clone(),
       vec![
         Box::new(native_transformer),
-        // Box::new(plugin_transformer),
+        Box::new(plugin_transformer),
         Box::new(static_transformer),
       ],
     );
@@ -69,6 +69,8 @@ impl Application {
 
     log!("<$>Application</>: Ready");
 
-    Ok(())
+    loop {
+      tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+    }
   }
 }

@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.99"
-async-std = { version = "1.13", features = ["attributes"] }
 clipboard-win = "5.4.0"
 rdev = { version="0.5.3", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
@@ -15,6 +14,7 @@ tray-item = "0.10.0"
 rust_logger = { git = "https://github.com/Akwalang/rust_logger.git", tag = "1.1.0" }
 async-broadcast = "0.7.2"
 mlua = { version = "0.9.9", default-features = false, features = ["lua54", "vendored", "send", "async"] }
+tokio = { version = "1.48.0", features = ["macros", "rt", "time"] }
 
 [dependencies.windows]
 version = "0.59"

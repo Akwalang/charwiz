@@ -40,7 +40,7 @@ impl HotkeyDetector {
 
     let this = Arc::clone(self);
 
-    async_std::task::spawn(async move {
+    tokio::task::spawn_local(async move {
       while let Ok(event) = input_rx.recv().await {
         this.process_event(event);
       }

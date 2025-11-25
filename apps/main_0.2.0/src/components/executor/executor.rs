@@ -9,6 +9,7 @@ use crate::components::state::State;
 use crate::components::event_hub::EventHub;
 use crate::components::transformers::Transformer;
 
+use crate::common::enums::ExecutorType;
 use crate::common::events::CommandEvent;
 
 pub struct Executor {
@@ -18,7 +19,7 @@ pub struct Executor {
   state: Arc<Mutex<State>>,
   event_hub: Arc<EventHub>,
 
-  transformers: Vec<Box<dyn Transformer + Send + Sync>>,
+  transformers: Vec<Box<dyn Transformer>>,
 }
 
 impl Executor {
@@ -27,15 +28,9 @@ impl Executor {
     settings: &'static Settings,
     state: Arc<Mutex<State>>,
     event_hub: Arc<EventHub>,
-    transformers: Vec<Box<dyn Transformer + Send + Sync>>,
+    transformers: Vec<Box<dyn Transformer>>,
   ) -> Arc<Self> {
-    Arc::new(Executor {
-      platform,
-      settings,
-      state: state,
-      event_hub: event_hub,
-      transformers,
-    })
+    Arc::new(Executor { platform, settings, state, event_hub, transformers })
   }
 
   pub fn init(self: &Arc<Self>) {
@@ -49,7 +44,7 @@ impl Executor {
 
     let this = Arc::clone(self);
 
-    async_std::task::spawn(async move {
+    tokio::task::spawn_local(async move {
       while let Ok(event) = command_rx.recv().await {
         this.process_event(event);
       }
@@ -57,11 +52,15 @@ impl Executor {
   }
 
   fn process_event(self: &Arc<Self>, event: CommandEvent) {
-    for tfr in self.transformers.iter() {
-      if *tfr.get_type() != event.executor.r#type {
-        println!("Executor type: {:?}", tfr.get_type());
-        continue;
-      }
-    }
+    let Some(tfr) = self.get_transformer(&event.executor.r#type) else {
+      warn!("<$>Executor</>: Transformer not found: type={}", event.executor.r#type);
+      return;
+    };
+
+    log!("<$>Executor</>: Apply transformer: <i&>{}</>", tfr.get_type());
+  }
+
+  fn get_transformer(&self, r#type: &ExecutorType) -> Option<&Box<dyn Transformer>> {
+    self.transformers.iter().find(|tfr| tfr.get_type() == r#type)
   }
 }
