@@ -39,15 +39,15 @@ impl MainSettings {
   fn read_file() -> anyhow::Result<String> {
     let src = MAIN_SETTINGS_FILE;
 
-    log!("<$>Settings::Custom</>: Loading custom settings: <i&>{}</>", src);
+    log!("<$>Settings::MainSettings</>: Loading main settings: <i&>{}</>", src);
 
     let path = Path::new(&src);
 
     let content = fs::read_to_string(&path);
 
     if let Err(e) = content {
-      error!("<$>Settings::Custom</>: Failed to load custom settings: <i&>{}</>", src);
-      error!("<$>Settings::Custom</>: Error: <i&>{}</>", e.to_string());
+      error!("<$>Settings::MainSettings</>: Failed to load main settings: <i&>{}</>", src);
+      error!("<$>Settings::MainSettings</>: Error: <i&>{}</>", e.to_string());
 
       Err(anyhow::anyhow!(e.to_string()))
     } else {
@@ -59,7 +59,7 @@ impl MainSettings {
     let items = serde_json::from_str::<SettingsRaw>(&content);
 
     if let Err(e) = items {
-      error!("<$>Settings::Custom</>: Invalid custom settings JSON: {}\n<i&>{}</>", e, content);
+      error!("<$>Settings::MainSettings</>: Invalid main settings JSON: {}\n<i&>{}</>", e, content);
       return Err(anyhow::anyhow!(e.to_string()));
     }
 

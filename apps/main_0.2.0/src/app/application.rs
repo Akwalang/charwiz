@@ -5,13 +5,14 @@ use rust_logger::*;
 use crate::platform::Platform;
 use crate::settings::Settings;
 
-use crate::components::{
-  event_hub::EventHub,
-  controllers::UserInputController,
-  detectors::{AutoConvertDetector, CommandDetector, HotkeyDetector},
-  executor::Executor,
-  state::State,
-};
+use crate::components::state::State;
+use crate::components::event_hub::EventHub;
+
+use crate::components::controllers::UserInputController;
+use crate::components::detectors::{AutoConvertDetector, CommandDetector, HotkeyDetector};
+use crate::components::transformers::{NativeTransformer, PluginTransformer, StaticTransformer};
+
+use crate::components::executor::Executor;
 
 pub struct Application {
   platform: &'static Platform,
@@ -44,7 +45,27 @@ impl Application {
     CommandDetector::new(self.settings, state.clone(), event_hub.clone()).init();
     HotkeyDetector::new(self.settings, state.clone(), event_hub.clone()).init();
 
-    Executor::new(state, event_hub).init();
+    let mut native_transformer = NativeTransformer::new(self.platform, self.settings);
+    let mut plugin_transformer = PluginTransformer::new(self.platform, self.settings);
+    let mut static_transformer = StaticTransformer::new(self.platform, self.settings);
+
+    native_transformer.init();
+    plugin_transformer.init();
+    static_transformer.init();
+
+    let executor = Executor::new(
+      self.platform,
+      self.settings,
+      state.clone(),
+      event_hub.clone(),
+      vec![
+        Box::new(native_transformer),
+        // Box::new(plugin_transformer),
+        Box::new(static_transformer),
+      ],
+    );
+
+    executor.init();
 
     log!("<$>Application</>: Ready");
 

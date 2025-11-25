@@ -54,11 +54,14 @@ impl AutoConvertDetector {
 
     for converter in converters {
       if str.ends_with(&converter.text) {
-        let converter = CommandEvent {
+        let executor = converter.executor.clone();
+        
+        let command = CommandEvent {
           command: CommandData::AutoConvert(Box::new(converter)),
+          executor,
         };
 
-        self.event_hub.publish_command(converter).ok();
+        self.event_hub.publish_command(command).ok();
       }
     }
   }

@@ -16,6 +16,5 @@ pub use timings::Timings;
 mod tooltip;
 pub use tooltip::Tooltip;
 
-
 mod settings;
 pub use settings::{SettingsRaw, Settings};

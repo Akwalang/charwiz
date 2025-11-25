@@ -94,8 +94,11 @@ impl HotkeyDetector {
 
     log!("<$>HotKeyDetector</>: Executor: {:?}", hot_key.executor);
 
+    let executor = hot_key.executor.clone();
+
     let command = CommandEvent {
       command: CommandData::HotKey(Box::new(hot_key.clone())),
+      executor,
     };
 
     self.event_hub.publish_command(command).ok();

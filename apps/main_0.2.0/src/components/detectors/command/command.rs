@@ -54,8 +54,11 @@ impl CommandDetector {
 
     for command in commands {
       if str.ends_with(&command.cmd) {
+        let executor = command.executor.clone();
+
         let command = CommandEvent {
           command: CommandData::Command(Box::new(command)),
+          executor,
         };
 
         self.event_hub.publish_command(command).ok();

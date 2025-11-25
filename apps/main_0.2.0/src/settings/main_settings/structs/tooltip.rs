@@ -2,6 +2,7 @@ use serde::Deserialize;
 
 use crate::common::enums::{TooltipType, TransformTarget};
 use crate::settings::main_settings::structs::executor::Executor;
+use crate::common::enums::InsertMethod;
 
 #[derive(Debug, Deserialize)]
 pub struct Tooltip {
@@ -14,5 +15,6 @@ pub struct TooltipItem {
   pub r#type: TooltipType,
   pub label: String,
   pub target: TransformTarget,
+  pub method: InsertMethod,
   pub executor: Executor,
 }

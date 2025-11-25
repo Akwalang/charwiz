@@ -67,17 +67,29 @@
     {
       "text": "сфкпщ",
       "method": "type",
-      "layout": "en-US"
+      "layout": "en-US",
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      }
     },
     {
       "text": "вщслук",
       "method": "type",
-      "layout": "en-US"
+      "layout": "en-US",
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      }
     },
     {
       "text": "нфкт",
       "method": "type",
-      "layout": "en-US"
+      "layout": "en-US",
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      }
     }
   ],
   "hotkeys": [
@@ -87,6 +99,7 @@
         "modifiers": ["ControlLeft", "ShiftLeft", "Alt"]
       },
       "target": "input",
+      "method": "type",
       "executor": {
         "type": "native",
         "value": "convert_layout"
@@ -98,6 +111,7 @@
         "modifiers": ["ControlLeft", "ShiftLeft", "Alt"]
       },
       "target": "input",
+      "method": "type",
       "executor": {
         "type": "native",
         "value": "convert_layout"
@@ -130,6 +144,7 @@
           "type": "option",
           "label": "to text",
           "target": "selection",
+          "method": "type",
           "executor": {
             "type": "plugin",
             "value": "to_text_case"
@@ -139,6 +154,7 @@
           "type": "option",
           "label": "to snake case",
           "target": "selection",
+          "method": "type",
           "executor": {
             "type": "plugin",
             "value": "to_snake_case"
@@ -148,6 +164,7 @@
           "type": "option",
           "label": "to pascal case",
           "target": "selection",
+          "method": "type",
           "executor": {
             "type": "plugin",
             "value": "to_pascal_case"
@@ -157,6 +174,7 @@
           "type": "option",
           "label": "to camel case",
           "target": "selection",
+          "method": "type",
           "executor": {
             "type": "plugin",
             "value": "to_camel_case"
@@ -166,6 +184,7 @@
           "type": "option",
           "label": "to kebab case",
           "target": "selection",
+          "method": "type",
           "executor": {
             "type": "plugin",
             "value": "to_kebab_case"

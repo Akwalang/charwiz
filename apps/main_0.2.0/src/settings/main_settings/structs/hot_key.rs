@@ -4,6 +4,7 @@ use crate::common::enums::TransformTarget;
 use crate::common::structs::KeyboardEventSnapshot;
 
 use crate::settings::main_settings::structs::Executor;
+use crate::common::enums::InsertMethod;
 
 use crate::utils::{str_to_key, str_to_modifier};
 
@@ -11,6 +12,7 @@ use crate::utils::{str_to_key, str_to_modifier};
 pub struct HotkeyRaw {
   pub keys: HotkeyKeysRaw,
   pub target: TransformTarget,
+  pub method: InsertMethod,
   pub executor: Executor,
 }
 
@@ -24,6 +26,7 @@ pub struct HotkeyKeysRaw {
 pub struct HotKey {
   pub keys: KeyboardEventSnapshot,
   pub target: TransformTarget,
+  pub method: InsertMethod,
   pub executor: Executor,
 }
 
@@ -42,6 +45,7 @@ impl Into<HotKey> for HotkeyRaw {
     HotKey {
       keys: KeyboardEventSnapshot{ key, modifiers },
       target: self.target,
+      method: self.method,
       executor: self.executor,
     }
   }

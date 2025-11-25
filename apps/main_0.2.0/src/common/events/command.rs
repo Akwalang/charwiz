@@ -1,4 +1,4 @@
-use crate::settings::structs::{AutoConvert, Command, HotKey};
+use crate::settings::structs::{AutoConvert, Command, HotKey, Executor};
 
 #[derive(Debug, Clone)]
 pub enum CommandData {
@@ -10,4 +10,5 @@ pub enum CommandData {
 #[derive(Debug, Clone)]
 pub struct CommandEvent {
   pub command: CommandData,
+  pub executor: Executor,
 }
