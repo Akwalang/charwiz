@@ -10,7 +10,7 @@ use crate::components::transformers::Transformer;
 use crate::Platform;
 use crate::Settings;
 
-use crate::common::enums::ExecutorType;
+use crate::common::enums::ExecutorTypeEnum;
 use crate::common::events::CommandEvent;
 
 use crate::constants::PLUGINS_FOLDER;
@@ -19,13 +19,13 @@ pub struct PluginTransformer {
   platform: &'static Platform,
   settings: &'static Settings,
 
-  r#type: ExecutorType,
+  r#type: ExecutorTypeEnum,
   lua: Option<Lua>,
 }
 
 impl PluginTransformer {
   pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
-    PluginTransformer { platform, settings, r#type: ExecutorType::Plugin, lua: None }
+    PluginTransformer { platform, settings, r#type: ExecutorTypeEnum::Plugin, lua: None }
   }
 
   pub fn init(&mut self) {
@@ -80,11 +80,15 @@ impl PluginTransformer {
 }
 
 impl Transformer for PluginTransformer {
-  fn get_type(&self) -> &ExecutorType {
+  fn get_type(&self) -> &ExecutorTypeEnum {
     &self.r#type
   }
 
-  fn apply(&self, event: CommandEvent) {
-    println!("PluginTransformer: {:?}", event);
+  fn transform(&self, event: &CommandEvent) -> String {
+    let result = String::from("Plugin result");
+
+    log!("<$>PluginTransformer</>: Result: <i+>{}</>", result);
+
+    result
   }
 }

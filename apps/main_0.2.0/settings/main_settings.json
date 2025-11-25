@@ -66,29 +66,38 @@
   "autoConverts": [
     {
       "text": "сфкпщ",
-      "method": "type",
-      "layout": "en-US",
       "executor": {
         "type": "native",
         "value": "convert_layout"
+      },
+      "injector": {
+        "target": "input",
+        "method": "type",
+        "layout": "en-US"
       }
     },
     {
       "text": "вщслук",
-      "method": "type",
-      "layout": "en-US",
       "executor": {
         "type": "native",
         "value": "convert_layout"
+      },
+      "injector": {
+        "target": "input",
+        "method": "type",
+        "layout": "en-US"
       }
     },
     {
       "text": "нфкт",
-      "method": "type",
-      "layout": "en-US",
       "executor": {
         "type": "native",
         "value": "convert_layout"
+      },
+      "injector": {
+        "target": "input",
+        "method": "type",
+        "layout": "en-US"
       }
     }
   ],
@@ -98,11 +107,14 @@
         "key": null,
         "modifiers": ["ControlLeft", "ShiftLeft", "Alt"]
       },
-      "target": "input",
-      "method": "type",
       "executor": {
         "type": "native",
         "value": "convert_layout"
+      },
+      "injector": {
+        "target": "input",
+        "method": "type",
+        "layout": "next"
       }
     },
     {
@@ -110,29 +122,40 @@
         "key": "KeyZ",
         "modifiers": ["ControlLeft", "ShiftLeft", "Alt"]
       },
-      "target": "input",
-      "method": "type",
       "executor": {
         "type": "native",
         "value": "convert_layout"
+      },
+      "injector": {
+        "target": "input",
+        "method": "type",
+        "layout": "current"
       }
     }
   ],
   "commands": [
     {
       "cmd": ":uuid",
-      "method": "paste",
       "executor": {
         "type": "plugin",
         "value": "random_uuid"
+      },
+      "injector": {
+        "target": "input",
+        "method": "paste",
+        "layout": "current"
       }
     },
     {
       "cmd": "ёёё",
-      "method": "type",
       "executor": {
         "type": "static",
         "value": "```"
+      },
+      "injector": {
+        "target": "input",
+        "method": "type",
+        "layout": "current"
       }
     }
   ],
@@ -141,53 +164,78 @@
       "id": "paste_convert",
       "items": [
         {
-          "type": "option",
-          "label": "to text",
-          "target": "selection",
-          "method": "type",
+          "settings": {
+            "type": "option",
+            "label": "to text"
+          },
           "executor": {
             "type": "plugin",
             "value": "to_text_case"
+          },
+          "injector": {
+            "target": "selection",
+            "method": "paste",
+            "layout": "current"
           }
         },
         {
-          "type": "option",
-          "label": "to snake case",
-          "target": "selection",
-          "method": "type",
+          "settings": {
+            "type": "option",
+            "label": "to snake case"
+          },
           "executor": {
             "type": "plugin",
             "value": "to_snake_case"
+          },
+          "injector": {
+            "target": "selection",
+            "method": "paste",
+            "layout": "current"
           }
         },
         {
-          "type": "option",
-          "label": "to pascal case",
-          "target": "selection",
-          "method": "type",
+          "settings": {
+            "type": "option",
+            "label": "to pascal case"
+          },
           "executor": {
             "type": "plugin",
             "value": "to_pascal_case"
+          },
+          "injector": {
+            "target": "selection",
+            "method": "paste",
+            "layout": "current"
           }
         },
         {
-          "type": "option",
-          "label": "to camel case",
-          "target": "selection",
-          "method": "type",
+          "settings": {
+            "type": "option",
+            "label": "to camel case"
+          },
           "executor": {
             "type": "plugin",
             "value": "to_camel_case"
+          },
+          "injector": {
+            "target": "selection",
+            "method": "paste",
+            "layout": "current"
           }
         },
         {
-          "type": "option",
-          "label": "to kebab case",
-          "target": "selection",
-          "method": "type",
+          "settings": {
+            "type": "option",
+            "label": "to kebab case"
+          },
           "executor": {
             "type": "plugin",
             "value": "to_kebab_case"
+          },
+          "injector": {
+            "target": "selection",
+            "method": "paste",
+            "layout": "current"
           }
         }
       ]

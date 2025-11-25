@@ -13,6 +13,7 @@ use crate::components::detectors::{AutoConvertDetector, CommandDetector, HotkeyD
 use crate::components::transformers::{NativeTransformer, PluginTransformer, StaticTransformer};
 
 use crate::components::executor::Executor;
+use crate::components::injector::Injector;
 
 pub struct Application {
   platform: &'static Platform,
@@ -53,6 +54,8 @@ impl Application {
     plugin_transformer.init();
     static_transformer.init();
 
+    let injector = Injector::new();
+
     let executor = Executor::new(
       self.platform,
       self.settings,
@@ -63,6 +66,7 @@ impl Application {
         Box::new(plugin_transformer),
         Box::new(static_transformer),
       ],
+      injector,
     );
 
     executor.init();

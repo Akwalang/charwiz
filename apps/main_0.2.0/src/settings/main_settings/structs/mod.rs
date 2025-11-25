@@ -7,6 +7,9 @@ pub use command::Command;
 mod executor;
 pub use executor::Executor;
 
+mod injector;
+pub use injector::Injector;
+
 mod hot_key;
 pub use hot_key::{HotkeyRaw, HotKey};
 

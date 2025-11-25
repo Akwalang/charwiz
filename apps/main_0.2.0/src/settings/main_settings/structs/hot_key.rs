@@ -1,19 +1,16 @@
 use serde::Deserialize;
 
-use crate::common::enums::TransformTarget;
 use crate::common::structs::KeyboardEventSnapshot;
 
-use crate::settings::main_settings::structs::Executor;
-use crate::common::enums::InsertMethod;
+use crate::settings::main_settings::structs::{Executor, Injector};
 
 use crate::utils::{str_to_key, str_to_modifier};
 
 #[derive(Debug, Deserialize)]
 pub struct HotkeyRaw {
   pub keys: HotkeyKeysRaw,
-  pub target: TransformTarget,
-  pub method: InsertMethod,
   pub executor: Executor,
+  pub injector: Injector,
 }
 
 #[derive(Debug, Deserialize)]
@@ -25,9 +22,8 @@ pub struct HotkeyKeysRaw {
 #[derive(Debug, Clone)]
 pub struct HotKey {
   pub keys: KeyboardEventSnapshot,
-  pub target: TransformTarget,
-  pub method: InsertMethod,
   pub executor: Executor,
+  pub injector: Injector,
 }
 
 impl Into<HotKey> for HotkeyRaw {
@@ -44,9 +40,8 @@ impl Into<HotKey> for HotkeyRaw {
 
     HotKey {
       keys: KeyboardEventSnapshot{ key, modifiers },
-      target: self.target,
-      method: self.method,
       executor: self.executor,
+      injector: self.injector,
     }
   }
 }

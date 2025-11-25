@@ -8,7 +8,7 @@ use crate::settings::Settings;
 use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
-use crate::common::events::{CommandData, CommandEvent, InputEvent};
+use crate::common::events::{CommandEvent, InputEvent};
 
 pub struct CommandDetector {
   settings: &'static Settings,
@@ -53,16 +53,16 @@ impl CommandDetector {
     let commands = self.settings.get_commands();
 
     for command in commands {
-      if str.ends_with(&command.cmd) {
-        let executor = command.executor.clone();
+      if !str.ends_with(&command.cmd) { continue; }
 
-        let command = CommandEvent {
-          command: CommandData::Command(Box::new(command)),
-          executor,
-        };
+      let executor = command.executor.clone();
+      let injector = command.injector.clone();
 
-        self.event_hub.publish_command(command).ok();
-      }
+      let command = CommandEvent { executor, injector };
+
+      self.event_hub.publish_command(command).ok();
+
+      break;
     }
   }
 }

@@ -8,7 +8,7 @@ use crate::settings::Settings;
 use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
-use crate::common::events::{InputEvent, CommandEvent, CommandData};
+use crate::common::events::{InputEvent, CommandEvent};
 
 pub struct AutoConvertDetector {
   settings: &'static Settings,
@@ -53,16 +53,16 @@ impl AutoConvertDetector {
     let converters = self.settings.get_auto_converters();
 
     for converter in converters {
-      if str.ends_with(&converter.text) {
-        let executor = converter.executor.clone();
-        
-        let command = CommandEvent {
-          command: CommandData::AutoConvert(Box::new(converter)),
-          executor,
-        };
+      if !str.ends_with(&converter.text) { continue; }
 
-        self.event_hub.publish_command(command).ok();
-      }
+      let executor = converter.executor.clone();
+      let injector = converter.injector.clone();
+      
+      let command = CommandEvent { executor, injector };
+
+      self.event_hub.publish_command(command).ok();
+
+      break;
     }
   }
 }

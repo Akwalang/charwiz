@@ -5,19 +5,19 @@ use crate::Settings;
 
 use crate::components::transformers::Transformer;
 
-use crate::common::enums::ExecutorType;
+use crate::common::enums::ExecutorTypeEnum;
 use crate::common::events::CommandEvent;
 
 pub struct StaticTransformer {
   platform: &'static Platform,
   settings: &'static Settings,
 
-  r#type: ExecutorType,
+  r#type: ExecutorTypeEnum,
 }
 
 impl StaticTransformer {
   pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
-    Self { platform, settings, r#type: ExecutorType::Static }
+    Self { platform, settings, r#type: ExecutorTypeEnum::Static }
   }
 
   pub fn init(&mut self) {
@@ -26,11 +26,15 @@ impl StaticTransformer {
 }
 
 impl Transformer for StaticTransformer {
-  fn get_type(&self) -> &ExecutorType {
+  fn get_type(&self) -> &ExecutorTypeEnum {
     &self.r#type
   }
 
-  fn apply(&self, event: CommandEvent) {
-    println!("StaticTransformer: {:?}", event);
+  fn transform(&self, event: &CommandEvent) -> String {
+    let result = String::from("Static result");
+
+    log!("<$>StaticTransformer</>: Result: <i+>{}</>", result);
+
+    result
   }
 }

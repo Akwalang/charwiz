@@ -8,7 +8,7 @@ use crate::components::state::State;
 
 use crate::settings::{Settings, structs::HotKey};
 
-use crate::common::events::{CommandData, CommandEvent, InputEvent};
+use crate::common::events::{CommandEvent, InputEvent};
 use crate::common::structs::KeyboardEventSnapshot;
 
 pub struct HotkeyDetector {
@@ -92,14 +92,10 @@ impl HotkeyDetector {
       return;
     };
 
-    log!("<$>HotKeyDetector</>: Executor: {:?}", hot_key.executor);
-
     let executor = hot_key.executor.clone();
+    let injector = hot_key.injector.clone();
 
-    let command = CommandEvent {
-      command: CommandData::HotKey(Box::new(hot_key.clone())),
-      executor,
-    };
+    let command = CommandEvent { executor, injector };
 
     self.event_hub.publish_command(command).ok();
 

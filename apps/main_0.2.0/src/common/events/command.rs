@@ -1,14 +1,7 @@
-use crate::settings::structs::{AutoConvert, Command, HotKey, Executor};
-
-#[derive(Debug, Clone)]
-pub enum CommandData {
-  AutoConvert(Box<AutoConvert>),
-  Command(Box<Command>),
-  HotKey(Box<HotKey>),
-}
+use crate::settings::structs::{Executor, Injector};
 
 #[derive(Debug, Clone)]
 pub struct CommandEvent {
-  pub command: CommandData,
   pub executor: Executor,
+  pub injector: Injector,
 }

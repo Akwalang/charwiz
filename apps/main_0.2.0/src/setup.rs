@@ -8,6 +8,7 @@ fn setup_logger() {
     alias!("$", "purple,i");
     alias!("!", "yellow");
     alias!("+", "green");
+    alias!("i+", "green,i");
     alias!("-", "red");
     alias!("&", "cyan");
     alias!("i&", "cyan,i");

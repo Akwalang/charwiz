@@ -114,7 +114,7 @@ impl KeyboardState {
 
     self.event_stack.push(KeyboardEventSnapshot::new(Some(key), self.modifiers));
 
-    println!("Stack: {:?}", self.char_stack.iter().collect::<String>());
+    // println!("Stack: {:?}", self.char_stack.iter().collect::<String>());
   }
 
   fn stack_pop(&mut self) {

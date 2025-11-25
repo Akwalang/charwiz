@@ -5,19 +5,19 @@ use crate::Settings;
 
 use crate::components::transformers::Transformer;
 
-use crate::common::enums::ExecutorType;
+use crate::common::enums::ExecutorTypeEnum;
 use crate::common::events::CommandEvent;
 
 pub struct NativeTransformer {
   platform: &'static Platform,
   settings: &'static Settings,
 
-  r#type: ExecutorType,
+  r#type: ExecutorTypeEnum,
 }
 
 impl NativeTransformer {
   pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
-    Self { platform, settings, r#type: ExecutorType::Native }
+    Self { platform, settings, r#type: ExecutorTypeEnum::Native }
   }
 
   pub fn init(&mut self) {
@@ -26,11 +26,15 @@ impl NativeTransformer {
 }
 
 impl Transformer for NativeTransformer {
-  fn get_type(&self) -> &ExecutorType {
+  fn get_type(&self) -> &ExecutorTypeEnum {
     &self.r#type
   }
 
-  fn apply(&self, event: CommandEvent) {
-    println!("NativeTransformer: {:?}", event);
+  fn transform(&self, event: &CommandEvent) -> String {
+    let result = String::from("Native result");
+
+    log!("<$>NativeTransformer</>: Result: <i+>{}</>", result);
+
+    result
   }
 }

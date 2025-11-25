@@ -8,8 +8,9 @@ use crate::Settings;
 use crate::components::state::State;
 use crate::components::event_hub::EventHub;
 use crate::components::transformers::Transformer;
+use crate::components::injector::Injector;
 
-use crate::common::enums::ExecutorType;
+use crate::common::enums::ExecutorTypeEnum;
 use crate::common::events::CommandEvent;
 
 pub struct Executor {
@@ -20,6 +21,7 @@ pub struct Executor {
   event_hub: Arc<EventHub>,
 
   transformers: Vec<Box<dyn Transformer>>,
+  injector: Injector,
 }
 
 impl Executor {
@@ -29,8 +31,9 @@ impl Executor {
     state: Arc<Mutex<State>>,
     event_hub: Arc<EventHub>,
     transformers: Vec<Box<dyn Transformer>>,
+    injector: Injector,
   ) -> Arc<Self> {
-    Arc::new(Executor { platform, settings, state, event_hub, transformers })
+    Arc::new(Executor { platform, settings, state, event_hub, transformers, injector })
   }
 
   pub fn init(self: &Arc<Self>) {
@@ -46,21 +49,23 @@ impl Executor {
 
     tokio::task::spawn_local(async move {
       while let Ok(event) = command_rx.recv().await {
-        this.process_event(event);
+        this.process_event(event).await;
       }
     });
   }
 
-  fn process_event(self: &Arc<Self>, event: CommandEvent) {
+  async fn process_event(self: &Arc<Self>, event: CommandEvent) {
     let Some(tfr) = self.get_transformer(&event.executor.r#type) else {
       warn!("<$>Executor</>: Transformer not found: type={}", event.executor.r#type);
       return;
     };
 
-    log!("<$>Executor</>: Apply transformer: <i&>{}</>", tfr.get_type());
+    let result = tfr.transform(&event);
+
+    self.injector.inject(event, result).await;
   }
 
-  fn get_transformer(&self, r#type: &ExecutorType) -> Option<&Box<dyn Transformer>> {
+  fn get_transformer(&self, r#type: &ExecutorTypeEnum) -> Option<&Box<dyn Transformer>> {
     self.transformers.iter().find(|tfr| tfr.get_type() == r#type)
   }
 }

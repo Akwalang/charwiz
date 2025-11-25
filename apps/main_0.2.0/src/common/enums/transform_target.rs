@@ -2,7 +2,8 @@ use serde::Deserialize;
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "lowercase")]
-pub enum TransformTarget {
+pub enum TransformTargetEnum {
+  Command,
   Input,
   Clipboard,
   Selection,
