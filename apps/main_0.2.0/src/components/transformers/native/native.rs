@@ -30,7 +30,7 @@ impl Transformer for NativeTransformer {
     &self.r#type
   }
 
-  fn transform(&self, event: &CommandEvent) -> String {
+  fn transform(&self, event: &CommandEvent, target: &str) -> String {
     let result = String::from("Native result");
 
     log!("<$>NativeTransformer</>: Result: <i+>{}</>", result);

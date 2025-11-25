@@ -127,7 +127,22 @@
         "value": "convert_layout"
       },
       "injector": {
-        "target": "input",
+        "target": "selection",
+        "method": "type",
+        "layout": "current"
+      }
+    },
+    {
+      "keys": {
+        "key": null,
+        "modifiers": ["ControlLeft", "ShiftLeft", "MetaLeft"]
+      },
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      },
+      "injector": {
+        "target": "selection",
         "method": "type",
         "layout": "current"
       }
@@ -141,7 +156,7 @@
         "value": "random_uuid"
       },
       "injector": {
-        "target": "input",
+        "target": "none",
         "method": "paste",
         "layout": "current"
       }
@@ -153,8 +168,8 @@
         "value": "```"
       },
       "injector": {
-        "target": "input",
-        "method": "type",
+        "target": "none",
+        "method": "paste",
         "layout": "current"
       }
     }

@@ -3,5 +3,5 @@ use crate::common::events::CommandEvent;
 
 pub trait Transformer {
   fn get_type(&self) -> &ExecutorTypeEnum;
-  fn transform(&self, event: &CommandEvent) -> String;
+  fn transform(&self, event: &CommandEvent, target: &str) -> String;
 }

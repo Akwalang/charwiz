@@ -30,8 +30,8 @@ impl Transformer for StaticTransformer {
     &self.r#type
   }
 
-  fn transform(&self, event: &CommandEvent) -> String {
-    let result = String::from("Static result");
+  fn transform(&self, event: &CommandEvent, _target: &str) -> String {
+    let result = event.executor.value.to_owned();
 
     log!("<$>StaticTransformer</>: Result: <i+>{}</>", result);
 

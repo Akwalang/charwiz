@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, MutexGuard};
 
 use rust_logger::*;
 use rdev::EventType;
@@ -56,7 +56,7 @@ impl HotkeyDetector {
     let mut cap = self.captured_keys.lock().unwrap();
 
     if Self::is_event_ready(&cur, &cap) {
-      self.publish_command(&mut cap);
+      self.publish_command(state, &mut cap);
     } else {
       self.check_hotkeys(&cur, &mut cap);
     }
@@ -86,16 +86,19 @@ impl HotkeyDetector {
     }
   }
 
-  fn publish_command(&self, cap: &mut Option<HotKey>) {
+  fn publish_command(&self, state: MutexGuard<'_, State>, cap: &mut Option<HotKey>) {
     let Some(hot_key) = cap else {
       error!("Unexpected empty captured hotkey");
       return;
     };
 
+    let char_stack = state.keyboard.char_stack.clone();
+    let event_stack = state.keyboard.event_stack.clone();
+
     let executor = hot_key.executor.clone();
     let injector = hot_key.injector.clone();
 
-    let command = CommandEvent { executor, injector };
+    let command = CommandEvent { char_stack, event_stack, executor, injector };
 
     self.event_hub.publish_command(command).ok();
 

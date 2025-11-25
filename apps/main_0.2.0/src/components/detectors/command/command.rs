@@ -55,10 +55,13 @@ impl CommandDetector {
     for command in commands {
       if !str.ends_with(&command.cmd) { continue; }
 
+      let char_stack = state.keyboard.char_stack.clone();
+      let event_stack = state.keyboard.event_stack.clone();
+
       let executor = command.executor.clone();
       let injector = command.injector.clone();
 
-      let command = CommandEvent { executor, injector };
+      let command = CommandEvent { char_stack, event_stack, executor, injector };
 
       self.event_hub.publish_command(command).ok();
 

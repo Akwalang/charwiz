@@ -10,7 +10,7 @@ use crate::components::event_hub::EventHub;
 use crate::components::transformers::Transformer;
 use crate::components::injector::Injector;
 
-use crate::common::enums::ExecutorTypeEnum;
+use crate::common::enums::{TransformTargetEnum, ExecutorTypeEnum};
 use crate::common::events::CommandEvent;
 
 pub struct Executor {
@@ -60,12 +60,23 @@ impl Executor {
       return;
     };
 
-    let result = tfr.transform(&event);
+    let target = self.get_transform_value(&event).await;
+
+    let result = tfr.transform(&event, &target);
 
     self.injector.inject(event, result).await;
   }
 
   fn get_transformer(&self, r#type: &ExecutorTypeEnum) -> Option<&Box<dyn Transformer>> {
     self.transformers.iter().find(|tfr| tfr.get_type() == r#type)
+  }
+
+  async fn get_transform_value(&self, event: &CommandEvent) -> String {
+    let target = &event.injector.target;
+
+    match target {
+      TransformTargetEnum::None => String::from(""),
+      _ => String::from(""),
+    }
   }
 }

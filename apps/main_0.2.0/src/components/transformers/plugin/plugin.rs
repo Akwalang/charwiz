@@ -84,7 +84,7 @@ impl Transformer for PluginTransformer {
     &self.r#type
   }
 
-  fn transform(&self, event: &CommandEvent) -> String {
+  fn transform(&self, event: &CommandEvent, target: &str) -> String {
     let result = String::from("Plugin result");
 
     log!("<$>PluginTransformer</>: Result: <i+>{}</>", result);
