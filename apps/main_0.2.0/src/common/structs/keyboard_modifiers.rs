@@ -4,6 +4,7 @@ use rdev::Key;
 pub struct KeyboardModifiers(pub u8);
 
 impl KeyboardModifiers {
+  #[allow(dead_code)]
   pub const NONE: u8 = 0;
 
   pub const CONTROL_LEFT: u8 = 1 << 0;
@@ -16,11 +17,12 @@ impl KeyboardModifiers {
   pub const META_RIGHT: u8 = 1 << 7;
 
   pub const CONTROL_ANY: u8 = Self::CONTROL_LEFT | Self::CONTROL_RIGHT;
+  #[allow(dead_code)]
   pub const SHIFT_ANY: u8 = Self::SHIFT_LEFT | Self::SHIFT_RIGHT;
 
   #[inline(always)]
-  pub fn new() -> Self {
-    KeyboardModifiers(Self::NONE)
+  pub fn new(state: u8) -> Self {
+    KeyboardModifiers(state)
   }
 
   pub fn add_key(&mut self, key: &Key) {
@@ -138,7 +140,6 @@ impl Iterator for KeyboardModifiersIter {
   }
 }
 
-// Реализуем IntoIterator для удобства
 impl IntoIterator for KeyboardModifiers {
   type Item = Key;
   type IntoIter = KeyboardModifiersIter;

@@ -141,7 +141,7 @@
       },
       "injector": {
         "target": "selection",
-        "method": "type",
+        "method": "paste",
         "layout": "current"
       }
     }
@@ -155,8 +155,8 @@
       },
       "injector": {
         "target": "none",
-        "method": "paste",
-        "layout": "current"
+        "method": "type",
+        "layout": "en-US"
       }
     },
     {
@@ -168,7 +168,7 @@
       "injector": {
         "target": "none",
         "method": "paste",
-        "layout": "current"
+        "layout": "en-US"
       }
     }
   ],

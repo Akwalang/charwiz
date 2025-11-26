@@ -5,7 +5,11 @@ use rust_logger::*;
 mod keyboard_layouts;
 use keyboard_layouts::KeyboardLayouts;
 
+mod clipboard;
+use clipboard::Clipboard;
+
 pub struct Platform {
+  pub clipboard: Mutex<Clipboard>,
   pub keyboard_layouts: Mutex<KeyboardLayouts>,
 }
 
@@ -14,6 +18,7 @@ impl Platform {
     let keyboard_layouts = KeyboardLayouts::new();
 
     Box::leak(Box::new(Platform {
+      clipboard: Mutex::new(Clipboard::new()),
       keyboard_layouts: Mutex::new(keyboard_layouts),
     }))
   }

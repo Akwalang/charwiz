@@ -46,7 +46,7 @@ where
  
   let list = maybe_list.unwrap_or_default();
  
-  let mut result = KeyboardModifiers::new();
+  let mut result = KeyboardModifiers::default();
 
   for s in list {
     let Some(key) = str_to_modifier(&s) else {

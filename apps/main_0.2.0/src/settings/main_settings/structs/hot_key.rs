@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-use crate::common::structs::KeyboardEventSnapshot;
+use crate::common::structs::{KeyboardEventSnapshot, KeyboardModifiers};
 
 use crate::settings::main_settings::structs::{Executor, Injector};
 
@@ -30,7 +30,7 @@ impl Into<HotKey> for HotkeyRaw {
   fn into(self) -> HotKey {
     let key = self.keys.key.and_then(|key| str_to_key(&key));
 
-    let mut modifiers = crate::common::structs::KeyboardModifiers::new();
+    let mut modifiers = KeyboardModifiers::default();
 
     for mod_str in self.keys.modifiers {
       if let Some(key) = str_to_modifier(&mod_str) {

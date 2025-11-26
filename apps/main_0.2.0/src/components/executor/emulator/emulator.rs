@@ -1,5 +1,5 @@
 use tokio::time::{sleep, Duration};
-use rdev::{Key, EventType, simulate};
+use rdev::{EventType, simulate};
 
 use crate::settings::Settings;
 
@@ -12,29 +12,6 @@ pub struct Emulator {
 impl Emulator {
   pub fn new(settings: &'static Settings) -> Self {
     Self { settings }
-  }
-
-  pub async fn test(&self) -> anyhow::Result<()> {
-    self.run(
-      vec![
-        KeyboardEventSnapshot { key: Some(Key::KeyH), modifiers: KeyboardModifiers(KeyboardModifiers::SHIFT_LEFT) },
-        KeyboardEventSnapshot { key: Some(Key::KeyE), modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-        KeyboardEventSnapshot { key: Some(Key::KeyL), modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-        KeyboardEventSnapshot { key: Some(Key::KeyL), modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-        KeyboardEventSnapshot { key: Some(Key::KeyO), modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-        KeyboardEventSnapshot { key: Some(Key::Comma), modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-        KeyboardEventSnapshot { key: Some(Key::Space), modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-        KeyboardEventSnapshot { key: Some(Key::KeyW), modifiers: KeyboardModifiers(KeyboardModifiers::SHIFT_LEFT) },
-        KeyboardEventSnapshot { key: Some(Key::KeyO), modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-        KeyboardEventSnapshot { key: Some(Key::KeyR), modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-        KeyboardEventSnapshot { key: Some(Key::KeyL), modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-        KeyboardEventSnapshot { key: Some(Key::KeyD), modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-        KeyboardEventSnapshot { key: Some(Key::Num1), modifiers: KeyboardModifiers(KeyboardModifiers::SHIFT_LEFT) },
-        KeyboardEventSnapshot { key: None, modifiers: KeyboardModifiers(KeyboardModifiers::NONE) },
-      ],
-    ).await?;
-
-    Ok(())
   }
 
   pub async fn run(&self, pipeline: Vec<KeyboardEventSnapshot>) -> anyhow::Result<()> {

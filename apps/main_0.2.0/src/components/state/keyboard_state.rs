@@ -23,7 +23,7 @@ impl KeyboardState {
       settings,
 
       key: None,
-      modifiers: KeyboardModifiers::new(),
+      modifiers: KeyboardModifiers::default(),
 
       char_stack: Vec::with_capacity(20),
       event_stack: Vec::with_capacity(20),
