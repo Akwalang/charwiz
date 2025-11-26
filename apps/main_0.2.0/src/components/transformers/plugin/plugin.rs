@@ -66,13 +66,13 @@ impl PluginTransformer {
       let entry = entry?;
       let path = entry.path();
 
-      if path.extension().and_then(|s| s.to_str()) == Some("lua") {
-        log!("<$>PluginTransformer</>: Loading script: <i&>{}</>", path.to_str().unwrap().replace("\\", "/"));
+      if path.extension().and_then(|s| s.to_str()) != Some("lua") { continue; }
 
-        let script = fs::read_to_string(&path)?;
+      log!("<$>PluginTransformer</>: Loading script: <i&>{}</>", path.to_str().unwrap().replace("\\", "/"));
 
-        lua.load(&script).exec()?;
-      }
+      let script = fs::read_to_string(&path)?;
+
+      lua.load(&script).exec()?;
     }
 
     Ok(Some(lua))
