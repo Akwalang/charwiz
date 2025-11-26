@@ -8,6 +8,7 @@ use crate::Settings;
 use crate::components::state::State;
 use crate::components::event_hub::EventHub;
 use crate::components::transformers::Transformer;
+use crate::components::executor::emulator::Emulator;
 use crate::components::injector::Injector;
 
 use crate::common::enums::{TransformTargetEnum, ExecutorTypeEnum};
@@ -16,6 +17,8 @@ use crate::common::events::CommandEvent;
 pub struct Executor {
   platform: &'static Platform,
   settings: &'static Settings,
+
+  emulator: Emulator,
 
   state: Arc<Mutex<State>>,
   event_hub: Arc<EventHub>,
@@ -33,7 +36,9 @@ impl Executor {
     transformers: Vec<Box<dyn Transformer>>,
     injector: Injector,
   ) -> Arc<Self> {
-    Arc::new(Executor { platform, settings, state, event_hub, transformers, injector })
+    let emulator = Emulator::new(settings);
+
+    Arc::new(Executor { platform, settings, emulator, state, event_hub, transformers, injector })
   }
 
   pub fn init(self: &Arc<Self>) {
@@ -64,7 +69,9 @@ impl Executor {
 
     let result = tfr.transform(&event, &target);
 
-    self.injector.inject(event, result).await;
+    self.emulator.test().await;
+
+    // self.injector.inject(event, result).await;
   }
 
   fn get_transformer(&self, r#type: &ExecutorTypeEnum) -> Option<&Box<dyn Transformer>> {

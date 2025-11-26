@@ -11,6 +11,8 @@ pub struct KeyboardEventSnapshot {
 }
 
 impl KeyboardEventSnapshot {
+  pub const CAPACITY: usize = 9;
+
   pub fn new(key: Option<Key>, modifiers: KeyboardModifiers) -> Self {
     Self { key, modifiers }
   }
@@ -37,4 +39,3 @@ impl Ord for KeyboardEventSnapshot {
     self.len().cmp(&other.len())
   }
 }
-
