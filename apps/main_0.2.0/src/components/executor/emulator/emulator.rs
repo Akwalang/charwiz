@@ -21,11 +21,14 @@ impl Emulator {
 
     let delay = self.settings.main_settings.lock().unwrap().settings.timings.keyActionDelay;
 
-    for next in queue {
-      let pipeline = Self::snapshots_to_pipeline(current, next);
+    // +1 - because of field key can be some in 2 snapshots
+    let mut pipeline = Vec::<EventType>::with_capacity(1 + KeyboardEventSnapshot::CAPACITY);
 
-      for event in pipeline {
-        simulate(&event)?;
+    for next in queue {
+      Self::put_snapshots_into_pipeline(&mut pipeline, current, next);
+
+      for event in &pipeline {
+        simulate(event)?;
 
         sleep(Duration::from_nanos(delay)).await;
       }
@@ -36,12 +39,15 @@ impl Emulator {
     Ok(())
   }
 
-  fn snapshots_to_pipeline(before: &KeyboardEventSnapshot, after: &KeyboardEventSnapshot) -> Vec<EventType> {
+  fn put_snapshots_into_pipeline(
+    pipeline: &mut Vec<EventType>, // prevent reallocations
+    before: &KeyboardEventSnapshot,
+    after: &KeyboardEventSnapshot,
+  ) {
+    pipeline.clear();
+
     let release = KeyboardModifiers::compare_to_release(&before.modifiers, &after.modifiers);
     let press = KeyboardModifiers::compare_to_press(&before.modifiers, &after.modifiers);
-
-    // +1 - because of field key can be in 2 snapshots
-    let mut pipeline = Vec::<EventType>::with_capacity(1 + KeyboardEventSnapshot::CAPACITY);
 
     if before.key.is_some() {
       pipeline.push(EventType::KeyRelease(before.key.unwrap()));
@@ -58,7 +64,5 @@ impl Emulator {
     if after.key.is_some() {
       pipeline.push(EventType::KeyPress(after.key.unwrap()));
     }
-
-    pipeline
   }
 }

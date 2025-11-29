@@ -144,6 +144,96 @@
         "method": "paste",
         "layout": "current"
       }
+    },
+    {
+      "keys": {
+        "key": "KeyA",
+        "modifiers": ["ControlLeft", "Alt"]
+      },
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      },
+      "injector": {
+        "target": "all",
+        "method": "paste",
+        "layout": "current"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyW",
+        "modifiers": ["ControlLeft", "Alt"]
+      },
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      },
+      "injector": {
+        "target": "word",
+        "method": "paste",
+        "layout": "current"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyL",
+        "modifiers": ["ControlLeft", "Alt"]
+      },
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      },
+      "injector": {
+        "target": "line",
+        "method": "paste",
+        "layout": "current"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyS",
+        "modifiers": ["ControlLeft", "Alt"]
+      },
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      },
+      "injector": {
+        "target": "selection",
+        "method": "paste",
+        "layout": "current"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyI",
+        "modifiers": ["ControlLeft", "Alt"]
+      },
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      },
+      "injector": {
+        "target": "input",
+        "method": "paste",
+        "layout": "current"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyE",
+        "modifiers": ["ControlLeft", "Alt"]
+      },
+      "executor": {
+        "type": "native",
+        "value": "convert_layout"
+      },
+      "injector": {
+        "target": "events",
+        "method": "paste",
+        "layout": "current"
+      }
     }
   ],
   "commands": [

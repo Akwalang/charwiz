@@ -4,7 +4,6 @@ use rdev::Key;
 pub struct KeyboardModifiers(pub u8);
 
 impl KeyboardModifiers {
-  #[allow(dead_code)]
   pub const NONE: u8 = 0;
 
   pub const CONTROL_LEFT: u8 = 1 << 0;
@@ -16,9 +15,9 @@ impl KeyboardModifiers {
   pub const META_LEFT: u8 = 1 << 6;
   pub const META_RIGHT: u8 = 1 << 7;
 
-  pub const CONTROL_ANY: u8 = Self::CONTROL_LEFT | Self::CONTROL_RIGHT;
   #[allow(dead_code)]
   pub const SHIFT_ANY: u8 = Self::SHIFT_LEFT | Self::SHIFT_RIGHT;
+  pub const CONTROL_ANY: u8 = Self::CONTROL_LEFT | Self::CONTROL_RIGHT;
 
   #[inline(always)]
   pub fn new(state: u8) -> Self {
@@ -82,6 +81,7 @@ impl KeyboardModifiers {
     }
   }
 
+  #[inline(always)]
   pub fn compare_to_release(a: &KeyboardModifiers, b: &KeyboardModifiers) -> KeyboardModifiers {
     // a     01001001
     // b     00101100
@@ -91,6 +91,7 @@ impl KeyboardModifiers {
     KeyboardModifiers((a.0 ^ b.0) & a.0)
   }
 
+  #[inline(always)]
   pub fn compare_to_press(a: &KeyboardModifiers, b: &KeyboardModifiers) -> KeyboardModifiers {
     // a     01001001
     // b     00101100

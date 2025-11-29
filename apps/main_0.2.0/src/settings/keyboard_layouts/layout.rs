@@ -7,27 +7,32 @@ use rdev::Key;
 
 use crate::settings::keyboard_layouts::KeyItem;
 
+use crate::common::structs::KeyboardEventSnapshot;
+
 use crate::constants::LAYOUTS_FOLDER;
 
 pub struct LayoutItem {
   pub name: String,
+  pub chars: HashMap<char, KeyboardEventSnapshot>,
   pub keys: HashMap<Key, KeyItem>,
 }
 
 impl LayoutItem {
   pub fn new(name: &str) -> Self {
-    LayoutItem {
-      name: name.to_string(),
-      keys: Self::load(name).unwrap_or(HashMap::new()),
-    }
+    let name = name.to_owned();
+
+    let items = Self::load(&name).unwrap_or(Vec::new());
+
+    let chars = Self::raw_to_chars_map(&items);
+    let keys = Self::raw_to_keys_map(items);
+
+    LayoutItem { name, chars, keys }
   }
 
-  fn load(name: &str) -> anyhow::Result<HashMap<Key, KeyItem>> {
+  fn load(name: &str) -> anyhow::Result<Vec<KeyItem>> {
     let content = Self::read_file(name)?;
-    let items = Self::parse_json(name, content)?;
-    let map = Self::convert_to_map(items);
-
-    Ok(map)
+    
+    Self::parse_json(name, content)
   }
 
   fn read_file(name: &str) -> anyhow::Result<String> {
@@ -58,7 +63,23 @@ impl LayoutItem {
     Ok(items.unwrap())
   }
 
-  fn convert_to_map(items: Vec<KeyItem>) -> HashMap<Key, KeyItem> {
+  fn raw_to_chars_map(items: &Vec<KeyItem>) -> HashMap<char, KeyboardEventSnapshot> {
+    let size: usize = items.iter().map(|i| i.insert.len()).sum();
+
+    let mut map: HashMap<char, KeyboardEventSnapshot> = HashMap::with_capacity(size);
+
+    for item in items {
+      for ins in &item.insert {
+        let value = KeyboardEventSnapshot::new(Some(item.key), ins.modifiers);
+
+        map.insert(ins.char, value);
+      }
+    }
+
+    map
+  }
+
+  fn raw_to_keys_map(items: Vec<KeyItem>) -> HashMap<Key, KeyItem> {
     let mut map: HashMap<Key, KeyItem> = HashMap::with_capacity(items.len());
 
     for item in items {

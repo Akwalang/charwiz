@@ -21,7 +21,7 @@ impl Settings {
   pub fn new(platform: &'static Platform) -> &'static Self {
     Box::leak(Box::new(Settings {
       platform,
-      keyboard_layouts: Mutex::new(KeyboardLayouts::new()),
+      keyboard_layouts: Mutex::new(KeyboardLayouts::new(platform)),
       main_settings: Mutex::new(MainSettings::new()),
     }))
   }

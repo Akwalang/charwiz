@@ -3,18 +3,23 @@ use std::collections::HashMap;
 use rust_logger::*;
 use rdev::Key;
 
+use crate::platform::Platform;
+
 use crate::common::structs::KeyboardModifiers;
 use crate::settings::keyboard_layouts::LayoutItem;
 
 use super::KeyInsert;
 
 pub struct KeyboardLayouts {
-  items: HashMap<String, LayoutItem>,
+  platform: &'static Platform,
+
+  pub items: HashMap<String, LayoutItem>,
 }
 
 impl KeyboardLayouts {
-  pub fn new() -> Self {
+  pub fn new(platform: &'static Platform) -> Self {
     KeyboardLayouts {
+      platform,
       items: HashMap::new(),
     }
   }
@@ -29,6 +34,7 @@ impl KeyboardLayouts {
     self.items.insert(name.to_owned(), layout);
   }
 
+  // Yes, we need here tuple not just Some/None, the second return for chars existing in other layouts
   pub fn find_combination(&self, layout_name: &str, key: &Key, modifiers: KeyboardModifiers) -> (Option<char>, bool) {
     let mut char = None;
     let mut is_exists = false;
@@ -48,5 +54,20 @@ impl KeyboardLayouts {
     }
 
     (char, is_exists)
+  }
+
+  pub fn check_keyboard_setup(&self) -> anyhow::Result<()> {
+    let layouts = &self.platform.keyboard_layouts.lock().unwrap().items;
+
+    for layout in layouts {
+      let setup = self.items.get(&layout.name);
+
+      if setup.is_none() {
+        error!("<$>KeyboardLayouts</>: Keyboard layout now found: {}", layout.name);
+        return Err(anyhow::anyhow!("Keyboard layout now found: {}", layout.name));
+      }
+    }
+
+    Ok(())
   }
 }

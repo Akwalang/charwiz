@@ -2,14 +2,16 @@ use std::sync::{Arc, Mutex};
 
 use rust_logger::*;
 
+use super::emulator::Emulator;
+use super::extractor::Extractor;
+use super::injector::Injector;
+
 use crate::Platform;
 use crate::Settings;
 
 use crate::components::state::State;
 use crate::components::event_hub::EventHub;
 use crate::components::transformers::Transformer;
-use crate::components::executor::emulator::Emulator;
-use crate::components::executor::injector::Injector;
 
 use crate::common::enums::{TransformTargetEnum, ExecutorTypeEnum};
 use crate::common::events::CommandEvent;
@@ -18,6 +20,8 @@ pub struct Executor {
   platform: &'static Platform,
   settings: &'static Settings,
 
+  emulator: Emulator,
+  extractor: Extractor,
   injector: Injector,
 
   state: Arc<Mutex<State>>,
@@ -36,9 +40,10 @@ impl Executor {
   ) -> Arc<Self> {
     let emulator = Emulator::new(settings);
 
-    let injector = Injector::new(platform, emulator);
+    let extractor = Extractor::new(platform, state.clone());
+    let injector = Injector::new(platform, settings);
 
-    Arc::new(Executor { platform, settings, injector, state, event_hub, transformers })
+    Arc::new(Executor { platform, settings, emulator, extractor, injector, state, event_hub, transformers })
   }
 
   pub fn init(self: &Arc<Self>) {
@@ -65,13 +70,24 @@ impl Executor {
       return;
     };
 
-    let target = self.get_transform_value(&event).await;
+    // lock state
 
-    let result = tfr.transform(&event, &target);
+    let target  = self.extractor.extract(&self.emulator, &event).await;
 
-    println!("Event: {:?}", event);
+    let Ok(target) = target else {
+      warn!("<$>Executor</>: Extraction failed: {}", target.err().unwrap());
+      return;
+    };
 
-    let _= self.injector.inject(event, result).await;
+    println!("Extracted target: {:?}", target);
+
+    // let value = self.get_transform_value(&event).await;
+
+    // let result = tfr.transform(&event, &value);
+
+    // let _= self.injector.inject(&self.emulator, event, result).await;
+
+    // unlock state
   }
 
   fn get_transformer(&self, r#type: &ExecutorTypeEnum) -> Option<&Box<dyn Transformer>> {

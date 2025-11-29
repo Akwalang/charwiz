@@ -91,13 +91,15 @@ impl KeyboardState {
   }
 
   fn handle_insert(&mut self, key: Key) {
-    let settings_kl = self.settings.get_keyboard_layouts();
     let platform_kl = self.platform.get_keyboard_layouts();
+    let settings_kl = self.settings.get_keyboard_layouts();
 
     let cur_layout = platform_kl.get_current_keyboard_layout();
 
     let (char, is_exists) = settings_kl.find_combination(&cur_layout.name, &key, self.modifiers);
 
+    // skip registration when hotkey missing in all keyboard layouts
+    // but save when any of layouts has this hotkey
     if !is_exists { return; }
 
     if let Some(char) = char {

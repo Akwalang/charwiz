@@ -5,4 +5,5 @@ use serde::Deserialize;
 pub enum InjectMethodEnum {
   Type,
   Paste,
+  TypeAndPaste,
 }
