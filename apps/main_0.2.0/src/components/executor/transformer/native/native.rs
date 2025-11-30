@@ -3,21 +3,20 @@ use rust_logger::*;
 use crate::Platform;
 use crate::Settings;
 
-use crate::components::transformers::Transformer;
+use super::super::traits::Transformer;
 
-use crate::common::enums::ExecutorTypeEnum;
+use crate::components::executor::enums::InputType;
+
 use crate::common::events::CommandEvent;
 
 pub struct NativeTransformer {
   platform: &'static Platform,
   settings: &'static Settings,
-
-  r#type: ExecutorTypeEnum,
 }
 
 impl NativeTransformer {
   pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
-    Self { platform, settings, r#type: ExecutorTypeEnum::Native }
+    Self { platform, settings }
   }
 
   pub fn init(&mut self) {
@@ -26,11 +25,7 @@ impl NativeTransformer {
 }
 
 impl Transformer for NativeTransformer {
-  fn get_type(&self) -> &ExecutorTypeEnum {
-    &self.r#type
-  }
-
-  fn transform(&self, event: &CommandEvent, target: &str) -> String {
+  async fn transform(&self, event: &CommandEvent, target: &InputType) -> String {
     let result = String::from("Native result");
 
     log!("<$>NativeTransformer</>: Result: <i+>{}</>", result);

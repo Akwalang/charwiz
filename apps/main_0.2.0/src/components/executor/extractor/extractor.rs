@@ -32,16 +32,16 @@ impl Extractor {
       TransformTargetEnum::Word => self.extract_word(emulator).await,
       TransformTargetEnum::Input => self.extract_input(),
       TransformTargetEnum::Events => self.extract_events(),
-      TransformTargetEnum::Command => Self::extract_none(),
+      TransformTargetEnum::Command => Self::extract_command(),
       TransformTargetEnum::Selection => self.extract_selection(emulator).await,
-      TransformTargetEnum::Clipboard => self.extract_clipboard(emulator).await,
+      TransformTargetEnum::Clipboard => self.extract_clipboard(),
     }
   }
 
   async fn get_data_through_clipboard(&self, emulator: &Emulator, pipeline: Vec<KeyboardEventSnapshot>) -> anyhow::Result<InputType> {
     self.platform.clipboard.lock().unwrap().backup();
 
-    emulator.run(pipeline).await;
+    let _ = emulator.run(pipeline).await;
 
     let result = self.platform.clipboard.lock().unwrap().get_clipboard_text();
 
@@ -90,7 +90,13 @@ impl Extractor {
     self.get_data_through_clipboard(emulator, commands::create_copy_selection_pipeline()).await
   }
 
-  async fn extract_clipboard(&self, emulator: &Emulator) -> anyhow::Result<InputType> {
-    self.get_data_through_clipboard(emulator, vec![]).await
+  fn extract_clipboard(&self) -> anyhow::Result<InputType> {
+    let result = self.platform.clipboard.lock().unwrap().get_clipboard_text();
+
+    if let Some(result) = result? {
+      Ok(InputType::Text(result))
+    } else {
+      Err(anyhow::anyhow!("Failed to extract all text from clipboard"))
+    }
   }
 }

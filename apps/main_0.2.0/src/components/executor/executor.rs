@@ -5,13 +5,13 @@ use rust_logger::*;
 use super::emulator::Emulator;
 use super::extractor::Extractor;
 use super::injector::Injector;
+use super::transformer::Transformer;
 
 use crate::Platform;
 use crate::Settings;
 
 use crate::components::state::State;
 use crate::components::event_hub::EventHub;
-use crate::components::transformers::Transformer;
 
 use crate::common::enums::{TransformTargetEnum, ExecutorTypeEnum};
 use crate::common::events::CommandEvent;
@@ -22,12 +22,11 @@ pub struct Executor {
 
   emulator: Emulator,
   extractor: Extractor,
+  transformer: Transformer,
   injector: Injector,
 
   state: Arc<Mutex<State>>,
   event_hub: Arc<EventHub>,
-
-  transformers: Vec<Box<dyn Transformer>>,
 }
 
 impl Executor {
@@ -36,14 +35,17 @@ impl Executor {
     settings: &'static Settings,
     state: Arc<Mutex<State>>,
     event_hub: Arc<EventHub>,
-    transformers: Vec<Box<dyn Transformer>>,
   ) -> Arc<Self> {
     let emulator = Emulator::new(settings);
-
     let extractor = Extractor::new(platform, state.clone());
+    let transformer = Transformer::new(platform, settings);
     let injector = Injector::new(platform, settings);
 
-    Arc::new(Executor { platform, settings, emulator, extractor, injector, state, event_hub, transformers })
+    Arc::new(Executor {
+      platform, settings,
+      emulator, extractor, transformer, injector,
+      state, event_hub,
+    })
   }
 
   pub fn init(self: &Arc<Self>) {
@@ -65,11 +67,6 @@ impl Executor {
   }
 
   async fn process_event(self: &Arc<Self>, event: CommandEvent) {
-    let Some(tfr) = self.get_transformer(&event.executor.r#type) else {
-      warn!("<$>Executor</>: Transformer not found: type={}", event.executor.r#type);
-      return;
-    };
-
     // lock state
 
     let target  = self.extractor.extract(&self.emulator, &event).await;
@@ -81,25 +78,12 @@ impl Executor {
 
     println!("Extracted target: {:?}", target);
 
-    // let value = self.get_transform_value(&event).await;
+    let value = self.transformer.transform(&event, &target).await;
 
     // let result = tfr.transform(&event, &value);
 
     // let _= self.injector.inject(&self.emulator, event, result).await;
 
     // unlock state
-  }
-
-  fn get_transformer(&self, r#type: &ExecutorTypeEnum) -> Option<&Box<dyn Transformer>> {
-    self.transformers.iter().find(|tfr| tfr.get_type() == r#type)
-  }
-
-  async fn get_transform_value(&self, event: &CommandEvent) -> String {
-    let target = &event.injector.target;
-
-    match target {
-      TransformTargetEnum::None => String::from(""),
-      _ => String::from(""),
-    }
   }
 }

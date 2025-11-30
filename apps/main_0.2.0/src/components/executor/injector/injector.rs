@@ -31,11 +31,6 @@ impl Injector {
     Ok(())
   }
 
-  // en-US xxx--xxxx--x--
-  // pl-PL xxxxxxxxx--x--
-  // ru-RU --x--xxxxxxx--
-  // Paste ------------xx
-
   async fn use_type_and_paste(&self, value: String) -> anyhow::Result<()> {
     self.settings.keyboard_layouts.lock().unwrap().check_keyboard_setup()?;
 

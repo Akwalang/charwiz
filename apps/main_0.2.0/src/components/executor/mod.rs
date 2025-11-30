@@ -1,10 +1,11 @@
 mod commands;
 mod enums;
 
-mod composer;
+mod planner;
 mod emulator;
 mod extractor;
 mod injector;
+mod transformer;
 
 mod executor;
 pub use executor::Executor;

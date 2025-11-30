@@ -5,12 +5,13 @@ use rust_logger::*;
 
 use mlua::{Lua, LuaOptions, Table, StdLib};
 
-use crate::components::transformers::Transformer;
-
 use crate::Platform;
 use crate::Settings;
 
-use crate::common::enums::ExecutorTypeEnum;
+use super::super::traits::Transformer;
+
+use crate::components::executor::enums::InputType;
+
 use crate::common::events::CommandEvent;
 
 use crate::constants::PLUGINS_FOLDER;
@@ -19,13 +20,12 @@ pub struct PluginTransformer {
   platform: &'static Platform,
   settings: &'static Settings,
 
-  r#type: ExecutorTypeEnum,
   lua: Option<Lua>,
 }
 
 impl PluginTransformer {
   pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
-    PluginTransformer { platform, settings, r#type: ExecutorTypeEnum::Plugin, lua: None }
+    PluginTransformer { platform, settings, lua: None }
   }
 
   pub fn init(&mut self) {
@@ -80,11 +80,7 @@ impl PluginTransformer {
 }
 
 impl Transformer for PluginTransformer {
-  fn get_type(&self) -> &ExecutorTypeEnum {
-    &self.r#type
-  }
-
-  fn transform(&self, event: &CommandEvent, target: &str) -> String {
+  async fn transform(&self, event: &CommandEvent, target: &InputType) -> String {
     let result = String::from("Plugin result");
 
     log!("<$>PluginTransformer</>: Result: <i+>{}</>", result);

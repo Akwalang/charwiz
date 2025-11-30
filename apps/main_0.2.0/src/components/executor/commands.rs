@@ -61,3 +61,13 @@ pub fn create_copy_selection_pipeline() -> Vec<KeyboardEventSnapshot> {
     KeyboardEventSnapshot::default(),
   ]
 }
+
+pub fn create_paste_pipeline() -> Vec<KeyboardEventSnapshot> {
+  vec![
+    KeyboardEventSnapshot::new(
+      Some(Key::KeyV),
+      KeyboardModifiers::new(KeyboardModifiers::CONTROL_LEFT),
+    ),
+    KeyboardEventSnapshot::default(),
+  ]
+}
