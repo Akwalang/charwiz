@@ -7,6 +7,7 @@ pub fn setup() {
 fn setup_logger() {
     alias!("$", "purple,i");
     alias!("!", "yellow");
+    alias!("i!", "yellow,i");
     alias!("+", "green");
     alias!("i+", "green,i");
     alias!("-", "red");

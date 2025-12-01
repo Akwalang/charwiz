@@ -70,12 +70,14 @@ impl UserInputController {
     let mut state = self.state.lock().unwrap();
     let mut sticked_keys = self.sticked_keys.lock().unwrap();
 
-    if state.application.is_executing() { return; }
-
     if !Self::is_trackable_event(&event) { return; }
     if Self::mute_sticky_keys(&event, &mut sticked_keys) { return; }
 
-    Self::write_debug_info(&event);
+    let is_executing = state.application.is_executing();
+
+    Self::write_debug_info(&event, is_executing);
+
+    if is_executing { return; }
 
     state.keyboard.apply_key_event(&event);
 
@@ -98,12 +100,14 @@ impl UserInputController {
     }
   }
 
-  fn write_debug_info(event: &Event) {
+  fn write_debug_info(event: &Event, is_muted: bool) {
+    let stl = if is_muted { "i" } else { "i!" };
+
     match event.event_type {
-      EventType::KeyPress(key) => { debug!("Key press: {:?}", key); },
-      EventType::KeyRelease(key) => { debug!("Key release: {:?}", key); },
-      EventType::ButtonPress(button) => { debug!("Mouse press: {:?}", button); },
-      EventType::ButtonRelease(button) => { debug!("Mouse release: {:?}", button); },
+      EventType::KeyPress(key) => { debug!("Key press: <{}>{:?}</>", stl, key); },
+      EventType::KeyRelease(key) => { debug!("Key release: <{}>{:?}</>", stl, key); },
+      EventType::ButtonPress(button) => { debug!("Mouse press: <{}>{:?}</>", stl, button); },
+      EventType::ButtonRelease(button) => { debug!("Mouse release: <{}>{:?}</>", stl, button); },
       _ => {},
     }
   }

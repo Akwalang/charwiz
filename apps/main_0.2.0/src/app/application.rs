@@ -5,7 +5,7 @@ use rust_logger::*;
 use crate::platform::Platform;
 use crate::settings::Settings;
 
-use crate::components::state::State;
+use crate::components::state::{State, ApplicationStatus};
 use crate::components::event_hub::EventHub;
 
 use crate::components::controllers::UserInputController;
@@ -52,6 +52,8 @@ impl Application {
     );
 
     executor.init();
+
+    state.lock().unwrap().application.set_status(ApplicationStatus::Active);
 
     log!("<$>Application</>: Ready");
 

@@ -10,7 +10,7 @@ use super::transformer::Transformer;
 use crate::Platform;
 use crate::Settings;
 
-use crate::components::state::State;
+use crate::components::state::{State, ApplicationStatus};
 use crate::components::event_hub::EventHub;
 
 use crate::common::enums::{TransformTargetEnum, ExecutorTypeEnum};
@@ -67,7 +67,7 @@ impl Executor {
   }
 
   async fn process_event(self: &Arc<Self>, event: CommandEvent) {
-    // lock state
+    self.state.lock().unwrap().application.set_status(ApplicationStatus::Executing);
 
     let target  = self.extractor.extract(&self.emulator, &event).await;
 
@@ -84,6 +84,6 @@ impl Executor {
 
     // let _= self.injector.inject(&self.emulator, event, result).await;
 
-    // unlock state
+    self.state.lock().unwrap().application.set_status(ApplicationStatus::Active);
   }
 }
