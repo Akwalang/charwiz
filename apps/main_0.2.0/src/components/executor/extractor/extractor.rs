@@ -38,13 +38,13 @@ impl Extractor {
   }
 
   async fn get_data_through_clipboard(&self, emulator: &Emulator, pipeline: Vec<KeyboardEventSnapshot>) -> anyhow::Result<InputType> {
-    self.platform.clipboard.lock().unwrap().backup();
+    self.platform.clipboard.borrow_mut().backup();
 
     let _ = emulator.run(pipeline).await;
 
-    let result = self.platform.clipboard.lock().unwrap().get_clipboard_text();
+    let result = self.platform.clipboard.borrow().get_clipboard_text();
 
-    self.platform.clipboard.lock().unwrap().restore();
+    self.platform.clipboard.borrow_mut().restore();
 
     if let Some(result) = result? {
       Ok(InputType::Text(result))
@@ -90,7 +90,7 @@ impl Extractor {
   }
 
   fn extract_clipboard(&self) -> anyhow::Result<InputType> {
-    let result = self.platform.clipboard.lock().unwrap().get_clipboard_text();
+    let result = self.platform.clipboard.borrow().get_clipboard_text();
 
     if let Some(result) = result? {
       Ok(InputType::Text(result))

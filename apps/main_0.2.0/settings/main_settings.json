@@ -1,7 +1,7 @@
 {
   "timings": {
     "forgetTimeout": 10000,
-    "keyActionDelay": 1
+    "keyActionDelay": 10
   },
   "executors": [
     {

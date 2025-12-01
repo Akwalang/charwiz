@@ -91,8 +91,8 @@ impl KeyboardState {
   }
 
   fn handle_insert(&mut self, key: Key) {
-    let platform_kl = self.platform.get_keyboard_layouts();
-    let settings_kl = self.settings.get_keyboard_layouts();
+    let platform_kl = self.platform.keyboard_layouts.borrow();
+    let settings_kl = self.settings.keyboard_layouts.borrow();
 
     let cur_layout = platform_kl.get_current_keyboard_layout();
 

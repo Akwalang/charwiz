@@ -57,7 +57,7 @@ impl KeyboardLayouts {
   }
 
   pub fn check_keyboard_setup(&self) -> anyhow::Result<()> {
-    let layouts = &self.platform.keyboard_layouts.lock().unwrap().items;
+    let layouts = &self.platform.keyboard_layouts.borrow().items;
 
     for layout in layouts {
       let setup = self.items.get(&layout.name);

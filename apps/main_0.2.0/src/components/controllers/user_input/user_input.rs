@@ -1,5 +1,7 @@
 use std::sync::{Arc, Mutex, MutexGuard};
 
+use tokio::sync::mpsc;
+
 use rust_logger::*;
 use rdev::{listen, Event, EventType};
 
@@ -17,22 +19,22 @@ pub struct UserInputController {
 }
 
 impl UserInputController {
-  pub fn new(state: &Arc<Mutex<State>>, event_hub: &Arc<EventHub>) -> Self {
-    UserInputController {
+  pub fn new(state: &Arc<Mutex<State>>, event_hub: &Arc<EventHub>) -> Arc<Self> {
+    Arc::new(UserInputController {
       state: state.clone(),
       event_hub: event_hub.clone(),
       sticked_keys: Arc::new(Mutex::new(StickyKeys::new())),
-    }
+    })
   }
 
-  pub fn init(&self) {
+  pub fn init(self: &Arc<Self>) {
     log!("<$>UserInputController</>: Init");
 
     self.subscribe();
     self.listen();
   }
 
-  fn subscribe(&self) {
+  fn subscribe(self: &Arc<Self>) {
     let mut status_rx = self.event_hub.status_stream();
 
     tokio::task::spawn_local(async move {
@@ -42,40 +44,50 @@ impl UserInputController {
     });
   }
 
-  fn listen(&self) {
-    let hub = self.event_hub.clone();
-    let state = self.state.clone();
-    let sticked_keys = self.sticked_keys.clone();
+  fn listen(self: &Arc<Self>) {
+    let (tx, mut rx) = mpsc::unbounded_channel();
 
-    let callback = move |event: Event| {
-      let mut state = state.lock().unwrap();
-      let mut sticked_keys = sticked_keys.lock().unwrap();
+    let this = Arc::clone(&self);
 
-      if state.application.is_executing() { return; }
-
-      if !Self::is_trackable_event(&event) { return; }
-      if Self::mute_sticky_keys(&event, &mut sticked_keys) { return; }
-
-      Self::write_debug_info(&event);
-
-      state.keyboard.apply_key_event(&event);
-
-      let event = InputEvent {
-        r#type: event.event_type,
-      };
-
-      drop(state);
-
-      if let Err(err) = hub.publish_input(event) {
-        warn!("<$>UserInputController</>: Failed to publish input event: {:?}", err);
+    tokio::task::spawn_local(async move {
+      while let Some(event) = rx.recv().await {
+        this.process_event(event);
       }
-    };
+    });
 
     tokio::task::spawn_blocking(move || {
+      let callback = move |event: Event| {
+        let _ = tx.send(event);
+      };
+
       if let Err(error) = listen(callback) {
         error!("<$>UserInputController</>: Can't start listen keyboard events. Error: {:?}", error);
       }
     });
+  }
+
+  fn process_event(&self, event: Event) {
+    let mut state = self.state.lock().unwrap();
+    let mut sticked_keys = self.sticked_keys.lock().unwrap();
+
+    if state.application.is_executing() { return; }
+
+    if !Self::is_trackable_event(&event) { return; }
+    if Self::mute_sticky_keys(&event, &mut sticked_keys) { return; }
+
+    Self::write_debug_info(&event);
+
+    state.keyboard.apply_key_event(&event);
+
+    let event = InputEvent {
+      r#type: event.event_type,
+    };
+
+    drop(state);
+
+    if let Err(err) = self.event_hub.publish_input(event) {
+      warn!("<$>UserInputController</>: Failed to publish input event: {:?}", err);
+    }
   }
 
   fn is_trackable_event(event: &Event) -> bool {

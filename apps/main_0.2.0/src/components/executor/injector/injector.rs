@@ -14,54 +14,48 @@ use crate::common::structs::{KeyboardEventSnapshot, KeyboardModifiers};
 pub struct Injector {
   platform: &'static Platform,
   settings: &'static Settings,
-  emulator: Emulator,
 }
 
 impl Injector {
-  pub fn new(platform: &'static Platform, settings: &'static Settings, emulator: Emulator) -> Self {
-    Self { platform, settings, emulator }
+  pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
+    Self { platform, settings }
   }
 
-  pub async fn inject(&self, event: CommandEvent, value: String) -> anyhow::Result<()> {
+  pub async fn inject(&self, emulator: &Emulator, event: CommandEvent, value: String) -> anyhow::Result<()> {
     match event.injector.method {
       InjectMethodEnum::TypeAndPaste => self.use_type_and_paste(value).await?,
-      InjectMethodEnum::Paste => self.use_paste(value).await?,
+      InjectMethodEnum::Paste => self.use_paste(emulator, value).await?,
       InjectMethodEnum::Type => self.use_type(value).await?,
     }
 
     Ok(())
   }
 
-  // en-US xxx--xxxx--x--
-  // pl-PL xxxxxxxxx--x--
-  // ru-RU --x--xxxxxxx--
-  // Paste ------------xx
-
   async fn use_type_and_paste(&self, value: String) -> anyhow::Result<()> {
-    self.settings.keyboard_layouts.lock().unwrap().check_keyboard_setup()?;
+    self.settings.keyboard_layouts.borrow().check_keyboard_setup()?;
 
     let (type_lines, paste_line) = self.calculate_char_lines(&value);
 
     Ok(())
   }
 
-  async fn use_paste(&self, value: String) -> anyhow::Result<()> {
+  async fn use_paste(&self, emulator: &Emulator, value: String) -> anyhow::Result<()> {
     // TODO: Remove Mutex
-    let _ = &self.platform.clipboard.lock().unwrap().backup();
-    let _ = &self.platform.clipboard.lock().unwrap().set_clipboard_text(&value);
+    let _ = &self.platform.clipboard.borrow_mut().backup();
+    let _ = &self.platform.clipboard.borrow_mut().set_clipboard_text(&value);
 
-    let result = self.emulator.run(vec![
+    let result = emulator.run(vec![
       Self::create_paste_snapshot(),
       KeyboardEventSnapshot::default(),
     ]).await;
 
-    let _ = &self.platform.clipboard.lock().unwrap().restore();
+    let _ = &self.platform.clipboard.borrow_mut().restore();
 
     result
   }
 
   async fn use_type(&self, value: String) -> anyhow::Result<()> {
-    let settings_kl = self.settings.keyboard_layouts.lock().unwrap();
+    let settings_kl = self.settings.keyboard_layouts.borrow();
 
     settings_kl.check_keyboard_setup()?;
 
@@ -70,7 +64,7 @@ impl Injector {
 
     let mut pipeline: Vec<KeyboardEventSnapshot> = Vec::with_capacity(chars.clone().count());
 
-    let platform_kl = self.platform.keyboard_layouts.lock().unwrap();
+    let platform_kl = self.platform.keyboard_layouts.borrow();
 
     let current_layout_name = platform_kl.get_current_keyboard_layout();
     let current_layout_chars = settings_kl.items.get(&current_layout_name.name).unwrap();
@@ -104,8 +98,8 @@ impl Injector {
 
   // TODO: Can panic if Settings::check_keyboard_setup wasn't run before
   fn calculate_char_lines(&self, value: &str) -> (HashMap<String, Vec<bool>>, Vec<bool>) {
-    let settings_kl = self.settings.keyboard_layouts.lock().unwrap();
-    let platform_kl = self.platform.keyboard_layouts.lock().unwrap();
+    let settings_kl = self.settings.keyboard_layouts.borrow();
+    let platform_kl = self.platform.keyboard_layouts.borrow();
 
     let capacity = value.chars().count();
 

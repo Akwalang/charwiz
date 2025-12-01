@@ -1,4 +1,4 @@
-use std::sync::{Mutex, MutexGuard};
+use std::cell::RefCell;
 
 use rust_logger::*;
 
@@ -9,8 +9,8 @@ mod clipboard;
 use clipboard::Clipboard;
 
 pub struct Platform {
-  pub clipboard: Mutex<Clipboard>,
-  pub keyboard_layouts: Mutex<KeyboardLayouts>,
+  pub clipboard: RefCell<Clipboard>,
+  pub keyboard_layouts: RefCell<KeyboardLayouts>,
 }
 
 impl Platform {
@@ -18,20 +18,16 @@ impl Platform {
     let keyboard_layouts = KeyboardLayouts::new();
 
     Box::leak(Box::new(Platform {
-      clipboard: Mutex::new(Clipboard::new()),
-      keyboard_layouts: Mutex::new(keyboard_layouts),
+      clipboard: RefCell::new(Clipboard::new()),
+      keyboard_layouts: RefCell::new(keyboard_layouts),
     }))
   }
 
   pub fn init(&self) {
     log!("<$>Windows</>: Init");
 
-    let mut keyboard_layouts = self.keyboard_layouts.lock().unwrap();
+    let mut keyboard_layouts = self.keyboard_layouts.borrow_mut();
 
     keyboard_layouts.init();
-  }
-
-  pub fn get_keyboard_layouts<'a>(&'a self) -> MutexGuard<'a, KeyboardLayouts> {
-    self.keyboard_layouts.lock().unwrap()
   }
 }
