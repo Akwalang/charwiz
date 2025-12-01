@@ -70,6 +70,8 @@ impl UserInputController {
     let mut state = self.state.lock().unwrap();
     let mut sticked_keys = self.sticked_keys.lock().unwrap();
 
+    if state.application.is_disabled() { return; }
+
     if !Self::is_trackable_event(&event) { return; }
     if Self::mute_sticky_keys(&event, &mut sticked_keys) { return; }
 

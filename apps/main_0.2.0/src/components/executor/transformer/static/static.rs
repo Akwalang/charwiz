@@ -9,7 +9,9 @@ use crate::components::executor::enums::InputType;
 
 use crate::common::events::CommandEvent;
 pub struct StaticTransformer {
+  #[allow(dead_code)]
   platform: &'static Platform,
+  #[allow(dead_code)]
   settings: &'static Settings,
 }
 

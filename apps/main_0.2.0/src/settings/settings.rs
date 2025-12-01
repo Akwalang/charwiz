@@ -1,11 +1,8 @@
 use std::cell::RefCell;
-use std::collections::HashSet;
 
 use rust_logger::*;
-use rdev::Key;
 
 use crate::platform::Platform;
-use crate::platform::common::structs::KeyboardLayoutItem;
 
 use crate::settings::{MainSettings, KeyboardLayouts};
 use crate::settings::main_settings::structs::{AutoConvert, Command, HotKey};

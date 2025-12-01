@@ -1,5 +1,4 @@
 use rust_logger::*;
-use rdev::Event;
 
 use async_broadcast::{broadcast, InactiveReceiver, Receiver, Sender, TrySendError};
 

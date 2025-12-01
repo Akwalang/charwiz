@@ -67,12 +67,13 @@ impl Executor {
   }
 
   async fn process_event(self: &Arc<Self>, event: CommandEvent) {
-    self.state.lock().unwrap().application.set_status(ApplicationStatus::Executing);
+    self.lock_application();
 
     let target  = self.extractor.extract(&self.emulator, &event).await;
 
     let Ok(target) = target else {
       warn!("<$>Executor</>: Extraction failed: {}", target.err().unwrap());
+      self.unlock_application();
       return;
     };
 
@@ -84,6 +85,14 @@ impl Executor {
 
     // let _= self.injector.inject(&self.emulator, event, result).await;
 
+    self.unlock_application();
+  }
+
+  fn lock_application(&self) {
+    self.state.lock().unwrap().application.set_status(ApplicationStatus::Executing);
+  }
+
+  fn unlock_application(&self) {
     self.state.lock().unwrap().application.set_status(ApplicationStatus::Active);
   }
 }

@@ -19,7 +19,7 @@ impl Emulator {
 
     let mut current = &KeyboardEventSnapshot::default();
 
-    let delay = self.settings.main_settings.borrow().settings.timings.keyActionDelay;
+    let delay = self.settings.main_settings.borrow().settings.timings.key_action_delay;
 
     // +1 - because of field key can be some in 2 snapshots
     let mut pipeline = Vec::<EventType>::with_capacity(1 + KeyboardEventSnapshot::CAPACITY);
