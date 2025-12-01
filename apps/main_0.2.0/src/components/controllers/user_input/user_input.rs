@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, MutexGuard};
 
 use rust_logger::*;
 use rdev::{listen, Event, EventType};
@@ -49,11 +49,12 @@ impl UserInputController {
 
     let callback = move |event: Event| {
       let mut state = state.lock().unwrap();
+      let mut sticked_keys = sticked_keys.lock().unwrap();
 
       if state.application.is_executing() { return; }
 
       if !Self::is_trackable_event(&event) { return; }
-      if Self::mute_sticky_keys(&event, &sticked_keys) { return; }
+      if Self::mute_sticky_keys(&event, &mut sticked_keys) { return; }
 
       Self::write_debug_info(&event);
 
@@ -95,7 +96,7 @@ impl UserInputController {
     }
   }
 
-  fn mute_sticky_keys(event: &Event, sticked_keys: &Arc<Mutex<StickyKeys>>) -> bool {
+  fn mute_sticky_keys(event: &Event, sticked_keys: &mut MutexGuard<'_, StickyKeys>) -> bool {
     let key = match event.event_type {
       EventType::KeyPress(key) => key,
       EventType::KeyRelease(key) => key,
@@ -104,17 +105,15 @@ impl UserInputController {
 
     if !StickyKeys::is_sticky_key(&key) { return false; }
 
-    let mut keys = sticked_keys.lock().unwrap();
-
     match event.event_type {
       EventType::KeyPress(_) => {
-        let is_sticked = keys.is_pressed(&key);
-        keys.add_key(&key);
+        let is_sticked = sticked_keys.is_pressed(&key);
+        sticked_keys.add_key(&key);
         is_sticked
       },
       EventType::KeyRelease(_) => {
-        let is_sticked = !keys.is_pressed(&key);
-        keys.remove_key(&key);
+        let is_sticked = !sticked_keys.is_pressed(&key);
+        sticked_keys.remove_key(&key);
         is_sticked
       },
       _ => false

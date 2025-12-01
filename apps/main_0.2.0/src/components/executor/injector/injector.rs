@@ -14,22 +14,28 @@ use crate::common::structs::{KeyboardEventSnapshot, KeyboardModifiers};
 pub struct Injector {
   platform: &'static Platform,
   settings: &'static Settings,
+  emulator: Emulator,
 }
 
 impl Injector {
-  pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
-    Self { platform, settings }
+  pub fn new(platform: &'static Platform, settings: &'static Settings, emulator: Emulator) -> Self {
+    Self { platform, settings, emulator }
   }
 
-  pub async fn inject(&self, emulator: &Emulator, event: CommandEvent, value: String) -> anyhow::Result<()> {
+  pub async fn inject(&self, event: CommandEvent, value: String) -> anyhow::Result<()> {
     match event.injector.method {
       InjectMethodEnum::TypeAndPaste => self.use_type_and_paste(value).await?,
-      InjectMethodEnum::Paste => self.use_paste(emulator, value).await?,
+      InjectMethodEnum::Paste => self.use_paste(value).await?,
       InjectMethodEnum::Type => self.use_type(value).await?,
     }
 
     Ok(())
   }
+
+  // en-US xxx--xxxx--x--
+  // pl-PL xxxxxxxxx--x--
+  // ru-RU --x--xxxxxxx--
+  // Paste ------------xx
 
   async fn use_type_and_paste(&self, value: String) -> anyhow::Result<()> {
     self.settings.keyboard_layouts.lock().unwrap().check_keyboard_setup()?;
@@ -39,12 +45,12 @@ impl Injector {
     Ok(())
   }
 
-  async fn use_paste(&self, emulator: &Emulator, value: String) -> anyhow::Result<()> {
+  async fn use_paste(&self, value: String) -> anyhow::Result<()> {
     // TODO: Remove Mutex
     let _ = &self.platform.clipboard.lock().unwrap().backup();
     let _ = &self.platform.clipboard.lock().unwrap().set_clipboard_text(&value);
 
-    let result = emulator.run(vec![
+    let result = self.emulator.run(vec![
       Self::create_paste_snapshot(),
       KeyboardEventSnapshot::default(),
     ]).await;

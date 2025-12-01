@@ -1,4 +1,3 @@
-use std::future::Future;
 use std::sync::{Arc, Mutex};
 
 use crate::platform::Platform;
@@ -79,7 +78,7 @@ impl Extractor {
   fn extract_events(&self) -> anyhow::Result<InputType> {
     let result = self.state.lock().unwrap().keyboard.get_events().clone();
 
-    Ok(InputType::Events(Box::new(result)))
+    Ok(InputType::Events(result))
   }
 
   fn extract_command() -> anyhow::Result<InputType> {
