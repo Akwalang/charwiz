@@ -6,6 +6,7 @@ pub fn get_current_keyboard_layout_id() -> String {
     let hwnd = GetForegroundWindow();
 
     if hwnd.0.is_null() {
+      // TODO: Remove panic. It can really appear
       panic!("GetForegroundWindow failed");
     }
 
