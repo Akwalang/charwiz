@@ -7,19 +7,16 @@ use crate::common::events::{InputEvent, CommandEvent, StatusEvent};
 pub struct EventHub {
   input_cast: (Sender<InputEvent>, InactiveReceiver<InputEvent>),
   command_cast: (Sender<CommandEvent>, InactiveReceiver<CommandEvent>),
-  status_cast: (Sender<StatusEvent>, InactiveReceiver<StatusEvent>),
 }
 
 impl EventHub {
   pub fn new() -> Self {
     let (input_tx, input_rx) = broadcast(8);
     let (command_tx, command_rx) = broadcast(8);
-    let (status_tx, status_rx) = broadcast(8);
 
     EventHub {
       input_cast: (input_tx, input_rx.deactivate()),
       command_cast: (command_tx, command_rx.deactivate()),
-      status_cast: (status_tx, status_rx.deactivate()),
     }
   }
 
@@ -46,19 +43,11 @@ impl EventHub {
     Self::publish(&self.command_cast.0, command, "command")
   }
 
-  pub fn publish_status(&self, status: StatusEvent) -> anyhow::Result<()> {
-    Self::publish(&self.status_cast.0, status, "status")
-  }
-
   pub fn input_stream(&self) -> Receiver<InputEvent> {
     self.input_cast.0.new_receiver()
   }
   
   pub fn command_stream(&self) -> Receiver<CommandEvent> {
     self.command_cast.0.new_receiver()
-  }
-
-  pub fn status_stream(&self) -> Receiver<StatusEvent> {
-    self.status_cast.0.new_receiver()
   }
 }

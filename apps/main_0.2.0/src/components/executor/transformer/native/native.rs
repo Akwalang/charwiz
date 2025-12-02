@@ -26,7 +26,7 @@ impl NativeTransformer {
 
 impl Transformer for NativeTransformer {
   async fn transform(&self, event: &CommandEvent, target: &InputType) -> String {
-    let result = String::from("Native result");
+    let result = String::from("Native куыгде");
 
     log!("<$>NativeTransformer</>: Result: <i+>{}</>", result);
 

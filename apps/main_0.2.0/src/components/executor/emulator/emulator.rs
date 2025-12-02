@@ -24,15 +24,13 @@ impl Emulator {
     // +1 - because of field key can be some in 2 snapshots
     let mut pipeline = Vec::<EventType>::with_capacity(1 + KeyboardEventSnapshot::CAPACITY);
 
-    sleep(Duration::from_nanos(delay)).await;
-
     for next in queue {
       Self::put_snapshots_into_pipeline(&mut pipeline, current, next);
 
       for event in &pipeline {
-        simulate(event)?;
-
         sleep(Duration::from_nanos(delay)).await;
+
+        simulate(event)?;
       }
 
       current = next;

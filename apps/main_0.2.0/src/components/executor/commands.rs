@@ -71,3 +71,13 @@ pub fn create_paste_pipeline() -> Vec<KeyboardEventSnapshot> {
     KeyboardEventSnapshot::default(),
   ]
 }
+
+pub fn create_backspace_pipeline() -> Vec<KeyboardEventSnapshot> {
+  vec![
+    KeyboardEventSnapshot::new(
+      Some(Key::Backspace),
+      KeyboardModifiers::new(KeyboardModifiers::NONE),
+    ),
+    KeyboardEventSnapshot::default(),
+  ]
+}

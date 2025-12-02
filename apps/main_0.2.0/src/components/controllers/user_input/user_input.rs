@@ -30,18 +30,7 @@ impl UserInputController {
   pub fn init(self: &Arc<Self>) {
     log!("<$>UserInputController</>: Init");
 
-    self.subscribe();
     self.listen();
-  }
-
-  fn subscribe(self: &Arc<Self>) {
-    let mut status_rx = self.event_hub.status_stream();
-
-    tokio::task::spawn_local(async move {
-      while let Ok(event) = status_rx.recv().await {
-        log!("Received status event: {:?}", event);
-      }
-    });
   }
 
   fn listen(self: &Arc<Self>) {

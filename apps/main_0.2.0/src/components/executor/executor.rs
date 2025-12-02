@@ -81,9 +81,9 @@ impl Executor {
 
     let value = self.transformer.transform(&event, &target).await;
 
-    // let result = tfr.transform(&event, &value);
-
-    // let _= self.injector.inject(&self.emulator, event, result).await;
+    if let Err(error) = self.injector.inject(&self.emulator, event, value).await {
+      warn!("<$>Executor</>: Injection failed: {}", error);
+    }
 
     self.unlock_application();
   }

@@ -2,8 +2,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(rename_all = "snake_case")]
-pub enum InjectMethodEnum {
-  Paste,
-  TypeAndSkip,
-  TypeAndPaste,
+pub enum CleanupMethodEnum {
+  None,
+  Backspace,
 }

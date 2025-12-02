@@ -70,7 +70,8 @@
       },
       "injector": {
         "target": "input",
-        "method": "type",
+        "cleanup": "backspace",
+        "method": "type_and_paste",
         "layout": "en-US"
       }
     },
@@ -82,7 +83,8 @@
       },
       "injector": {
         "target": "input",
-        "method": "type",
+        "cleanup": "backspace",
+        "method": "type_and_paste",
         "layout": "en-US"
       }
     },
@@ -94,7 +96,8 @@
       },
       "injector": {
         "target": "input",
-        "method": "type",
+        "cleanup": "backspace",
+        "method": "type_and_paste",
         "layout": "en-US"
       }
     }
@@ -111,7 +114,8 @@
       },
       "injector": {
         "target": "input",
-        "method": "type",
+        "cleanup": "none",
+        "method": "type_and_paste",
         "layout": "next"
       }
     },
@@ -126,7 +130,8 @@
       },
       "injector": {
         "target": "selection",
-        "method": "type",
+        "cleanup": "none",
+        "method": "type_and_paste",
         "layout": "current"
       }
     },
@@ -141,6 +146,7 @@
       },
       "injector": {
         "target": "selection",
+        "cleanup": "none",
         "method": "paste",
         "layout": "current"
       }
@@ -156,6 +162,7 @@
       },
       "injector": {
         "target": "all",
+        "cleanup": "none",
         "method": "paste",
         "layout": "current"
       }
@@ -171,6 +178,7 @@
       },
       "injector": {
         "target": "word",
+        "cleanup": "none",
         "method": "paste",
         "layout": "current"
       }
@@ -186,6 +194,7 @@
       },
       "injector": {
         "target": "line",
+        "cleanup": "none",
         "method": "paste",
         "layout": "current"
       }
@@ -201,6 +210,7 @@
       },
       "injector": {
         "target": "selection",
+        "cleanup": "none",
         "method": "paste",
         "layout": "current"
       }
@@ -216,6 +226,7 @@
       },
       "injector": {
         "target": "input",
+        "cleanup": "none",
         "method": "paste",
         "layout": "current"
       }
@@ -231,6 +242,7 @@
       },
       "injector": {
         "target": "events",
+        "cleanup": "none",
         "method": "paste",
         "layout": "current"
       }
@@ -245,7 +257,8 @@
       },
       "injector": {
         "target": "none",
-        "method": "type",
+        "cleanup": "backspace",
+        "method": "type_and_paste",
         "layout": "en-US"
       }
     },
@@ -257,7 +270,8 @@
       },
       "injector": {
         "target": "none",
-        "method": "paste",
+        "cleanup": "backspace",
+        "method": "type_and_paste",
         "layout": "en-US"
       }
     }
@@ -277,6 +291,7 @@
           },
           "injector": {
             "target": "selection",
+            "cleanup": "none",
             "method": "paste",
             "layout": "current"
           }
@@ -292,6 +307,7 @@
           },
           "injector": {
             "target": "selection",
+            "cleanup": "none",
             "method": "paste",
             "layout": "current"
           }
@@ -307,6 +323,7 @@
           },
           "injector": {
             "target": "selection",
+            "cleanup": "none",
             "method": "paste",
             "layout": "current"
           }
@@ -322,6 +339,7 @@
           },
           "injector": {
             "target": "selection",
+            "cleanup": "none",
             "method": "paste",
             "layout": "current"
           }
@@ -337,6 +355,7 @@
           },
           "injector": {
             "target": "selection",
+            "cleanup": "none",
             "method": "paste",
             "layout": "current"
           }
