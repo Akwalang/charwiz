@@ -10,6 +10,7 @@ use crate::common::enums::{
 #[derive(Debug, Clone, Deserialize)]
 pub struct Injector {
   pub target: TransformTargetEnum,
+  #[serde(default)]
   pub cleanup: CleanupMethodEnum,
   pub method: InjectMethodEnum,
   pub layout: KeyboardLayoutEnum,

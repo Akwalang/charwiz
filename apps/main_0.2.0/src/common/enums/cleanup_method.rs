@@ -4,5 +4,11 @@ use serde::Deserialize;
 #[serde(rename_all = "snake_case")]
 pub enum CleanupMethodEnum {
   None,
-  Backspace,
+  Backspace(u8),
+}
+
+impl Default for CleanupMethodEnum {
+  fn default() -> Self {
+    CleanupMethodEnum::None
+  }
 }

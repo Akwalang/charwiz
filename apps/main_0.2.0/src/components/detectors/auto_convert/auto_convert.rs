@@ -8,6 +8,7 @@ use crate::settings::Settings;
 use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
+use crate::common::enums::CleanupMethodEnum;
 use crate::common::events::{InputEvent, CommandEvent};
 
 pub struct AutoConvertDetector {
@@ -59,7 +60,9 @@ impl AutoConvertDetector {
       let event_stack = state.keyboard.event_stack.clone();
 
       let executor = converter.executor.clone();
-      let injector = converter.injector.clone();
+      let mut injector = converter.injector.clone();
+
+      injector.cleanup = CleanupMethodEnum::Backspace(converter.text.chars().count() as u8);
 
       let command = CommandEvent { char_stack, event_stack, executor, injector };
 

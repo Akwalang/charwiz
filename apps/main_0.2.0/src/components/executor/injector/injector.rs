@@ -42,10 +42,8 @@ impl Injector {
   async fn remove_injection_place(&self, emulator: &Emulator, event: &CommandEvent) -> anyhow::Result<()> {
     match event.injector.cleanup {
       CleanupMethodEnum::None => {},
-      CleanupMethodEnum::Backspace => {
-        // println!("{:#?}", event);
-
-        for _ in 0..6 {
+      CleanupMethodEnum::Backspace(count) => {
+        for _ in 0..count {
           emulator.run(commands::create_backspace_pipeline()).await?;
         }
       },
