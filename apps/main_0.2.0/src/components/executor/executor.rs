@@ -13,13 +13,9 @@ use crate::Settings;
 use crate::components::state::{State, ApplicationStatus};
 use crate::components::event_hub::EventHub;
 
-use crate::common::enums::{TransformTargetEnum, ExecutorTypeEnum};
 use crate::common::events::CommandEvent;
 
 pub struct Executor {
-  platform: &'static Platform,
-  settings: &'static Settings,
-
   emulator: Emulator,
   extractor: Extractor,
   transformer: Transformer,
@@ -42,7 +38,6 @@ impl Executor {
     let injector = Injector::new(platform, settings);
 
     Arc::new(Executor {
-      platform, settings,
       emulator, extractor, transformer, injector,
       state, event_hub,
     })

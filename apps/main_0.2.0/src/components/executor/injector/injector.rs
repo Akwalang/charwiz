@@ -1,5 +1,6 @@
+use std::usize;
+
 use rust_logger::*;
-use rdev::Key;
 
 use crate::platform::Platform;
 use crate::settings::Settings;
@@ -9,7 +10,13 @@ use crate::components::executor::emulator::Emulator;
 
 use crate::common::enums::{InjectMethodEnum, CleanupMethodEnum};
 use crate::common::events::CommandEvent;
-use crate::common::structs::{KeyboardEventSnapshot, KeyboardModifiers};
+use crate::common::structs::KeyboardEventSnapshot;
+
+type CharLine = (String, String, Vec<bool>);
+type ExecuteLine = (String, String, String);
+
+const PASTE_LINE_NAME: &'static str = "Paste";
+
 pub struct Injector {
   platform: &'static Platform,
   settings: &'static Settings,
@@ -24,8 +31,8 @@ impl Injector {
     self.remove_injection_place(emulator, &event).await?;
 
     match event.injector.method {
-      InjectMethodEnum::TypeAndPaste => self.use_type_and_paste(value).await?,
-      InjectMethodEnum::TypeAndSkip => self.use_type_and_skip(value).await?,
+      InjectMethodEnum::TypeAndPaste => self.use_type_and_paste(emulator, value).await?,
+      InjectMethodEnum::TypeAndSkip => self.use_type_and_skip(emulator, value).await?,
       InjectMethodEnum::Paste => self.use_paste(emulator, value).await?,
     }
 
@@ -38,7 +45,7 @@ impl Injector {
       CleanupMethodEnum::Backspace => {
         // println!("{:#?}", event);
 
-        for _ in 0..3 {
+        for _ in 0..6 {
           emulator.run(commands::create_backspace_pipeline()).await?;
         }
       },
@@ -60,77 +67,100 @@ impl Injector {
     result
   }
 
-  async fn use_type_and_paste(&self, value: String) -> anyhow::Result<()> {
-    self.settings.keyboard_layouts.borrow().check_keyboard_setup()?;
+  async fn use_type_and_paste(&self, emulator: &Emulator, value: String) -> anyhow::Result<()> {
+    let execute_line = self.prepare_execute_line(value)?;
 
-    let (type_lines, paste_line) = self.calculate_char_lines(&value);
-
-    Self::debug_print_char_lines(&type_lines, &paste_line);
-
-    let execute_line = self.calculate_execute_line(&value, type_lines, paste_line);
-
-    Self::debug_print_execute_line(&execute_line);
-
-    Ok(())
-  }
-
-  async fn use_type_and_skip(&self, value: String) -> anyhow::Result<()> {
-    self.settings.keyboard_layouts.borrow().check_keyboard_setup()?;
-
-    let (type_lines, paste_line) = self.calculate_char_lines(&value);
-
-    Self::debug_print_char_lines(&type_lines, &paste_line);
-
-    Ok(())
-  }
-
-  async fn use_type(&self, value: String) -> anyhow::Result<()> {
-    let settings_kl = self.settings.keyboard_layouts.borrow();
-
-    settings_kl.check_keyboard_setup()?;
-
-
-    let chars = value.chars();
-
-    let mut pipeline: Vec<KeyboardEventSnapshot> = Vec::with_capacity(chars.clone().count());
-
-    let platform_kl = self.platform.keyboard_layouts.borrow();
-
-    let current_layout_name = platform_kl.get_current_keyboard_layout();
-    let current_layout_chars = settings_kl.items.get(&current_layout_name.name).unwrap();
-
-    for r#char in chars {
-      let snapshot = current_layout_chars.chars.get(&r#char);
-
-      if let Some(snapshot) = snapshot {
-        pipeline.push(snapshot.clone());
-        continue;
-      }
-
-      let mut next_layout_name: Option<String> = None;
-
-      for item in &settings_kl.items {
-        if item.1.chars.get(&r#char).is_none() { continue; }
-
-        next_layout_name = Some(item.0.to_owned());
+    for line in execute_line {
+      if line.1 == PASTE_LINE_NAME {
+        self.do_paste(emulator, line).await?;
+      } else {
+        self.do_type(emulator, line).await?;
       }
     }
 
     Ok(())
   }
 
+  async fn use_type_and_skip(&self, emulator: &Emulator, value: String) -> anyhow::Result<()> {
+    let execute_line = self.prepare_execute_line(value)?;
+
+    for line in execute_line {
+      if line.1 != PASTE_LINE_NAME {
+        self.do_type(emulator, line).await?;
+      }
+    }
+
+    Ok(())
+  }
+
+  async fn do_paste(&self, emulator: &Emulator, line: ExecuteLine) -> anyhow::Result<()> {
+    self.platform.clipboard.borrow_mut().backup();
+    self.platform.clipboard.borrow_mut().set_clipboard_text(&line.2)?;
+
+    emulator.run(commands::create_paste_pipeline()).await?;
+
+    self.platform.clipboard.borrow_mut().restore();
+
+    Ok(())
+  }
+
+  async fn do_type(&self, emulator: &Emulator, line: ExecuteLine) -> anyhow::Result<()> {
+    let settings = self.settings.keyboard_layouts.borrow();
+    let layout_chars = settings.items.get(&line.1).unwrap();
+
+    self.platform.keyboard_layouts.borrow_mut().set_keyboard_layouts(&line.0)?;
+
+    let chars = line.2.chars();
+
+    let mut pipeline: Vec<KeyboardEventSnapshot> = Vec::with_capacity(2 + chars.clone().count());
+
+    pipeline.push(KeyboardEventSnapshot::default());
+
+    for r#char in chars {
+      let snapshot = layout_chars.chars.get(&r#char).unwrap();
+
+      pipeline.push(snapshot.clone());
+    }
+
+    pipeline.push(KeyboardEventSnapshot::default());
+
+    emulator.run(pipeline).await?;
+
+    Ok(())
+  }
+
+  fn prepare_execute_line(&self, value: String) -> anyhow::Result<Vec<ExecuteLine>> {
+    self.settings.keyboard_layouts.borrow().check_keyboard_setup()?;
+
+    let char_lines = self.calculate_char_lines(&value);
+
+    Self::debug_print_char_lines(&char_lines);
+
+    let execute_line = self.calculate_execute_line(&value, char_lines);
+
+    Self::debug_print_execute_line(&execute_line);
+
+    Ok(execute_line)
+  }
+
+  // Create lines of the following format
+  // 00000409  en-US  1 1 1 1 1 1 1 0 0 0 0 0 0 1 0 0 0 0 0 0
+  // 00000419  ru-RU  0 0 0 0 0 0 1 0 0 0 0 0 0 1 1 1 1 1 1 1
+  //           Paste  0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 0
+
   // TODO: Can panic if Settings::check_keyboard_setup wasn't run before
-  fn calculate_char_lines(&self, value: &str) -> (Vec<(String, Vec<bool>)>, Vec<bool>) {
+  fn calculate_char_lines(&self, value: &str) -> Vec<CharLine> {
     let settings_kl = self.settings.keyboard_layouts.borrow();
     let platform_kl = self.platform.keyboard_layouts.borrow();
 
-    let capacity = value.chars().count();
+    let capacity = platform_kl.items.len();
+    let length = value.chars().count();
 
-    let mut type_lines: Vec<(String, Vec<bool>)> = vec![];
-    let mut paste_line: Vec<bool> = Vec::with_capacity(capacity);
+    let mut type_lines: Vec<CharLine> = Vec::with_capacity(1 + capacity); // +1 for paste line
+    let mut paste_line: CharLine = (String::new(), String::from(PASTE_LINE_NAME), Vec::with_capacity(1 + length));
 
     for layout in &platform_kl.items {
-      type_lines.push((layout.name.to_owned(), Vec::with_capacity(capacity)));
+      type_lines.push((layout.id.to_owned(), layout.name.to_owned(), Vec::with_capacity(length)));
     }
 
     for char in value.chars() {
@@ -145,92 +175,84 @@ impl Injector {
         is_any_exists = is_any_exists || is_exists;
 
         for line in &mut type_lines {
-          if &line.0 != layout_name { continue; }
+          if &line.1 != layout_name { continue; }
 
-          line.1.push(is_exists);
+          line.2.push(is_exists);
           break;
         }
       }
 
-      paste_line.push(!is_any_exists);
+      paste_line.2.push(!is_any_exists);
     }
 
-    (type_lines, paste_line)
+    type_lines.push(paste_line);
+
+    type_lines
   }
 
-  fn calculate_execute_line(&self, value: &str, type_lines: Vec<(String, Vec<bool>)>, paste_line: Vec<bool>) -> Vec<(String, String)> {
-    let mut schedule: Vec<(String, String)> = vec![];
+  // Covnver char lines into the following format
+  // 00000409  en-US  "Native "
+  //           Paste  "🔥🔥🔥🔥🔥🔥🔥"
+  // 00000419  ru-RU  " скрипт"
 
-    let length = paste_line.len();
-
-    let mut offset: usize = 0;
-
-    let mut longest_size: usize = 0;
-    let mut longest_line: String = String::new();
+  fn calculate_execute_line(&self, value: &str, char_lines: Vec<CharLine>) -> Vec<ExecuteLine> {
+    let mut schedule: Vec<ExecuteLine> = vec![];
 
     let chars = value.chars().collect::<Vec<char>>();
 
-    while offset < length {
-      for (name, line) in &type_lines {
-        let mut size = 0;
+    let mut offset: usize = 0;
 
-        for index in offset..length {
+    while offset < chars.len() {
+      let mut longest_size: usize = 0;
+      let mut longest_line_id: String = String::new();
+      let mut longest_line_name: String = String::new();
+
+      for (id, name, line) in &char_lines {
+        let mut count = 0;
+
+        for index in offset..chars.len() {
           if !line[index] { break; }
-          size += 1;
+          count += 1;
         }
 
-        if size > longest_size {
-          longest_size = size;
-          longest_line = name.to_owned();
+        if count > longest_size {
+          longest_size = count;
+          longest_line_id = id.to_owned();
+          longest_line_name = name.to_owned();
         }
       }
 
-      println!("Longest line: {} (size: {})", longest_line, longest_size);
+      schedule.push((longest_line_id, longest_line_name, chars[offset..offset + longest_size].iter().collect()));
 
-      if longest_size == 0 {
-        offset += 1;
-        continue;
-      }
-
-      schedule.push((longest_line.clone(), chars[offset..offset + (longest_size - 1)].iter().collect()));
       offset += longest_size;
     }
 
     schedule
   }
 
-  fn debug_print_char_lines(type_lines: &Vec<(String, Vec<bool>)>, paste_line: &Vec<bool>) {
-    for line in type_lines {
-      let mut line_str = format!("<i+>{}</>: ", line.0);
+  fn debug_print_char_lines(char_lines: &Vec<CharLine>) {
+    debug!("<$>Injector</>: Type char lines:");
 
-      for is_exists in &line.1 {
+    for line in char_lines {
+      let mut line_str = format!("<i+>{}</>:", line.1);
+
+      for is_exists in &line.2 {
         if *is_exists {
-          line_str.push_str("<i>1</> ");
+          line_str.push_str(" <i>1</>");
         } else {
-          line_str.push_str("<i>0</> ");
+          line_str.push_str(" <i>0</>");
         }
       }
 
-      log!("{}", line_str);
+      debug!("{}", line_str);
     }
-
-    let mut paste_line_str = String::from("<i+>Paste</>: ");
-
-    for is_exists in paste_line {
-      if *is_exists {
-        paste_line_str.push_str("<i>1</> ");
-      } else {
-        paste_line_str.push_str("<i>0</> ");
-      }
-    }
-
-    log!("{}", paste_line_str);
   }
 
-  fn debug_print_execute_line(execute_line: &Vec<(String, String)>) {
-    println!("{:#?}", execute_line);
-    // for line in execute_line {
-    //   log!("<i+>{}</>: <i>{}</>", line.0, line.1);
-    // }
+  fn debug_print_execute_line(execute_line: &Vec<ExecuteLine>) {
+    debug!("<$>Injector</>: Type execute lines:");
+
+    for line in execute_line {
+      debug!("<i+>{}</>: <i>{:?}</>", &line.1, &line.2);
+    }
   }
 }

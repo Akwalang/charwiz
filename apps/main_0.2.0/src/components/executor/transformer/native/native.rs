@@ -10,7 +10,9 @@ use crate::components::executor::enums::InputType;
 use crate::common::events::CommandEvent;
 
 pub struct NativeTransformer {
+  #[allow(dead_code)]
   platform: &'static Platform,
+  #[allow(dead_code)]
   settings: &'static Settings,
 }
 
@@ -25,8 +27,8 @@ impl NativeTransformer {
 }
 
 impl Transformer for NativeTransformer {
-  async fn transform(&self, event: &CommandEvent, target: &InputType) -> String {
-    let result = String::from("Native куыгде");
+  async fn transform(&self, _event: &CommandEvent, _target: &InputType) -> String {
+    let result = String::from("Native 🔥🔥🔥🔥🔥🔥🔥 скрипт");
 
     log!("<$>NativeTransformer</>: Result: <i+>{}</>", result);
 

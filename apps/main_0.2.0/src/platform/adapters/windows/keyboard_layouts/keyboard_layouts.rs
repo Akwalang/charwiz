@@ -50,13 +50,13 @@ impl KeyboardLayouts {
 
   pub fn set_keyboard_layouts(&self, layout_id: &str) -> anyhow::Result<Option<KeyboardLayoutItem>> {
     let Some(lt) = self.get_keyboard_layout_by_id(layout_id) else {
-      log!(" - <->Keyboard layout not found</>");
+      warn!("<$>Platform::KeyboardLayouts</>: <->Keyboard layout not found: {}</>", layout_id);
       return Ok(None);
     };
 
     utils::switch_global_keyboard_layout(layout_id)?;
 
-    log!(" + <+>{}</> ({})", lt.name, layout_id);
+    log!("<$>Platform::KeyboardLayouts</>: Switch keyboard layout to: <i+>{}</> (<i+>{}</>)", lt.name, layout_id);
 
     Ok(Some(lt.clone()))
   }
