@@ -1,5 +1,7 @@
 use rdev::{Event, EventType, Key};
 
+use rust_logger::*;
+
 use crate::platform::Platform;
 use crate::settings::Settings;
 
@@ -65,10 +67,10 @@ impl KeyboardState {
 
     if !state { return; }
 
-    if Self::is_backspace(&key) {
-      self.handle_backspace(key);
-    } else if self.is_stack_breaker(&key) {
+    if self.is_stack_breaker(&key) {
       self.handle_stack_breaker(key);
+    } else if Self::is_backspace(&key) {
+      self.handle_backspace(key);
     } else {
       self.handle_insert(key);
     }
@@ -122,7 +124,9 @@ impl KeyboardState {
     self.event_stack.pop();
   }
 
-  fn stack_clear(&mut self) {
+  pub fn stack_clear(&mut self) {
+    debug!("<$>KeyboardState</>: Drop keyboard stack");
+
     self.char_stack.clear();
     self.event_stack.clear();
   }
@@ -135,6 +139,7 @@ impl KeyboardState {
     }
   }
 
+  #[inline]
   fn is_backspace(key: &Key) -> bool {
     *key == Key::Backspace
   }
@@ -146,8 +151,13 @@ impl KeyboardState {
       Key::PageUp | Key::PageDown => true,
       Key::Home | Key::End => true,
       _ => false
+        || (*key == Key::Backspace && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
         || (*key == Key::KeyA && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyX && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
         || (*key == Key::KeyC && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyY && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyZ && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyZ && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY) && self.modifiers.is_any_pressed(KeyboardModifiers::SHIFT_ANY))
       ,
     }
   }

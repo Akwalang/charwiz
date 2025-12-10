@@ -2,13 +2,13 @@ use serde::Deserialize;
 
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(rename_all = "snake_case")]
-pub enum CleanupMethodEnum {
+pub enum UserInputCleanupEnum {
   None,
   Backspace(u8),
 }
 
-impl Default for CleanupMethodEnum {
+impl Default for UserInputCleanupEnum {
   fn default() -> Self {
-    CleanupMethodEnum::None
+    UserInputCleanupEnum::None
   }
 }

@@ -1,4 +1,5 @@
 use std::usize;
+use tokio::time::{sleep, Duration};
 
 use rust_logger::*;
 
@@ -8,7 +9,7 @@ use crate::settings::Settings;
 use crate::components::executor::commands;
 use crate::components::executor::emulator::Emulator;
 
-use crate::common::enums::{InjectMethodEnum, CleanupMethodEnum};
+use crate::common::enums::{InjectMethodEnum, UserInputCleanupEnum};
 use crate::common::events::CommandEvent;
 use crate::common::structs::KeyboardEventSnapshot;
 
@@ -27,7 +28,7 @@ impl Injector {
     Self { platform, settings }
   }
 
-  pub async fn inject(&self, emulator: &Emulator, event: CommandEvent, value: String) -> anyhow::Result<()> {
+  pub async fn inject(&self, emulator: &Emulator, event: &CommandEvent, value: String) -> anyhow::Result<()> {
     self.remove_injection_place(emulator, &event).await?;
 
     match event.injector.method {
@@ -40,9 +41,9 @@ impl Injector {
   }
 
   async fn remove_injection_place(&self, emulator: &Emulator, event: &CommandEvent) -> anyhow::Result<()> {
-    match event.injector.cleanup {
-      CleanupMethodEnum::None => {},
-      CleanupMethodEnum::Backspace(count) => {
+    match event.injector.user_input_cleanup {
+      UserInputCleanupEnum::None => {},
+      UserInputCleanupEnum::Backspace(count) => {
         for _ in 0..count {
           emulator.run(commands::create_backspace_pipeline()).await?;
         }
@@ -107,6 +108,10 @@ impl Injector {
     let layout_chars = settings.items.get(&line.1).unwrap();
 
     self.platform.keyboard_layouts.borrow_mut().set_keyboard_layouts(&line.0)?;
+
+    let delay = self.settings.main_settings.borrow().settings.timings.key_action_delay;
+
+    sleep(Duration::from_nanos(delay)).await;
 
     let chars = line.2.chars();
 

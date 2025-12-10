@@ -15,9 +15,8 @@ impl KeyboardModifiers {
   pub const META_LEFT: u8 = 1 << 6;
   pub const META_RIGHT: u8 = 1 << 7;
 
-  #[allow(dead_code)]
-  pub const SHIFT_ANY: u8 = Self::SHIFT_LEFT | Self::SHIFT_RIGHT;
   pub const CONTROL_ANY: u8 = Self::CONTROL_LEFT | Self::CONTROL_RIGHT;
+  pub const SHIFT_ANY: u8 = Self::SHIFT_LEFT | Self::SHIFT_RIGHT;
 
   #[inline(always)]
   pub fn new(state: u8) -> Self {
@@ -49,20 +48,6 @@ impl KeyboardModifiers {
       Key::MetaLeft => self.0 &= !Self::META_LEFT,
       Key::MetaRight => self.0 &= !Self::META_RIGHT,
       _ => {},
-    }
-  }
-
-  pub fn is_pressed(&self, key: &Key) -> bool {
-    match key {
-      Key::ControlLeft => (self.0 & Self::CONTROL_LEFT) != 0,
-      Key::ControlRight => (self.0 & Self::CONTROL_RIGHT) != 0,
-      Key::ShiftLeft => (self.0 & Self::SHIFT_LEFT) != 0,
-      Key::ShiftRight => (self.0 & Self::SHIFT_RIGHT) != 0,
-      Key::Alt => (self.0 & Self::ALT) != 0,
-      Key::AltGr => (self.0 & Self::ALT_GR) != 0,
-      Key::MetaLeft => (self.0 & Self::META_LEFT) != 0,
-      Key::MetaRight => (self.0 & Self::META_RIGHT) != 0,
-      _ => false,
     }
   }
 

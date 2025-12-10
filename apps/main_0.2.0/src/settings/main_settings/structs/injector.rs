@@ -1,7 +1,8 @@
 use serde::Deserialize;
 
 use crate::common::enums::{
-  CleanupMethodEnum,
+  UserInputCleanupEnum,
+  KeyboardStateCleanupEnum,
   InjectMethodEnum,
   KeyboardLayoutEnum,
   TransformTargetEnum,
@@ -9,9 +10,11 @@ use crate::common::enums::{
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Injector {
-  pub target: TransformTargetEnum,
   #[serde(default)]
-  pub cleanup: CleanupMethodEnum,
+  pub user_input_cleanup: UserInputCleanupEnum,
+  #[serde(default)]
+  pub keyboard_state_cleanup: KeyboardStateCleanupEnum,
+  pub target: TransformTargetEnum,
   pub method: InjectMethodEnum,
   pub layout: KeyboardLayoutEnum,
 }

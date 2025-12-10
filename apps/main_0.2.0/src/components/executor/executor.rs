@@ -13,6 +13,7 @@ use crate::Settings;
 use crate::components::state::{State, ApplicationStatus};
 use crate::components::event_hub::EventHub;
 
+use crate::common::enums::KeyboardStateCleanupEnum;
 use crate::common::events::CommandEvent;
 
 pub struct Executor {
@@ -76,8 +77,12 @@ impl Executor {
 
     let value = self.transformer.transform(&event, &target).await;
 
-    if let Err(error) = self.injector.inject(&self.emulator, event, value).await {
+    if let Err(error) = self.injector.inject(&self.emulator, &event, value).await {
       warn!("<$>Executor</>: Injection failed: {}", error);
+    }
+
+    if event.injector.keyboard_state_cleanup == KeyboardStateCleanupEnum::Drop {
+      self.state.lock().unwrap().keyboard.stack_clear();
     }
 
     self.unlock_application();

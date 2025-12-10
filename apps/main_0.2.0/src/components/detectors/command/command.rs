@@ -8,7 +8,7 @@ use crate::settings::Settings;
 use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
-use crate::common::enums::CleanupMethodEnum;
+use crate::common::enums::{UserInputCleanupEnum, KeyboardStateCleanupEnum};
 use crate::common::events::{CommandEvent, InputEvent};
 
 pub struct CommandDetector {
@@ -62,7 +62,8 @@ impl CommandDetector {
       let executor = command.executor.clone();
       let mut injector = command.injector.clone();
 
-      injector.cleanup = CleanupMethodEnum::Backspace(command.cmd.chars().count() as u8);
+      injector.user_input_cleanup = UserInputCleanupEnum::Backspace(command.cmd.chars().count() as u8);
+      injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
 
       let command = CommandEvent { char_stack, event_stack, executor, injector };
 

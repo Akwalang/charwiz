@@ -8,7 +8,7 @@ use crate::settings::Settings;
 use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
-use crate::common::enums::CleanupMethodEnum;
+use crate::common::enums::{UserInputCleanupEnum, KeyboardStateCleanupEnum};
 use crate::common::events::{InputEvent, CommandEvent};
 
 pub struct AutoConvertDetector {
@@ -62,7 +62,8 @@ impl AutoConvertDetector {
       let executor = converter.executor.clone();
       let mut injector = converter.injector.clone();
 
-      injector.cleanup = CleanupMethodEnum::Backspace(converter.text.chars().count() as u8);
+      injector.user_input_cleanup = UserInputCleanupEnum::Backspace(converter.text.chars().count() as u8);
+      injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
 
       let command = CommandEvent { char_stack, event_stack, executor, injector };
 
