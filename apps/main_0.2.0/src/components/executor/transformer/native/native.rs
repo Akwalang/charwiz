@@ -3,6 +3,7 @@ use rust_logger::*;
 use crate::Platform;
 use crate::Settings;
 
+use super::methods;
 use super::super::traits::Transformer;
 
 use crate::components::executor::enums::InputType;
@@ -27,11 +28,18 @@ impl NativeTransformer {
 }
 
 impl Transformer for NativeTransformer {
-  async fn transform(&self, _event: &CommandEvent, _target: &InputType) -> String {
-    let result = String::from("Native 🔥🔥🔥🔥🔥🔥🔥 скрипт");
+  async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
+    println!("Executor: {:#?}", event.executor.value);
+    println!("Target: {:#?}", target);
+    match event.executor.value.as_str() {
+      "invert_case" => methods::invert_case(target),
+      _ => InputType::Text("Transformer not found".to_owned()),
+    }
 
-    log!("<$>NativeTransformer</>: Result: <i+>{}</>", result);
+    // let result = String::from("Native 🔥🔥🔥🔥🔥🔥🔥 скрипт");
 
-    result
+    // log!("<$>NativeTransformer</>: Result: <i+>{}</>", result);
+
+    // InputType::Text(result)
   }
 }

@@ -151,13 +151,13 @@ impl KeyboardState {
       Key::PageUp | Key::PageDown => true,
       Key::Home | Key::End => true,
       _ => false
-        || (*key == Key::Backspace && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyA && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyX && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyC && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyY && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyZ && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyZ && self.modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY) && self.modifiers.is_any_pressed(KeyboardModifiers::SHIFT_ANY))
+        || (*key == Key::Backspace && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyA && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyX && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyC && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyY && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyZ && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyZ && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY) && self.modifiers.is_any_pressed(KeyboardModifiers::SHIFT_ANY))
       ,
     }
   }

@@ -80,11 +80,11 @@ impl PluginTransformer {
 }
 
 impl Transformer for PluginTransformer {
-  async fn transform(&self, event: &CommandEvent, target: &InputType) -> String {
+  async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
     let result = String::from("Plugin result");
 
     log!("<$>PluginTransformer</>: Result: <i+>{}</>", result);
 
-    result
+    InputType::Text(result)
   }
 }

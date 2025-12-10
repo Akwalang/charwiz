@@ -14,7 +14,7 @@ impl Emulator {
     Self { settings }
   }
 
-  pub async fn run(&self, pipeline: Vec<KeyboardEventSnapshot>) -> anyhow::Result<()> {
+  pub async fn run(&self, pipeline: &[KeyboardEventSnapshot]) -> anyhow::Result<()> {
     let queue = pipeline.iter();
 
     let mut current = &KeyboardEventSnapshot::default();

@@ -7,6 +7,7 @@ use crate::platform::Platform;
 use crate::settings::Settings;
 
 use crate::components::executor::commands;
+use crate::components::executor::enums::InputType;
 use crate::components::executor::emulator::Emulator;
 
 use crate::common::enums::{InjectMethodEnum, UserInputCleanupEnum};
@@ -28,13 +29,18 @@ impl Injector {
     Self { platform, settings }
   }
 
-  pub async fn inject(&self, emulator: &Emulator, event: &CommandEvent, value: String) -> anyhow::Result<()> {
+  pub async fn inject(&self, emulator: &Emulator, event: &CommandEvent, input: InputType) -> anyhow::Result<()> {
     self.remove_injection_place(emulator, &event).await?;
 
-    match event.injector.method {
-      InjectMethodEnum::TypeAndPaste => self.use_type_and_paste(emulator, value).await?,
-      InjectMethodEnum::TypeAndSkip => self.use_type_and_skip(emulator, value).await?,
-      InjectMethodEnum::Paste => self.use_paste(emulator, value).await?,
+    match input {
+      InputType::Text(value) => {
+        match event.injector.method {
+          InjectMethodEnum::TypeAndPaste => self.use_type_and_paste(emulator, value).await?,
+          InjectMethodEnum::TypeAndSkip => self.use_type_and_skip(emulator, value).await?,
+          InjectMethodEnum::Paste => self.use_paste(emulator, value).await?,
+        }
+      }
+      InputType::Events(value) => self.use_emulate(emulator, &value).await?,
     }
 
     Ok(())
@@ -45,12 +51,21 @@ impl Injector {
       UserInputCleanupEnum::None => {},
       UserInputCleanupEnum::Backspace(count) => {
         for _ in 0..count {
-          emulator.run(commands::create_backspace_pipeline()).await?;
+          emulator.run(&commands::create_backspace_pipeline()).await?;
         }
       },
     }
 
     Ok(())
+  }
+
+  async fn use_emulate(&self, emulator: &Emulator, value: &[KeyboardEventSnapshot]) -> anyhow::Result<()> {
+    let mut pipeline = Vec::with_capacity(1 + value.len());
+
+    pipeline.extend_from_slice(value);
+    pipeline.extend_from_slice(&commands::create_release_pipeline());
+
+    emulator.run(&pipeline).await
   }
 
   async fn use_paste(&self, emulator: &Emulator, value: String) -> anyhow::Result<()> {
@@ -59,7 +74,7 @@ impl Injector {
     clipboard.backup();
     clipboard.set_clipboard_text(&value)?;
 
-    let result = emulator.run(commands::create_paste_pipeline()).await;
+    let result = emulator.run(&commands::create_paste_pipeline()).await;
 
     clipboard.restore();
 
@@ -96,7 +111,7 @@ impl Injector {
     self.platform.clipboard.borrow_mut().backup();
     self.platform.clipboard.borrow_mut().set_clipboard_text(&line.2)?;
 
-    emulator.run(commands::create_paste_pipeline()).await?;
+    emulator.run(&commands::create_paste_pipeline()).await?;
 
     self.platform.clipboard.borrow_mut().restore();
 
@@ -127,7 +142,7 @@ impl Injector {
 
     pipeline.push(KeyboardEventSnapshot::default());
 
-    emulator.run(pipeline).await?;
+    emulator.run(&pipeline).await?;
 
     Ok(())
   }

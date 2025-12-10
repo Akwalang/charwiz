@@ -1,7 +1,7 @@
 {
   "timings": {
-    "forgetTimeout": 10000,
-    "keyActionDelay": 10
+    "forgetTimeout": 10000000,
+    "keyActionDelay": 10000
   },
   "executors": [
     {
@@ -110,7 +110,7 @@
         "value": "convert_layout"
       },
       "injector": {
-        "target": "input",
+        "target": "events",
         "method": "type_and_paste",
         "layout": "next"
       }
@@ -122,10 +122,10 @@
       },
       "executor": {
         "type": "native",
-        "value": "convert_layout"
+        "value": "invert_case"
       },
       "injector": {
-        "target": "selection",
+        "target": "events",
         "method": "type_and_paste",
         "layout": "current"
       }

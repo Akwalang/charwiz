@@ -73,11 +73,9 @@ impl Executor {
       return;
     };
 
-    println!("Extracted target: {:?}", target);
+    let input = self.transformer.transform(&event, &target).await;
 
-    let value = self.transformer.transform(&event, &target).await;
-
-    if let Err(error) = self.injector.inject(&self.emulator, &event, value).await {
+    if let Err(error) = self.injector.inject(&self.emulator, &event, input).await {
       warn!("<$>Executor</>: Injection failed: {}", error);
     }
 

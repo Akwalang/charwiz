@@ -26,11 +26,11 @@ impl StaticTransformer {
 }
 
 impl Transformer for StaticTransformer {
-  async fn transform(&self, event: &CommandEvent, _target: &InputType) -> String {
+  async fn transform(&self, event: &CommandEvent, _target: &InputType) -> InputType {
     let result = event.executor.value.to_owned();
 
     log!("<$>StaticTransformer</>: Result: <i+>{}</>", result);
 
-    result
+    InputType::Text(result)
   }
 }

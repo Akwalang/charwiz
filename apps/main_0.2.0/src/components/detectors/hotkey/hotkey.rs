@@ -8,6 +8,7 @@ use crate::components::state::State;
 
 use crate::settings::{Settings, structs::HotKey};
 
+use crate::common::enums::UserInputCleanupEnum;
 use crate::common::events::{CommandEvent, InputEvent};
 use crate::common::structs::KeyboardEventSnapshot;
 
@@ -96,7 +97,9 @@ impl HotkeyDetector {
     let event_stack = state.keyboard.event_stack.clone();
 
     let executor = hot_key.executor.clone();
-    let injector = hot_key.injector.clone();
+    let mut injector = hot_key.injector.clone();
+
+    injector.user_input_cleanup = UserInputCleanupEnum::Backspace(char_stack.len() as u8);
 
     let command = CommandEvent { char_stack, event_stack, executor, injector };
 

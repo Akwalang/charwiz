@@ -29,15 +29,15 @@ impl Extractor {
       TransformTargetEnum::All => self.extract_all(emulator).await,
       TransformTargetEnum::Line => self.extract_line(emulator).await,
       TransformTargetEnum::Word => self.extract_word(emulator).await,
-      TransformTargetEnum::Input => self.extract_input(),
-      TransformTargetEnum::Events => self.extract_events(),
+      TransformTargetEnum::Input => self.extract_input(event),
+      TransformTargetEnum::Events => self.extract_events(event),
       TransformTargetEnum::Command => Self::extract_command(),
       TransformTargetEnum::Selection => self.extract_selection(emulator).await,
       TransformTargetEnum::Clipboard => self.extract_clipboard(),
     }
   }
 
-  async fn get_data_through_clipboard(&self, emulator: &Emulator, pipeline: Vec<KeyboardEventSnapshot>) -> anyhow::Result<InputType> {
+  async fn get_data_through_clipboard(&self, emulator: &Emulator, pipeline: &[KeyboardEventSnapshot]) -> anyhow::Result<InputType> {
     self.platform.clipboard.borrow_mut().backup();
 
     let _ = emulator.run(pipeline).await;
@@ -58,27 +58,23 @@ impl Extractor {
   }
 
   async fn extract_all(&self, emulator: &Emulator) -> anyhow::Result<InputType> {
-    self.get_data_through_clipboard(emulator, commands::create_copy_all_pipeline()).await
+    self.get_data_through_clipboard(emulator, &commands::create_copy_all_pipeline()).await
   }
 
   async fn extract_line(&self, emulator: &Emulator) -> anyhow::Result<InputType> {
-    self.get_data_through_clipboard(emulator, commands::create_copy_line_pipeline()).await
+    self.get_data_through_clipboard(emulator, &commands::create_copy_line_pipeline()).await
   }
 
   async fn extract_word(&self, emulator: &Emulator) -> anyhow::Result<InputType> {
-    self.get_data_through_clipboard(emulator, commands::create_copy_word_pipeline()).await
+    self.get_data_through_clipboard(emulator, &commands::create_copy_word_pipeline()).await
   }
 
-  fn extract_input(&self) -> anyhow::Result<InputType> {
-    let result = self.state.lock().unwrap().keyboard.get_string();
-
-    Ok(InputType::Text(result))
+  fn extract_input(&self, event: &CommandEvent) -> anyhow::Result<InputType> {
+    Ok(InputType::Text(event.char_stack.iter().collect()))
   }
 
-  fn extract_events(&self) -> anyhow::Result<InputType> {
-    let result = self.state.lock().unwrap().keyboard.get_events().clone();
-
-    Ok(InputType::Events(result))
+  fn extract_events(&self, event: &CommandEvent) -> anyhow::Result<InputType> {
+    Ok(InputType::Events(event.event_stack.clone()))
   }
 
   fn extract_command() -> anyhow::Result<InputType> {
@@ -86,7 +82,7 @@ impl Extractor {
   }
 
   async fn extract_selection(&self, emulator: &Emulator) -> anyhow::Result<InputType> {
-    self.get_data_through_clipboard(emulator, commands::create_copy_selection_pipeline()).await
+    self.get_data_through_clipboard(emulator, &commands::create_copy_selection_pipeline()).await
   }
 
   fn extract_clipboard(&self) -> anyhow::Result<InputType> {
