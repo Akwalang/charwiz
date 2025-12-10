@@ -29,17 +29,9 @@ impl NativeTransformer {
 
 impl Transformer for NativeTransformer {
   async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
-    println!("Executor: {:#?}", event.executor.value);
-    println!("Target: {:#?}", target);
     match event.executor.value.as_str() {
       "invert_case" => methods::invert_case(target),
       _ => InputType::Text("Transformer not found".to_owned()),
     }
-
-    // let result = String::from("Native 🔥🔥🔥🔥🔥🔥🔥 скрипт");
-
-    // log!("<$>NativeTransformer</>: Result: <i+>{}</>", result);
-
-    // InputType::Text(result)
   }
 }

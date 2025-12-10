@@ -125,8 +125,8 @@
         "value": "invert_case"
       },
       "injector": {
-        "target": "events",
-        "method": "type_and_paste",
+        "target": "input",
+        "method": "paste",
         "layout": "current"
       }
     },
