@@ -125,8 +125,8 @@
         "value": "invert_case"
       },
       "injector": {
-        "target": "input",
-        "method": "paste",
+        "target": "events",
+        "method": "type_and_paste",
         "layout": "current"
       }
     },
@@ -238,10 +238,46 @@
   ],
   "commands": [
     {
-      "cmd": ":uuid",
+      "cmd": ":uuid0",
       "executor": {
         "type": "plugin",
-        "value": "random_uuid"
+        "value": "uuid_v0"
+      },
+      "injector": {
+        "target": "none",
+        "method": "type_and_paste",
+        "layout": "en-US"
+      }
+    },
+    {
+      "cmd": ":uuid4",
+      "executor": {
+        "type": "plugin",
+        "value": "uuid_v4"
+      },
+      "injector": {
+        "target": "none",
+        "method": "type_and_paste",
+        "layout": "en-US"
+      }
+    },
+    {
+      "cmd": ":uuid7",
+      "executor": {
+        "type": "plugin",
+        "value": "uuid_v7"
+      },
+      "injector": {
+        "target": "none",
+        "method": "type_and_paste",
+        "layout": "en-US"
+      }
+    },
+    {
+      "cmd": ":catch",
+      "executor": {
+        "type": "plugin",
+        "value": "js_promise_catch"
       },
       "injector": {
         "target": "none",

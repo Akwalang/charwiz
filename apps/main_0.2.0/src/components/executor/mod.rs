@@ -1,7 +1,6 @@
 mod commands;
 mod enums;
 
-mod planner;
 mod emulator;
 mod extractor;
 mod injector;

@@ -3,12 +3,13 @@ use std::path::Path;
 
 use rust_logger::*;
 
-use mlua::{Lua, LuaOptions, Table, StdLib};
+use mlua::{Lua, LuaOptions, StdLib, Table, Function, Error};
 
 use crate::Platform;
 use crate::Settings;
 
 use super::super::traits::Transformer;
+use super::utils;
 
 use crate::components::executor::enums::InputType;
 
@@ -49,7 +50,7 @@ impl PluginTransformer {
   }
 
   fn initialize_lua_scripts() -> anyhow::Result<Option<Lua>> {
-    let safe_libs = StdLib::ALL ^ (StdLib::OS | StdLib::IO | StdLib::DEBUG | StdLib::PACKAGE);
+    let safe_libs = StdLib::ALL ^ (/*StdLib::OS | */StdLib::IO | StdLib::DEBUG | StdLib::PACKAGE);
 
     let lua = Lua::new_with(safe_libs, LuaOptions::new())?;
 
@@ -77,11 +78,43 @@ impl PluginTransformer {
 
     Ok(Some(lua))
   }
+
+  fn prepare_data(
+    &self,
+    event: &CommandEvent,
+    target: &InputType,
+  ) -> anyhow::Result<Table<'_>> {
+    let lua = self.lua.as_ref().unwrap();
+
+    let data = lua.create_table()?;
+
+    data.set("target", utils::injector_to_lua(&lua, &event.injector)?)?;
+
+    Ok(data)
+  }
 }
 
 impl Transformer for PluginTransformer {
   async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
-    let result = String::from("Plugin result");
+    let Some(lua) = self.lua.as_ref() else {
+      warn!("<$>PluginTransformer</>: Lua not initialized");
+      return target.clone();
+    };
+
+    let Ok(handler): Result<Function, Error> = lua.globals().get(event.executor.value.clone()) else {
+      warn!("<$>PluginTransformer</>: Lua function not found");
+      return target.clone();
+    };
+
+    let Ok(data) = self.prepare_data(event, target) else {
+      warn!("<$>PluginTransformer</>: Can't transform event data to Lua table");
+      return target.clone();
+    };
+
+    let Ok(result): Result<String, Error> = handler.call(data) else {
+      warn!("<$>PluginTransformer</>: Error during Lua function execution");
+      return target.clone();
+    };
 
     log!("<$>PluginTransformer</>: Result: <i+>{}</>", result);
 

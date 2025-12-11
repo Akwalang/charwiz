@@ -2,7 +2,7 @@ use rust_logger::*;
 
 use async_broadcast::{broadcast, InactiveReceiver, Receiver, Sender, TrySendError};
 
-use crate::common::events::{InputEvent, CommandEvent, StatusEvent};
+use crate::common::events::{InputEvent, CommandEvent};
 
 pub struct EventHub {
   input_cast: (Sender<InputEvent>, InactiveReceiver<InputEvent>),
