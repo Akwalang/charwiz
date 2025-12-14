@@ -294,7 +294,7 @@
       "injector": {
         "target": "none",
         "method": "type_and_paste",
-        "layout": "en-US"
+        "layout": "current"
       }
     }
   ],

@@ -122,7 +122,7 @@ impl Injector {
     let settings = self.settings.keyboard_layouts.borrow();
     let layout_chars = settings.items.get(&line.1).unwrap();
 
-    self.platform.keyboard_layouts.borrow_mut().set_keyboard_layouts(&line.0)?;
+    self.platform.keyboard_layouts.borrow_mut().set_keyboard_layout(&line.0)?;
 
     let delay = self.settings.main_settings.borrow().settings.timings.key_action_delay;
 

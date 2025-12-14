@@ -32,23 +32,47 @@ impl KeyboardLayouts {
     self.items.iter().find(|lt| lt.id == id)
   }
 
+  pub fn get_keyboard_layout_by_name(&self, name: &str) -> Option<&KeyboardLayoutItem> {
+    self.items.iter().find(|lt| lt.name == name)
+  }
+
   pub fn get_current_keyboard_layout(&self) -> &KeyboardLayoutItem {
     let id = utils::get_current_keyboard_layout_id();
 
     &self.get_keyboard_layout_by_id(&id).unwrap()
   }
 
+  pub fn get_previous_keyboard_layout(&self) -> &KeyboardLayoutItem {
+    let id = utils::get_current_keyboard_layout_id();
+    
+    self.get_previous_to_keyboard_layout(&id)
+  }
+
   pub fn get_next_keyboard_layout(&self) -> &KeyboardLayoutItem {
     let id = utils::get_current_keyboard_layout_id();
+
+    self.get_next_to_keyboard_layout(&id)
+  }
+
+  pub fn get_previous_to_keyboard_layout(&self, id: &str) -> &KeyboardLayoutItem {
     let lts = &self.items;
 
     let idx: usize = lts.iter().position(|lt| lt.id == *id).unwrap();
-    let next_idx = (idx + 1usize) % lts.len();
+    let next_idx = (lts.len() + idx - 1) % lts.len();
 
     &lts.get(next_idx).unwrap()
   }
 
-  pub fn set_keyboard_layouts(&self, layout_id: &str) -> anyhow::Result<Option<KeyboardLayoutItem>> {
+  pub fn get_next_to_keyboard_layout(&self, id: &str) -> &KeyboardLayoutItem {
+    let lts = &self.items;
+
+    let idx: usize = lts.iter().position(|lt| lt.id == *id).unwrap();
+    let next_idx = (lts.len() + idx + 1) % lts.len();
+
+    &lts.get(next_idx).unwrap()
+  }
+
+  pub fn set_keyboard_layout(&self, layout_id: &str) -> anyhow::Result<Option<KeyboardLayoutItem>> {
     let Some(lt) = self.get_keyboard_layout_by_id(layout_id) else {
       warn!("<$>Platform::KeyboardLayouts</>: <->Keyboard layout not found: {}</>", layout_id);
       return Ok(None);
@@ -61,7 +85,19 @@ impl KeyboardLayouts {
     Ok(Some(lt.clone()))
   }
 
-  pub fn switch_keyboard_layout(&self) -> anyhow::Result<Option<KeyboardLayoutItem>> {
-    self.set_keyboard_layouts(&self.get_next_keyboard_layout().id)
+  pub fn set_previous_keyboard_layout(&self) -> anyhow::Result<Option<KeyboardLayoutItem>> {
+    self.set_keyboard_layout(&self.get_previous_keyboard_layout().id)
+  }
+
+  pub fn set_next_keyboard_layout(&self) -> anyhow::Result<Option<KeyboardLayoutItem>> {
+    self.set_keyboard_layout(&self.get_next_keyboard_layout().id)
+  }
+
+  pub fn set_previous_to_keyboard_layout(&self, id: &str) -> anyhow::Result<Option<KeyboardLayoutItem>> {
+    self.set_keyboard_layout(&self.get_previous_to_keyboard_layout(id).id)
+  }
+
+  pub fn set_next_to_keyboard_layout(&self, id: &str) -> anyhow::Result<Option<KeyboardLayoutItem>> {
+    self.set_keyboard_layout(&self.get_next_to_keyboard_layout(id).id)
   }
 }
