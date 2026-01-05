@@ -93,8 +93,8 @@ impl HotkeyDetector {
       return;
     };
 
-    let char_stack = state.keyboard.char_stack.clone();
-    let event_stack = state.keyboard.event_stack.clone();
+    let char_stack = state.keyboard.get_chars();
+    let event_stack = state.keyboard.get_events();
 
     let executor = hot_key.executor.clone();
     let mut injector = hot_key.injector.clone();

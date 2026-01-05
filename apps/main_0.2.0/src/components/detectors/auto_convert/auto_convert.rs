@@ -56,8 +56,8 @@ impl AutoConvertDetector {
     for converter in converters {
       if !str.ends_with(&converter.text) { continue; }
 
-      let char_stack = state.keyboard.char_stack.clone();
-      let event_stack = state.keyboard.event_stack.clone();
+      let char_stack = state.keyboard.get_chars();
+      let event_stack = state.keyboard.get_events();
 
       let executor = converter.executor.clone();
       let mut injector = converter.injector.clone();

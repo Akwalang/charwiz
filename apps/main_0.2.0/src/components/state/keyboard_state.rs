@@ -14,8 +14,10 @@ pub struct KeyboardState {
   pub key: Option<Key>,
   pub modifiers: KeyboardModifiers,
 
+  pub initial_keyboard_layout: String,
+
   pub char_stack: Vec<char>,
-  pub event_stack: Vec<KeyboardEventSnapshot>,
+  pub event_stack: Vec<(bool, KeyboardEventSnapshot)>,
 }
 
 impl KeyboardState {
@@ -27,6 +29,8 @@ impl KeyboardState {
       key: None,
       modifiers: KeyboardModifiers::default(),
 
+      initial_keyboard_layout: String::new(),
+
       char_stack: Vec::with_capacity(20),
       event_stack: Vec::with_capacity(20),
     }
@@ -36,8 +40,12 @@ impl KeyboardState {
     self.char_stack.iter().collect::<String>()
   }
 
-  pub fn get_events(&self) -> &Vec<KeyboardEventSnapshot> {
-    &self.event_stack
+  pub fn get_chars(&self) -> Vec<char> {
+    self.char_stack.clone()
+  }
+
+  pub fn get_events(&self) -> Vec<KeyboardEventSnapshot> {
+    self.event_stack.iter().map(|item| item.1.clone()).collect()
   }
 
   pub fn apply_key_event(&mut self, event: &Event) {
@@ -113,15 +121,26 @@ impl KeyboardState {
         self.stack_clear();
       }
 
+      if self.char_stack.len() == 0 {
+        self.initial_keyboard_layout = self.platform.keyboard_layouts.borrow().get_current_keyboard_layout().name.to_owned();
+      }
+
       self.char_stack.push(char);
     }
 
-    self.event_stack.push(KeyboardEventSnapshot::new(Some(key), self.modifiers));
+    self.event_stack.push((char.is_some(), KeyboardEventSnapshot::new(Some(key), self.modifiers)));
   }
 
   fn stack_pop(&mut self) {
     self.char_stack.pop();
-    self.event_stack.pop();
+
+    loop {
+      let Some((state, _)) = self.event_stack.pop() else {
+        break;
+      };
+
+      if state { break; }
+    }
   }
 
   pub fn stack_clear(&mut self) {
@@ -151,13 +170,18 @@ impl KeyboardState {
       Key::PageUp | Key::PageDown => true,
       Key::Home | Key::End => true,
       _ => false
+        || (*key == Key::Tab && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::ALT_ANY))
         || (*key == Key::Backspace && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
         || (*key == Key::KeyA && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
         || (*key == Key::KeyX && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
         || (*key == Key::KeyC && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
         || (*key == Key::KeyY && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
         || (*key == Key::KeyZ && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyZ && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY) && self.modifiers.is_any_pressed(KeyboardModifiers::SHIFT_ANY))
+        || (
+            *key == Key::KeyZ
+            && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY)
+            && self.modifiers.is_any_pressed(KeyboardModifiers::SHIFT_ANY)
+          )
       ,
     }
   }

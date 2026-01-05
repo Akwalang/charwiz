@@ -9,6 +9,7 @@ use crate::common::enums::{
 };
 
 #[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Injector {
   #[serde(default)]
   pub user_input_cleanup: UserInputCleanupEnum,

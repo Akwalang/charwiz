@@ -17,6 +17,7 @@ impl KeyboardModifiers {
 
   pub const CONTROL_ANY: u8 = Self::CONTROL_LEFT | Self::CONTROL_RIGHT;
   pub const SHIFT_ANY: u8 = Self::SHIFT_LEFT | Self::SHIFT_RIGHT;
+  pub const ALT_ANY: u8 = Self::ALT | Self::ALT_GR;
 
   #[inline(always)]
   pub fn new(state: u8) -> Self {

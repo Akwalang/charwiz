@@ -37,9 +37,10 @@ impl Injector {
         match event.injector.method {
           InjectMethodEnum::TypeAndPaste => self.use_type_and_paste(emulator, value).await?,
           InjectMethodEnum::TypeAndSkip => self.use_type_and_skip(emulator, value).await?,
+          InjectMethodEnum::Emulate => self.use_type_and_skip(emulator, value).await?,
           InjectMethodEnum::Paste => self.use_paste(emulator, value).await?,
         }
-      }
+      },
       InputType::Events(value) => self.use_emulate(emulator, &value).await?,
     }
 
@@ -47,6 +48,8 @@ impl Injector {
   }
 
   async fn remove_injection_place(&self, emulator: &Emulator, event: &CommandEvent) -> anyhow::Result<()> {
+    debug!("<$>Injector</>: Clean size: {:?}", event.injector.user_input_cleanup);
+
     match event.injector.user_input_cleanup {
       UserInputCleanupEnum::None => {},
       UserInputCleanupEnum::Backspace(count) => {
@@ -79,6 +82,12 @@ impl Injector {
     clipboard.restore();
 
     result
+  }
+
+  async fn use_retype(&self, emulator: &Emulator, value: &[KeyboardEventSnapshot]) -> anyhow::Result<()> {
+    emulator.run(value).await?;
+
+    Ok(())
   }
 
   async fn use_type_and_paste(&self, emulator: &Emulator, value: String) -> anyhow::Result<()> {

@@ -24,12 +24,10 @@ fn invert_case_text(text: &String) -> InputType {
 }
 
 fn invert_case_events(events: &[KeyboardEventSnapshot]) -> InputType {
-  println!("=> {:#?}", events);
   let mut result = Vec::with_capacity(1 + events.len());
 
   result.extend_from_slice(&commands::create_capslock_toggle_pipeline());
   result.extend_from_slice(&events);
-  // result.extend_from_slice(&commands::create_capslock_toggle_pipeline());
 
   InputType::Events(result)
 }

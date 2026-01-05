@@ -68,9 +68,9 @@ impl UserInputController {
 
     Self::write_debug_info(&event, is_executing);
 
-    if is_executing { return; }
-
     state.keyboard.apply_key_event(&event);
+
+    if is_executing { return; }
 
     let event = InputEvent {
       r#type: event.event_type,
