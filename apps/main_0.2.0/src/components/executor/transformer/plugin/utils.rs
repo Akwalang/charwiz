@@ -11,7 +11,8 @@ pub fn injector_to_lua<'a>(lua: &'a Lua, injector: &Injector) -> anyhow::Result<
   lua_data.set("keyboard_state_cleanup", to_string(&injector.keyboard_state_cleanup)?)?;
   lua_data.set("target", to_string(&injector.target)?)?;
   lua_data.set("method", to_string(&injector.method)?)?;
-  lua_data.set("layout", to_string(&injector.layout)?)?;
+  lua_data.set("layout_before", to_string(&injector.layout_before)?)?;
+  lua_data.set("layout_after", to_string(&injector.layout_after)?)?;
 
   Ok(lua_data)
 }

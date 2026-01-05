@@ -2,7 +2,6 @@ use serde::Deserialize;
 
 use crate::settings::main_settings::structs::{
   Timings,
-  Executor,
   HotkeyRaw, HotKey,
   AutoConvert,
   Command,
@@ -13,7 +12,6 @@ use crate::settings::main_settings::structs::{
 #[serde(rename_all = "camelCase")]
 pub struct SettingsRaw {
   pub timings: Timings,
-  pub executors: Vec<Executor>,
   pub auto_converts: Vec<AutoConvert>,
   pub hotkeys: Vec<HotkeyRaw>,
   pub commands: Vec<Command>,
@@ -23,7 +21,6 @@ pub struct SettingsRaw {
 #[derive(Debug, Default)]
 pub struct Settings {
   pub timings: Timings,
-  pub executors: Vec<Executor>,
   pub auto_converts: Vec<AutoConvert>,
   pub hotkeys: Vec<HotKey>,
   pub commands: Vec<Command>,
@@ -34,7 +31,6 @@ impl From<SettingsRaw> for Settings {
   fn from(raw: SettingsRaw) -> Self {
     Self {
       timings: raw.timings,
-      executors: raw.executors,
       auto_converts: raw.auto_converts,
       hotkeys: raw.hotkeys.into_iter().map(|hk| hk.into()).collect(),
       commands: raw.commands,

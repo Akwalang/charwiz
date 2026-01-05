@@ -14,7 +14,10 @@ pub struct Injector {
   pub user_input_cleanup: UserInputCleanupEnum,
   #[serde(default)]
   pub keyboard_state_cleanup: KeyboardStateCleanupEnum,
+  #[serde(default)]
+  pub layout_before: KeyboardLayoutEnum,
+  #[serde(default)]
+  pub layout_after: KeyboardLayoutEnum,
   pub target: TransformTargetEnum,
   pub method: InjectMethodEnum,
-  pub layout: KeyboardLayoutEnum,
 }

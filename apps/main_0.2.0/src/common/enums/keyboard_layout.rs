@@ -10,6 +10,12 @@ pub enum KeyboardLayoutEnum {
   Direct(String),
 }
 
+impl Default for KeyboardLayoutEnum {
+  fn default() -> Self {
+    KeyboardLayoutEnum::Current
+  }
+}
+
 impl FromStr for KeyboardLayoutEnum {
   type Err = String;
 
