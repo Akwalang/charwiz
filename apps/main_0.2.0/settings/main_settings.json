@@ -1,7 +1,7 @@
 {
   "timings": {
     "forgetTimeout": 10000000,
-    "keyActionDelay": 10000
+    "keyActionDelay": 1000
   },
   "executors": [
     {
@@ -245,6 +245,100 @@
         "method": "paste",
         "layoutAfter": "current"
       }
+    },
+    {
+      "keys": {
+        "key": "Num1",
+        "modifiers": ["ControlLeft", "Alt"]
+      },
+      "executor": {
+        "type": "plugin",
+        "value": "randomize_numbers"
+      },
+      "injector": {
+        "target": "selection",
+        "method": "paste",
+        "layoutAfter": "current"
+      }
+    },
+    {
+      "keys": {
+        "key": "Num2",
+        "modifiers": ["ControlLeft", "Alt"]
+      },
+      "executor": {
+        "type": "plugin",
+        "value": "randomize_symbols"
+      },
+      "injector": {
+        "target": "selection",
+        "method": "paste",
+        "layoutAfter": "current"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyP",
+        "modifiers": ["ControlLeft", "Alt"]
+      },
+      "executor": {
+        "type": "plugin",
+        "value": "js_json_log"
+      },
+      "injector": {
+        "target": "clipboard",
+        "method": "type_and_paste",
+        "layoutAfter": "current",
+        "userInputCleanup": "none"
+      }
+    },
+    {
+      "keys": {
+        "key": "Equal",
+        "modifiers": ["Alt"]
+      },
+      "executor": {
+        "type": "static",
+        "value": "≈"
+      },
+      "injector": {
+        "target": "none",
+        "method": "paste",
+        "layoutAfter": "current",
+        "userInputCleanup": "none"
+      }
+    },
+    {
+      "keys": {
+        "key": "Equal",
+        "modifiers": ["ShiftLeft", "Alt"]
+      },
+      "executor": {
+        "type": "static",
+        "value": "≠"
+      },
+      "injector": {
+        "target": "none",
+        "method": "paste",
+        "layoutAfter": "current",
+        "userInputCleanup": "none"
+      }
+    },
+    {
+      "keys": {
+        "key": "Minus",
+        "modifiers": ["Alt"]
+      },
+      "executor": {
+        "type": "static",
+        "value": "—"
+      },
+      "injector": {
+        "target": "none",
+        "method": "paste",
+        "layoutAfter": "current",
+        "userInputCleanup": "none"
+      }
     }
   ],
   "commands": [
@@ -305,6 +399,32 @@
       "executor": {
         "type": "static",
         "value": "```"
+      },
+      "injector": {
+        "target": "none",
+        "method": "type_and_paste",
+        "layoutAfter": "current",
+        "keyboardStateCleanup": "drop"
+      }
+    },
+    {
+      "cmd": ":git-branch",
+      "executor": {
+        "type": "static",
+        "value": "git rev-parse --abbrev-ref HEAD"
+      },
+      "injector": {
+        "target": "none",
+        "method": "type_and_paste",
+        "layoutAfter": "current",
+        "keyboardStateCleanup": "drop"
+      }
+    },
+    {
+      "cmd": ":pi",
+      "executor": {
+        "type": "static",
+        "value": "PI.4-S.4"
       },
       "injector": {
         "target": "none",

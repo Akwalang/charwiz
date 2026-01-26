@@ -18,9 +18,9 @@ function uuid_v4()
   end)
 end
 
-function uuid_v7()
+function uuid_v7(input)
   -- time ms
-  local ts = math.floor(os.time() * 1000)
+  local ts = math.floor(input.timestamp * 1000)
 
   -- 48-bite timestamp split on high 32 and low 16 bits
   local ts_high = math.floor(ts / 0x10000)
