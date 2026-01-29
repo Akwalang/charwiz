@@ -1,4 +1,4 @@
-use crate::common::structs::KeyboardEventSnapshot;
+use crate::common::structs::KeyboardSnapshot;
 
 use crate::components::executor::commands;
 use crate::components::executor::enums::InputType;
@@ -23,7 +23,7 @@ fn invert_case_text(text: &String) -> InputType {
   InputType::Text(result)
 }
 
-fn invert_case_events(events: &[KeyboardEventSnapshot]) -> InputType {
+fn invert_case_events(events: &[KeyboardSnapshot]) -> InputType {
   let mut result = Vec::with_capacity(1 + events.len());
 
   result.extend_from_slice(&commands::create_capslock_toggle_pipeline());

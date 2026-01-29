@@ -7,13 +7,13 @@ use rdev::Key;
 
 use crate::settings::keyboard_layouts::KeyItem;
 
-use crate::common::structs::KeyboardEventSnapshot;
+use crate::common::structs::KeyboardSnapshot;
 
 use crate::constants::LAYOUTS_FOLDER;
 
 pub struct LayoutItem {
   pub name: String,
-  pub chars: HashMap<char, KeyboardEventSnapshot>,
+  pub chars: HashMap<char, KeyboardSnapshot>,
   pub keys: HashMap<Key, KeyItem>,
 }
 
@@ -46,7 +46,7 @@ impl LayoutItem {
 
     if let Err(e) = content {
       error!("<$>Settings::KeyboardLayouts</>: Failed to load keyboard layout for \"<&>{}</>\": <i&>{}</>", name, src);
-      return Err(anyhow::anyhow!(e.to_string()));
+      anyhow::bail!(e.to_string());
     }
     
     Ok(content.unwrap())
@@ -57,20 +57,20 @@ impl LayoutItem {
 
     if let Err(e) = items {
       error!("<$>Settings::KeyboardLayouts</>: Invalid keyboard layout JSON for \"<&>{}</>\": <i&>{}</> -> <->{}</>", name, content, e);
-      return Err(anyhow::anyhow!(e.to_string()));
+      anyhow::bail!(e.to_string());
     }
 
     Ok(items.unwrap())
   }
 
-  fn raw_to_chars_map(items: &Vec<KeyItem>) -> HashMap<char, KeyboardEventSnapshot> {
+  fn raw_to_chars_map(items: &Vec<KeyItem>) -> HashMap<char, KeyboardSnapshot> {
     let size: usize = items.iter().map(|i| i.insert.len()).sum();
 
-    let mut map: HashMap<char, KeyboardEventSnapshot> = HashMap::with_capacity(size);
+    let mut map: HashMap<char, KeyboardSnapshot> = HashMap::with_capacity(size);
 
     for item in items {
       for ins in &item.insert {
-        let value = KeyboardEventSnapshot::new(Some(item.key), ins.modifiers);
+        let value = KeyboardSnapshot::new(Some(item.key), ins.modifiers);
 
         map.insert(ins.char, value);
       }

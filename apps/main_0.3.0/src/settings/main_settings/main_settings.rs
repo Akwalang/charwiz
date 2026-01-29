@@ -1,11 +1,9 @@
-use std::fs;
-use std::path::Path;
-
 use rust_logger::*;
 
-use crate::constants::MAIN_SETTINGS_FILE;
-
 use crate::settings::main_settings::structs::{SettingsRaw, Settings};
+
+use crate::utils;
+use crate::constants::MAIN_SETTINGS_FILE;
 
 pub struct MainSettings {
   pub settings: Settings,
@@ -17,56 +15,21 @@ impl MainSettings {
   }
 
   pub fn init(&mut self) {
-    log!("<$>Settings::MainSettings</>: Init");
+    log!("<$>Main Settings</>: Init");
 
-    let Ok(settings) = Self::load() else {
-      error!("<$>Settings::MainSettings</>: Can't load config json");
-      panic!("Can't load config json");
-    };
-
-    self.settings = settings;
+    self.settings = Self::load().unwrap_or_else(|_| panic!("Can't load main settings"));
   }
 
   fn load() -> anyhow::Result<Settings> {
-    let content = Self::read_file()?;
+    log!("<$>Main Settings</>: Loading settings: <i&>{}</>", MAIN_SETTINGS_FILE);
 
-    let settings = Self::parse_json(content)?;
-    let settings = Self::convert_json(settings);
+    let raw = utils::read_json::<SettingsRaw>(MAIN_SETTINGS_FILE);
 
-    Ok(settings)
-  }
+    if let Err(e) = raw {
+      error!("<$>Main Settings</>: Failed to load settings. Error: <i->{}</>", e.to_string());
+      return Err(e);
+    };
 
-  fn read_file() -> anyhow::Result<String> {
-    let src = MAIN_SETTINGS_FILE;
-
-    log!("<$>Settings::MainSettings</>: Loading main settings: <i&>{}</>", src);
-
-    let path = Path::new(&src);
-
-    let content = fs::read_to_string(&path);
-
-    if let Err(e) = content {
-      error!("<$>Settings::MainSettings</>: Failed to load main settings: <i&>{}</>", src);
-      error!("<$>Settings::MainSettings</>: Error: <i&>{}</>", e.to_string());
-
-      Err(anyhow::anyhow!(e.to_string()))
-    } else {
-      Ok(content.unwrap())
-    }
-  }
-
-  fn parse_json(content: String) -> anyhow::Result<SettingsRaw> {
-    let items = serde_json::from_str::<SettingsRaw>(&content);
-
-    if let Err(e) = items {
-      error!("<$>Settings::MainSettings</>: Invalid main settings JSON: {}\n<i&>{}</>", e, content);
-      return Err(anyhow::anyhow!(e.to_string()));
-    }
-
-    Ok(items.unwrap())
-  }
-
-  fn convert_json(items: SettingsRaw) -> Settings {
-    Settings::from(items)
+    Ok(Settings::from(raw.unwrap()))
   }
 }

@@ -3,7 +3,7 @@ use rdev::{EventType, simulate};
 
 use crate::settings::Settings;
 
-use crate::common::structs::{KeyboardEventSnapshot, KeyboardModifiers};
+use crate::common::structs::{KeyboardSnapshot, KeyboardModifiers};
 
 pub struct Emulator {
   settings: &'static Settings,
@@ -14,11 +14,11 @@ impl Emulator {
     Self { settings }
   }
 
-  pub async fn run(&self, pipeline: &[KeyboardEventSnapshot]) -> anyhow::Result<()> {
+  pub async fn run(&self, pipeline: &[KeyboardSnapshot]) -> anyhow::Result<()> {
     let queue = pipeline.iter();
 
-    let mut current = &KeyboardEventSnapshot::default();
-    let mut pipeline = Vec::<EventType>::with_capacity(1 + KeyboardEventSnapshot::CAPACITY); // +1 for before & after key field
+    let mut current = &KeyboardSnapshot::default();
+    let mut pipeline = Vec::<EventType>::with_capacity(1 + KeyboardSnapshot::CAPACITY); // +1 for before & after key field
 
     let delay = self.settings.main_settings.borrow().settings.timings.key_action_delay;
 
@@ -41,8 +41,8 @@ impl Emulator {
 
   fn put_snapshots_into_pipeline(
     pipeline: &mut Vec<EventType>, // prevent reallocations
-    before: &KeyboardEventSnapshot,
-    after: &KeyboardEventSnapshot,
+    before: &KeyboardSnapshot,
+    after: &KeyboardSnapshot,
   ) {
     pipeline.clear();
 

@@ -4,13 +4,18 @@ use rust_logger::*;
 
 use crate::platform::Platform;
 
-use crate::settings::{MainSettings, KeyboardLayouts};
+use crate::settings::main_settings::MainSettings;
+use crate::settings::platform_settings::PlatformSettings;
+use crate::settings::keyboard_layouts::KeyboardLayouts;
+
 use crate::settings::main_settings::structs::{AutoConvert, Command, HotKey};
+use crate::settings::platform_settings::structs::ClipboardHotkeys;
 
 pub struct Settings {
   platform: &'static Platform,
 
   pub keyboard_layouts: RefCell<KeyboardLayouts>,
+  pub platform_settings: RefCell<PlatformSettings>,
   pub main_settings: RefCell<MainSettings>,
 }
 
@@ -19,6 +24,7 @@ impl Settings {
     Box::leak(Box::new(Settings {
       platform,
       keyboard_layouts: RefCell::new(KeyboardLayouts::new(platform)),
+      platform_settings: RefCell::new(PlatformSettings::new()),
       main_settings: RefCell::new(MainSettings::new()),
     }))
   }
@@ -37,9 +43,8 @@ impl Settings {
       }
     }
 
-    {
-      self.main_settings.borrow_mut().init();
-    }
+    self.main_settings.borrow_mut().init();
+    self.platform_settings.borrow_mut().init();
   }
 
   // TODO: optimize
@@ -61,5 +66,11 @@ impl Settings {
     let main = self.main_settings.borrow();
 
     main.settings.hotkeys.clone()
+  }
+
+  pub fn get_clipboard_hotkeys(&self) -> ClipboardHotkeys {
+    let platform = self.platform_settings.borrow();
+
+    platform.settings.clipboard_hotkeys.clone()
   }
 }

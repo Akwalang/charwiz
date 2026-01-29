@@ -25,7 +25,7 @@ impl KeyboardLayouts {
   }
 
   pub fn init(&mut self) {
-    log!("<$>Settings::KeyboardLayouts</>: Init");
+    log!("<$>Keyboard Layouts</>: Init");
   }
 
   pub fn add(&mut self, name: &str) {
@@ -63,8 +63,8 @@ impl KeyboardLayouts {
       let setup = self.items.get(&layout.name);
 
       if setup.is_none() {
-        error!("<$>KeyboardLayouts</>: Keyboard layout now found: {}", layout.name);
-        return Err(anyhow::anyhow!("Keyboard layout now found: {}", layout.name));
+        error!("<$>Keyboard Layouts</>: Keyboard layout now found: {}", layout.name);
+        anyhow::bail!("Keyboard layout now found: {}", layout.name);
       }
     }
 

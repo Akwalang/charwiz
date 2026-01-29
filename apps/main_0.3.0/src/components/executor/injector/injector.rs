@@ -12,7 +12,7 @@ use crate::components::executor::emulator::Emulator;
 
 use crate::common::enums::{InjectMethodEnum, UserInputCleanupEnum};
 use crate::common::events::CommandEvent;
-use crate::common::structs::KeyboardEventSnapshot;
+use crate::common::structs::KeyboardSnapshot;
 
 type CharLine = (String, String, Vec<bool>);
 type ExecuteLine = (String, String, String);
@@ -62,7 +62,7 @@ impl Injector {
     Ok(())
   }
 
-  async fn use_emulate(&self, emulator: &Emulator, value: &[KeyboardEventSnapshot]) -> anyhow::Result<()> {
+  async fn use_emulate(&self, emulator: &Emulator, value: &[KeyboardSnapshot]) -> anyhow::Result<()> {
     let mut pipeline = Vec::with_capacity(1 + value.len());
 
     pipeline.extend_from_slice(value);
@@ -77,14 +77,17 @@ impl Injector {
     clipboard.backup();
     clipboard.set_clipboard_text(&value)?;
 
-    let result = emulator.run(&commands::create_paste_pipeline()).await;
+    let clipboard_settings = self.settings.get_clipboard_hotkeys();
+    let pipeline = commands::create_paste_pipeline(clipboard_settings.paste);
+
+    let result = emulator.run(&pipeline).await;
 
     clipboard.restore();
 
     result
   }
 
-  async fn use_retype(&self, emulator: &Emulator, value: &[KeyboardEventSnapshot]) -> anyhow::Result<()> {
+  async fn use_retype(&self, emulator: &Emulator, value: &[KeyboardSnapshot]) -> anyhow::Result<()> {
     emulator.run(value).await?;
 
     Ok(())
@@ -120,7 +123,10 @@ impl Injector {
     self.platform.clipboard.borrow_mut().backup();
     self.platform.clipboard.borrow_mut().set_clipboard_text(&line.2)?;
 
-    emulator.run(&commands::create_paste_pipeline()).await?;
+    let clipboard = self.settings.get_clipboard_hotkeys();
+    let pipeline = commands::create_paste_pipeline(clipboard.paste);
+
+    emulator.run(&pipeline).await?;
 
     self.platform.clipboard.borrow_mut().restore();
 
@@ -139,9 +145,9 @@ impl Injector {
 
     let chars = line.2.chars();
 
-    let mut pipeline: Vec<KeyboardEventSnapshot> = Vec::with_capacity(2 + chars.clone().count());
+    let mut pipeline: Vec<KeyboardSnapshot> = Vec::with_capacity(2 + chars.clone().count());
 
-    pipeline.push(KeyboardEventSnapshot::default());
+    pipeline.push(KeyboardSnapshot::default());
 
     for r#char in chars {
       let snapshot = layout_chars.chars.get(&r#char).unwrap();
@@ -149,7 +155,7 @@ impl Injector {
       pipeline.push(snapshot.clone());
     }
 
-    pipeline.push(KeyboardEventSnapshot::default());
+    pipeline.push(KeyboardSnapshot::default());
 
     emulator.run(&pipeline).await?;
 

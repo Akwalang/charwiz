@@ -5,7 +5,7 @@ use rust_logger::*;
 use crate::platform::Platform;
 use crate::settings::Settings;
 
-use crate::common::structs::{KeyboardEventSnapshot, KeyboardModifiers};
+use crate::common::structs::{KeyboardSnapshot, KeyboardModifiers};
 
 pub struct KeyboardState {
   platform: &'static Platform,
@@ -17,7 +17,7 @@ pub struct KeyboardState {
   pub initial_keyboard_layout: String,
 
   pub char_stack: Vec<char>,
-  pub event_stack: Vec<(bool, KeyboardEventSnapshot)>,
+  pub event_stack: Vec<(bool, KeyboardSnapshot)>,
 }
 
 impl KeyboardState {
@@ -44,7 +44,7 @@ impl KeyboardState {
     self.char_stack.clone()
   }
 
-  pub fn get_events(&self) -> Vec<KeyboardEventSnapshot> {
+  pub fn get_events(&self) -> Vec<KeyboardSnapshot> {
     self.event_stack.iter().map(|item| item.1.clone()).collect()
   }
 
@@ -138,7 +138,7 @@ impl KeyboardState {
       self.char_stack.push(char);
     }
 
-    self.event_stack.push((char.is_some(), KeyboardEventSnapshot::new(Some(key), self.modifiers)));
+    self.event_stack.push((char.is_some(), KeyboardSnapshot::new(Some(key), self.modifiers)));
   }
 
   fn stack_pop(&mut self) {

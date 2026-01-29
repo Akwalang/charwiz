@@ -38,7 +38,7 @@ impl Executor {
     event_hub: Arc<EventHub>,
   ) -> Arc<Self> {
     let emulator = Emulator::new(settings);
-    let extractor = Extractor::new(platform);
+    let extractor = Extractor::new(platform, settings);
     let transformer = Transformer::new(platform, settings);
     let injector = Injector::new(platform, settings);
 
@@ -82,7 +82,7 @@ impl Executor {
     let Ok(target) = target else {
       warn!("<$>Executor</>: Extraction failed: {}", target.err().unwrap());
       self.unlock_application();
-      return Err(anyhow::anyhow!("Extraction failed"));
+      anyhow::bail!("Extraction failed");
     };
 
     let input = self.transformer.transform(&event, &target).await;

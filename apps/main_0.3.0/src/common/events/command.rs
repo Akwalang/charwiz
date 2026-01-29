@@ -1,10 +1,9 @@
-use crate::common::structs::KeyboardEventSnapshot;
-use crate::settings::structs::{Executor, Injector};
+use crate::common::structs::{Executor, Injector, KeyboardSnapshot};
 
 #[derive(Debug, Clone)]
 pub struct CommandEvent {
   pub char_stack: Vec<char>,
-  pub event_stack: Vec<KeyboardEventSnapshot>,
+  pub event_stack: Vec<KeyboardSnapshot>,
 
   pub executor: Executor,
   pub injector: Injector,

@@ -6,11 +6,12 @@ use rdev::EventType;
 use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
-use crate::settings::{Settings, structs::HotKey};
+use crate::settings::Settings;
+use crate::settings::main_settings::structs::HotKey;
 
 use crate::common::enums::UserInputCleanupEnum;
+use crate::common::structs::KeyboardSnapshot;
 use crate::common::events::{CommandEvent, InputEvent};
-use crate::common::structs::KeyboardEventSnapshot;
 
 pub struct HotkeyDetector {
   settings: &'static Settings,
@@ -53,7 +54,7 @@ impl HotkeyDetector {
     
     let state: std::sync::MutexGuard<'_, State> = self.state.lock().unwrap();
 
-    let cur = KeyboardEventSnapshot::new(state.keyboard.key, state.keyboard.modifiers);
+    let cur = KeyboardSnapshot::new(state.keyboard.key, state.keyboard.modifiers);
     let mut cap = self.captured_keys.lock().unwrap();
 
     if Self::is_event_ready(&cur, &cap) {
@@ -70,13 +71,13 @@ impl HotkeyDetector {
     }
   }
 
-  fn is_event_ready(cur: &KeyboardEventSnapshot, cap: &Option<HotKey>) -> bool {
+  fn is_event_ready(cur: &KeyboardSnapshot, cap: &Option<HotKey>) -> bool {
     let Some(hot_key) = cap else { return false; };
 
     cur.len() == 0 && hot_key.keys.len() != 0
   }
 
-  fn check_hotkeys(&self, cur: &KeyboardEventSnapshot, cap: &mut Option<HotKey>) {
+  fn check_hotkeys(&self, cur: &KeyboardSnapshot, cap: &mut Option<HotKey>) {
     let hotkeys = self.settings.get_hotkeys();
 
     for hotkey in hotkeys.iter() {

@@ -1,7 +1,7 @@
-use crate::common::structs::KeyboardEventSnapshot;
+use crate::common::structs::KeyboardSnapshot;
 
 #[derive(Debug, Clone)]
 pub enum InputType {
   Text(String),
-  Events(Vec<KeyboardEventSnapshot>),
+  Events(Vec<KeyboardSnapshot>),
 }

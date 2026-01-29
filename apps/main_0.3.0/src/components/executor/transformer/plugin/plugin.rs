@@ -93,7 +93,7 @@ impl PluginTransformer {
       .as_secs();
     
     let InputType::Text(value) = target else {
-      return Err(anyhow::anyhow!("Can't get the target value"));
+      anyhow::bail!("Can't get the target value");
     };
 
     lua_data.set("value", value.to_owned())?;

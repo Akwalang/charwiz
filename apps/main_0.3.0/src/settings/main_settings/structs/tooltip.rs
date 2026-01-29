@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
+use crate::common::structs::{Executor, Injector};
 use crate::common::enums::TooltipTypeEnum;
-use crate::settings::main_settings::structs::{Executor, Injector};
 
 #[allow(dead_code)]
 #[derive(Debug, Deserialize)]

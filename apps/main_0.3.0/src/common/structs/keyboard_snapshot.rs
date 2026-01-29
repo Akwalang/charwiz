@@ -5,12 +5,12 @@ use rdev::Key;
 use crate::common::structs::KeyboardModifiers;
 
 #[derive(Debug, PartialEq, Eq, Clone, Default)]
-pub struct KeyboardEventSnapshot {
+pub struct KeyboardSnapshot {
   pub key: Option<Key>,
   pub modifiers: KeyboardModifiers,
 }
 
-impl KeyboardEventSnapshot {
+impl KeyboardSnapshot {
   pub const CAPACITY: usize = 9;
 
   pub fn new(key: Option<Key>, modifiers: KeyboardModifiers) -> Self {
@@ -28,13 +28,13 @@ impl KeyboardEventSnapshot {
   }
 }
 
-impl PartialOrd for KeyboardEventSnapshot {
+impl PartialOrd for KeyboardSnapshot {
   fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
     Some(self.cmp(other))
   }
 }
 
-impl Ord for KeyboardEventSnapshot {
+impl Ord for KeyboardSnapshot {
   fn cmp(&self, other: &Self) -> Ordering {
     self.len().cmp(&other.len())
   }

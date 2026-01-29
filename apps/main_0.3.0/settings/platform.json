@@ -3,13 +3,15 @@
     "copy": { "key": "KeyC", "modifiers": ["ControlLeft"] },
     "paste": { "key": "Insert", "modifiers": ["ShiftLeft"] }
   },
-  "systemHotkeys": {
-    "switchKeyboardLayout": { "key": "Space", "modifiers": ["MetaLeft"] }
-  },
   "bannedHotkeys": [
     { "key": "KeyL", "modifiers": ["MetaLeft"] }
   ],
-  "stackBreakers": [
+  "switchKeyboardLayoutHotkeys": [
+    { "key": null, "modifiers": ["ShiftLeft", "Alt"] },
+    { "key": null, "modifiers": ["ShiftRight", "Alt"] },
+    { "key": "Space", "modifiers": ["MetaLeft"] }
+  ],
+  "stackBreakeHotkeys": [
     { "key": "UpArrow", "modifiers": [] },
     { "key": "DownArrow", "modifiers": [] },
     { "key": "LeftArrow", "modifiers": [] },

@@ -28,7 +28,7 @@ impl Clipboard {
 
   pub fn get_clipboard_text(&self) -> anyhow::Result<Option<String>> {
     let Ok(buffer) = get_clipboard(formats::Unicode) else {
-      return Err(anyhow::anyhow!("Failed to get clipboard text"));
+      anyhow::bail!("Failed to get clipboard text");
     };
 
     Ok(Some(buffer))
@@ -36,7 +36,7 @@ impl Clipboard {
 
   pub fn set_clipboard_text(&self, text: &str) -> anyhow::Result<()> {
     if let Err(_) = set_clipboard(formats::Unicode, text) {
-      return Err(anyhow::anyhow!("Failed to set clipboard text"))
+      anyhow::bail!("Failed to set clipboard text")
     }
 
     Ok(())

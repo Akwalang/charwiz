@@ -7,7 +7,7 @@ pub fn switch_global_keyboard_layout(layout_code: &str) -> anyhow::Result<()> {
   unsafe {
     let display = xlib::XOpenDisplay(std::ptr::null());
     if display.is_null() {
-      return Err(anyhow::anyhow!("Failed to open X display"));
+      anyhow::bail!("Failed to open X display");
     }
 
     // mapping LANGID → XKB group
@@ -16,10 +16,10 @@ pub fn switch_global_keyboard_layout(layout_code: &str) -> anyhow::Result<()> {
       "00000419" => 1, // ru
       _ => {
         xlib::XCloseDisplay(display);
-        return Err(anyhow::anyhow!(
+        anyhow::bail!(
           "Unknown keyboard layout code: {}",
           layout_code
-        ));
+        );
       }
     };
 
@@ -33,7 +33,7 @@ pub fn switch_global_keyboard_layout(layout_code: &str) -> anyhow::Result<()> {
     xlib::XCloseDisplay(display);
 
     if status != xlib::Success as i32 {
-      return Err(anyhow::anyhow!("XkbLockGroup failed"));
+      anyhow::bail!("XkbLockGroup failed");
     }
 
     Ok(())

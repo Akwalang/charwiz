@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-use crate::settings::main_settings::structs::{Executor, Injector};
+use crate::common::structs::{Executor, Injector};
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Command {

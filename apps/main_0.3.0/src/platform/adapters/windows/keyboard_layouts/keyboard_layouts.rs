@@ -4,7 +4,7 @@ use rust_logger::*;
 
 use crate::platform::common::structs::KeyboardLayoutItem;
 
-use crate::common::structs::{KeyboardEventSnapshot, KeyboardModifiers};
+use crate::common::structs::{KeyboardSnapshot, KeyboardModifiers};
 
 use super::utils;
 
@@ -105,7 +105,7 @@ impl KeyboardLayouts {
     self.set_keyboard_layout(&self.get_next_to_keyboard_layout(id).id)
   }
 
-  pub fn is_banned_event_snapshots(snapshot: &KeyboardEventSnapshot) -> bool {
+  pub fn is_banned_event_snapshots(snapshot: &KeyboardSnapshot) -> bool {
     let Some(key) = snapshot.key else {
       return false;
     };
@@ -116,7 +116,7 @@ impl KeyboardLayouts {
     || (key == Key::KeyL && modifiers.is_any_pressed_strict(KeyboardModifiers::META_ANY))
   }
 
-  pub fn is_stack_breaker_snapshots(snapshot: &KeyboardEventSnapshot) -> bool {
+  pub fn is_stack_breaker_snapshots(snapshot: &KeyboardSnapshot) -> bool {
     let Some(key) = snapshot.key else {
       return false;
     };

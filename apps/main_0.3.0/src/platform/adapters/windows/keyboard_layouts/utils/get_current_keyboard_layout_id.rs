@@ -6,7 +6,7 @@ pub fn get_current_keyboard_layout_id() -> anyhow::Result<String> {
     let hwnd = GetForegroundWindow();
 
     if hwnd.0.is_null() {
-      return Err(anyhow::anyhow!("No foreground window"));
+      anyhow::bail!("No foreground window");
     }
 
     let thread_id = GetWindowThreadProcessId(hwnd, None);
