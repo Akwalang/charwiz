@@ -1,7 +1,6 @@
 [
   {
     "key": "KeyQ",
-    "invertible": true,
     "insert": [
       { "char": "й" },
       { "char": "Й", "modifiers": ["ShiftLeft"] },
@@ -10,7 +9,6 @@
   },
   {
     "key": "KeyW",
-    "invertible": true,
     "insert": [
       { "char": "ц" },
       { "char": "Ц", "modifiers": ["ShiftLeft"] },
@@ -19,7 +17,6 @@
   },
   {
     "key": "KeyE",
-    "invertible": true,
     "insert": [
       { "char": "у" },
       { "char": "У", "modifiers": ["ShiftLeft"] },
@@ -28,7 +25,6 @@
   },
   {
     "key": "KeyR",
-    "invertible": true,
     "insert": [
       { "char": "к" },
       { "char": "К", "modifiers": ["ShiftLeft"] },
@@ -37,7 +33,6 @@
   },
   {
     "key": "KeyT",
-    "invertible": true,
     "insert": [
       { "char": "е" },
       { "char": "Е", "modifiers": ["ShiftLeft"] },
@@ -46,7 +41,6 @@
   },
   {
     "key": "KeyY",
-    "invertible": true,
     "insert": [
       { "char": "н" },
       { "char": "Н", "modifiers": ["ShiftLeft"] },
@@ -55,7 +49,6 @@
   },
   {
     "key": "KeyU",
-    "invertible": true,
     "insert": [
       { "char": "г" },
       { "char": "Г", "modifiers": ["ShiftLeft"] },
@@ -64,7 +57,6 @@
   },
   {
     "key": "KeyI",
-    "invertible": true,
     "insert": [
       { "char": "ш" },
       { "char": "Ш", "modifiers": ["ShiftLeft"] },
@@ -73,7 +65,6 @@
   },
   {
     "key": "KeyO",
-    "invertible": true,
     "insert": [
       { "char": "щ" },
       { "char": "Щ", "modifiers": ["ShiftLeft"] },
@@ -82,7 +73,6 @@
   },
   {
     "key": "KeyP",
-    "invertible": true,
     "insert": [
       { "char": "з" },
       { "char": "З", "modifiers": ["ShiftLeft"] },
@@ -91,7 +81,6 @@
   },
   {
     "key": "LeftBracket",
-    "invertible": true,
     "insert": [
       { "char": "х" },
       { "char": "Х", "modifiers": ["ShiftLeft"] },
@@ -100,7 +89,6 @@
   },
   {
     "key": "RightBracket",
-    "invertible": true,
     "insert": [
       { "char": "ъ" },
       { "char": "Ъ", "modifiers": ["ShiftLeft"] },
@@ -108,7 +96,7 @@
     ]
   },
   {
-    "key": "Backslash",
+    "key": "BackSlash",
     "insert": [
       { "char": "\\" },
       { "char": "/", "modifiers": ["ShiftLeft"] },
@@ -117,7 +105,6 @@
   },
   {
     "key": "KeyA",
-    "invertible": true,
     "insert": [
       { "char": "ф" },
       { "char": "Ф", "modifiers": ["ShiftLeft"] },
@@ -126,7 +113,6 @@
   },
   {
     "key": "KeyS",
-    "invertible": true,
     "insert": [
       { "char": "ы" },
       { "char": "Ы", "modifiers": ["ShiftLeft"] },
@@ -135,7 +121,6 @@
   },
   {
     "key": "KeyD",
-    "invertible": true,
     "insert": [
       { "char": "в" },
       { "char": "В", "modifiers": ["ShiftLeft"] },
@@ -144,7 +129,6 @@
   },
   {
     "key": "KeyF",
-    "invertible": true,
     "insert": [
       { "char": "а" },
       { "char": "А", "modifiers": ["ShiftLeft"] },
@@ -153,7 +137,6 @@
   },
   {
     "key": "KeyG",
-    "invertible": true,
     "insert": [
       { "char": "п" },
       { "char": "П", "modifiers": ["ShiftLeft"] },
@@ -162,7 +145,6 @@
   },
   {
     "key": "KeyH",
-    "invertible": true,
     "insert": [
       { "char": "р" },
       { "char": "Р", "modifiers": ["ShiftLeft"] },
@@ -171,7 +153,6 @@
   },
   {
     "key": "KeyJ",
-    "invertible": true,
     "insert": [
       { "char": "о" },
       { "char": "О", "modifiers": ["ShiftLeft"] },
@@ -180,7 +161,6 @@
   },
   {
     "key": "KeyK",
-    "invertible": true,
     "insert": [
       { "char": "л" },
       { "char": "Л", "modifiers": ["ShiftLeft"] },
@@ -189,7 +169,6 @@
   },
   {
     "key": "KeyL",
-    "invertible": true,
     "insert": [
       { "char": "д" },
       { "char": "Д", "modifiers": ["ShiftLeft"] },
@@ -198,7 +177,6 @@
   },
   {
     "key": "SemiColon",
-    "invertible": true,
     "insert": [
       { "char": "ж" },
       { "char": "Ж", "modifiers": ["ShiftLeft"] },
@@ -207,7 +185,6 @@
   },
   {
     "key": "Quote",
-    "invertible": true,
     "insert": [
       { "char": "э" },
       { "char": "Э", "modifiers": ["ShiftLeft"] },
@@ -216,7 +193,6 @@
   },
   {
     "key": "KeyZ",
-    "invertible": true,
     "insert": [
       { "char": "я" },
       { "char": "Я", "modifiers": ["ShiftLeft"] },
@@ -225,7 +201,6 @@
   },
   {
     "key": "KeyX",
-    "invertible": true,
     "insert": [
       { "char": "ч" },
       { "char": "Ч", "modifiers": ["ShiftLeft"] },
@@ -234,7 +209,6 @@
   },
   {
     "key": "KeyC",
-    "invertible": true,
     "insert": [
       { "char": "с" },
       { "char": "С", "modifiers": ["ShiftLeft"] },
@@ -243,7 +217,6 @@
   },
   {
     "key": "KeyV",
-    "invertible": true,
     "insert": [
       { "char": "м" },
       { "char": "М", "modifiers": ["ShiftLeft"] },
@@ -252,7 +225,6 @@
   },
   {
     "key": "KeyB",
-    "invertible": true,
     "insert": [
       { "char": "и" },
       { "char": "И", "modifiers": ["ShiftLeft"] },
@@ -261,7 +233,6 @@
   },
   {
     "key": "KeyN",
-    "invertible": true,
     "insert": [
       { "char": "т" },
       { "char": "Т", "modifiers": ["ShiftLeft"] },
@@ -270,7 +241,6 @@
   },
   {
     "key": "KeyM",
-    "invertible": true,
     "insert": [
       { "char": "ь" },
       { "char": "Ь", "modifiers": ["ShiftLeft"] },
@@ -279,7 +249,6 @@
   },
   {
     "key": "Comma",
-    "invertible": true,
     "insert": [
       { "char": "б" },
       { "char": "Б", "modifiers": ["ShiftLeft"] },
@@ -288,7 +257,6 @@
   },
   {
     "key": "Dot",
-    "invertible": true,
     "insert": [
       { "char": "ю" },
       { "char": "Ю", "modifiers": ["ShiftLeft"] },
@@ -305,7 +273,6 @@
   },
   {
     "key": "BackQuote",
-    "invertible": true,
     "insert": [
       { "char": "ё" },
       { "char": "Ё", "modifiers": ["ShiftLeft"] },

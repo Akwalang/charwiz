@@ -1,7 +1,7 @@
 {
   "clipboardHotkeys": {
     "copy": { "key": "KeyC", "modifiers": ["ControlLeft"] },
-    "paste": { "key": "Insert", "modifiers": ["ShiftLeft"] }
+    "paste": { "key": "KeyV", "modifiers": ["ControlLeft"] }
   },
   "bannedHotkeys": [
     { "key": "KeyL", "modifiers": ["MetaLeft"] }

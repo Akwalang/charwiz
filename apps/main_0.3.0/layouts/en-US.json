@@ -1,7 +1,6 @@
 [
   {
     "key": "KeyQ",
-    "invertible": true,
     "insert": [
       { "char": "q" },
       { "char": "Q", "modifiers": ["ShiftLeft"] },
@@ -10,7 +9,6 @@
   },
   {
     "key": "KeyW",
-    "invertible": true,
     "insert": [
       { "char": "w" },
       { "char": "W", "modifiers": ["ShiftLeft"] },
@@ -19,7 +17,6 @@
   },
   {
     "key": "KeyE",
-    "invertible": true,
     "insert": [
       { "char": "e" },
       { "char": "E", "modifiers": ["ShiftLeft"] },
@@ -28,7 +25,6 @@
   },
   {
     "key": "KeyR",
-    "invertible": true,
     "insert": [
       { "char": "r" },
       { "char": "R", "modifiers": ["ShiftLeft"] },
@@ -37,7 +33,6 @@
   },
   {
     "key": "KeyT",
-    "invertible": true,
     "insert": [
       { "char": "t" },
       { "char": "T", "modifiers": ["ShiftLeft"] },
@@ -46,7 +41,6 @@
   },
   {
     "key": "KeyY",
-    "invertible": true,
     "insert": [
       { "char": "y" },
       { "char": "Y", "modifiers": ["ShiftLeft"] },
@@ -55,7 +49,6 @@
   },
   {
     "key": "KeyU",
-    "invertible": true,
     "insert": [
       { "char": "u" },
       { "char": "U", "modifiers": ["ShiftLeft"] },
@@ -64,7 +57,6 @@
   },
   {
     "key": "KeyI",
-    "invertible": true,
     "insert": [
       { "char": "i" },
       { "char": "I", "modifiers": ["ShiftLeft"] },
@@ -73,7 +65,6 @@
   },
   {
     "key": "KeyO",
-    "invertible": true,
     "insert": [
       { "char": "o" },
       { "char": "O", "modifiers": ["ShiftLeft"] },
@@ -82,7 +73,6 @@
   },
   {
     "key": "KeyP",
-    "invertible": true,
     "insert": [
       { "char": "p" },
       { "char": "P", "modifiers": ["ShiftLeft"] },
@@ -106,7 +96,7 @@
     ]
   },
   {
-    "key": "Backslash",
+    "key": "BackSlash",
     "insert": [
       { "char": "\\" },
       { "char": "|", "modifiers": ["ShiftLeft"] },
@@ -115,7 +105,6 @@
   },
   {
     "key": "KeyA",
-    "invertible": true,
     "insert": [
       { "char": "a" },
       { "char": "A", "modifiers": ["ShiftLeft"] },
@@ -124,7 +113,6 @@
   },
   {
     "key": "KeyS",
-    "invertible": true,
     "insert": [
       { "char": "s" },
       { "char": "S", "modifiers": ["ShiftLeft"] },
@@ -133,7 +121,6 @@
   },
   {
     "key": "KeyD",
-    "invertible": true,
     "insert": [
       { "char": "d" },
       { "char": "D", "modifiers": ["ShiftLeft"] },
@@ -142,7 +129,6 @@
   },
   {
     "key": "KeyF",
-    "invertible": true,
     "insert": [
       { "char": "f" },
       { "char": "F", "modifiers": ["ShiftLeft"] },
@@ -151,7 +137,6 @@
   },
   {
     "key": "KeyG",
-    "invertible": true,
     "insert": [
       { "char": "g" },
       { "char": "G", "modifiers": ["ShiftLeft"] },
@@ -160,7 +145,6 @@
   },
   {
     "key": "KeyH",
-    "invertible": true,
     "insert": [
       { "char": "h" },
       { "char": "H", "modifiers": ["ShiftLeft"] },
@@ -169,7 +153,6 @@
   },
   {
     "key": "KeyJ",
-    "invertible": true,
     "insert": [
       { "char": "j" },
       { "char": "J", "modifiers": ["ShiftLeft"] },
@@ -178,7 +161,6 @@
   },
   {
     "key": "KeyK",
-    "invertible": true,
     "insert": [
       { "char": "k" },
       { "char": "K", "modifiers": ["ShiftLeft"] },
@@ -187,7 +169,6 @@
   },
   {
     "key": "KeyL",
-    "invertible": true,
     "insert": [
       { "char": "l" },
       { "char": "L", "modifiers": ["ShiftLeft"] },
@@ -212,7 +193,6 @@
   },
   {
     "key": "KeyZ",
-    "invertible": true,
     "insert": [
       { "char": "z" },
       { "char": "Z", "modifiers": ["ShiftLeft"] },
@@ -221,7 +201,6 @@
   },
   {
     "key": "KeyX",
-    "invertible": true,
     "insert": [
       { "char": "x" },
       { "char": "X", "modifiers": ["ShiftLeft"] },
@@ -230,7 +209,6 @@
   },
   {
     "key": "KeyC",
-    "invertible": true,
     "insert": [
       { "char": "c" },
       { "char": "C", "modifiers": ["ShiftLeft"] },
@@ -239,7 +217,6 @@
   },
   {
     "key": "KeyV",
-    "invertible": true,
     "insert": [
       { "char": "v" },
       { "char": "V", "modifiers": ["ShiftLeft"] },
@@ -248,7 +225,6 @@
   },
   {
     "key": "KeyB",
-    "invertible": true,
     "insert": [
       { "char": "b" },
       { "char": "B", "modifiers": ["ShiftLeft"] },
@@ -257,7 +233,6 @@
   },
   {
     "key": "KeyN",
-    "invertible": true,
     "insert": [
       { "char": "n" },
       { "char": "N", "modifiers": ["ShiftLeft"] },
@@ -266,7 +241,6 @@
   },
   {
     "key": "KeyM",
-    "invertible": true,
     "insert": [
       { "char": "m" },
       { "char": "M", "modifiers": ["ShiftLeft"] },
