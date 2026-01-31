@@ -75,12 +75,10 @@ impl KeyboardState {
 
     if !state { return; }
 
-    let platform_kl = self.platform.keyboard_layouts.borrow();
-
-    // if platform_kl.is_banned_event_snapshots() {
-
-    // }
-
+    if self.is_banned_event() {
+      self.state_clear();
+    }
+    
     if self.is_stack_breaker(&key) {
       self.handle_stack_breaker(key);
     } else if Self::is_backspace(&key) {
@@ -153,6 +151,11 @@ impl KeyboardState {
     }
   }
 
+  fn state_clear(&mut self) {
+    self.key = None;
+    self.modifiers = KeyboardModifiers::default();
+  }
+
   pub fn stack_clear(&mut self) {
     debug!("<$>KeyboardState</>: Drop keyboard stack");
 
@@ -173,6 +176,13 @@ impl KeyboardState {
     *key == Key::Backspace
   }
 
+  fn is_banned_event(&self) -> bool {
+    let snapshot: KeyboardSnapshot = KeyboardSnapshot::new(self.key, self.modifiers);
+    let banned = self.settings.get_banned_hotkeys();
+
+    banned.into_iter().any(|v| v == snapshot)
+  }
+
   fn is_stack_breaker(&self, key: &Key) -> bool {
     match key {
       Key::UpArrow | Key::DownArrow => true,
@@ -182,6 +192,7 @@ impl KeyboardState {
       _ => false
         || (*key == Key::Tab && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::ALT_ANY))
         || (*key == Key::Backspace && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
+        || (*key == Key::KeyL && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::META_LEFT))
         || (*key == Key::KeyA && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
         || (*key == Key::KeyX && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
         || (*key == Key::KeyC && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))

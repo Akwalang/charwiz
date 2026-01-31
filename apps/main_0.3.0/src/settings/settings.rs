@@ -11,6 +11,8 @@ use crate::settings::keyboard_layouts::KeyboardLayouts;
 use crate::settings::main_settings::structs::{AutoConvert, Command, HotKey};
 use crate::settings::platform_settings::structs::ClipboardHotkeys;
 
+use crate::common::structs::KeyboardSnapshot;
+
 pub struct Settings {
   platform: &'static Platform,
 
@@ -66,6 +68,12 @@ impl Settings {
     let main = self.main_settings.borrow();
 
     main.settings.hotkeys.clone()
+  }
+
+  pub fn get_banned_hotkeys(&self) -> Vec<KeyboardSnapshot> {
+    let platform = self.platform_settings.borrow();
+
+    platform.settings.banned_hotkeys.clone()
   }
 
   pub fn get_clipboard_hotkeys(&self) -> ClipboardHotkeys {
