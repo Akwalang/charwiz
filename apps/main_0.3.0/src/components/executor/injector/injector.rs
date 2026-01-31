@@ -87,12 +87,6 @@ impl Injector {
     result
   }
 
-  async fn use_retype(&self, emulator: &Emulator, value: &[KeyboardSnapshot]) -> anyhow::Result<()> {
-    emulator.run(value).await?;
-
-    Ok(())
-  }
-
   async fn use_type_and_paste(&self, emulator: &Emulator, value: String) -> anyhow::Result<()> {
     let execute_line = self.prepare_execute_line(value)?;
 

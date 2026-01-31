@@ -54,7 +54,7 @@ impl HotkeyDetector {
     
     let state: std::sync::MutexGuard<'_, State> = self.state.lock().unwrap();
 
-    let cur = KeyboardSnapshot::new(state.keyboard.key, state.keyboard.modifiers);
+    let cur = state.keyboard.get_current_snapshot();
     let mut cap = self.captured_keys.lock().unwrap();
 
     if Self::is_event_ready(&cur, &cap) {

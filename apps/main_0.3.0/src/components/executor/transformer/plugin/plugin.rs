@@ -18,17 +18,15 @@ use crate::common::events::CommandEvent;
 use crate::constants::PLUGINS_FOLDER;
 
 pub struct PluginTransformer {
+  #[allow(dead_code)]
   platform: &'static Platform,
+  #[allow(dead_code)]
   settings: &'static Settings,
 
   lua: Option<Lua>,
 }
 
 impl PluginTransformer {
-  pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
-    PluginTransformer { platform, settings, lua: None }
-  }
-
   pub fn init(&mut self) {
     log!("<$>Plugin Transformer</>: Init");
 
@@ -104,6 +102,10 @@ impl PluginTransformer {
 }
 
 impl Transformer for PluginTransformer {
+  fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
+    Self { platform, settings, lua: None }
+  }
+
   async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
     let Some(lua) = self.lua.as_ref() else {
       warn!("<$>Plugin Transformer</>: Lua not initialized");

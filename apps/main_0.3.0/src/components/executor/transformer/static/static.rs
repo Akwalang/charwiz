@@ -17,16 +17,16 @@ pub struct StaticTransformer {
 }
 
 impl StaticTransformer {
-  pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
-    Self { platform, settings }
-  }
-
   pub fn init(&mut self) {
     log!("<$>Static Transformer</>: Init");
   }
 }
 
 impl Transformer for StaticTransformer {
+  fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
+    Self { platform, settings }
+  }
+
   async fn transform(&self, event: &CommandEvent, _target: &InputType) -> InputType {
     let result = event.executor.value.to_owned();
 

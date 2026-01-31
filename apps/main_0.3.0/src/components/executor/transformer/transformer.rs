@@ -37,15 +37,9 @@ impl Transformer {
 
   pub async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
     match event.executor.r#type {
-      ExecutorTypeEnum::Native => {
-        self.native_transformer.transform(event, target).await
-      }
-      ExecutorTypeEnum::Plugin => {
-        self.plugin_transformer.transform(event, target).await
-      }
-      ExecutorTypeEnum::Static => {
-        self.static_transformer.transform(event, target).await
-      }
+      ExecutorTypeEnum::Native => self.native_transformer.transform(event, target).await,
+      ExecutorTypeEnum::Plugin => self.plugin_transformer.transform(event, target).await,
+      ExecutorTypeEnum::Static => self.static_transformer.transform(event, target).await,
     }
   }
 }

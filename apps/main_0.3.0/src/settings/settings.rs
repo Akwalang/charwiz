@@ -76,6 +76,12 @@ impl Settings {
     platform.settings.banned_hotkeys.clone()
   }
 
+  pub fn get_stack_breake_hotkeys(&self) -> Vec<KeyboardSnapshot> {
+    let platform = self.platform_settings.borrow();
+
+    platform.settings.stack_breake_hotkeys.clone()
+  }
+
   pub fn get_clipboard_hotkeys(&self) -> ClipboardHotkeys {
     let platform = self.platform_settings.borrow();
 

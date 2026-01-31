@@ -11,8 +11,7 @@ pub struct KeyboardState {
   platform: &'static Platform,
   settings: &'static Settings,
 
-  pub key: Option<Key>,
-  pub modifiers: KeyboardModifiers,
+  keyboard_snapshot: KeyboardSnapshot,
 
   pub initial_keyboard_layout: String,
 
@@ -26,14 +25,16 @@ impl KeyboardState {
       platform,
       settings,
 
-      key: None,
-      modifiers: KeyboardModifiers::default(),
-
       initial_keyboard_layout: String::new(),
+      keyboard_snapshot: KeyboardSnapshot::default(),
 
       char_stack: Vec::with_capacity(20),
       event_stack: Vec::with_capacity(20),
     }
+  }
+
+  pub fn get_current_snapshot(&self) -> KeyboardSnapshot {
+    self.keyboard_snapshot.clone()
   }
 
   pub fn get_string(&self) -> String {
@@ -70,7 +71,7 @@ impl KeyboardState {
     }
 
     if !KeyboardModifiers::is_modifier(&key) {
-      self.key = if state { Some(key) } else { None };
+      self.keyboard_snapshot.key = if state { Some(key) } else { None };
     }
 
     if !state { return; }
@@ -90,9 +91,9 @@ impl KeyboardState {
 
   fn handle_modifier_update(&mut self, key: Key, state: bool) {
     if state {
-      self.modifiers.add_key(&key);
+      self.keyboard_snapshot.modifiers.add_key(&key);
     } else {
-      self.modifiers.remove_key(&key);
+      self.keyboard_snapshot.modifiers.remove_key(&key);
     }
   }
 
@@ -114,7 +115,7 @@ impl KeyboardState {
 
     let cur_layout_name = cur_layout.name.to_owned();
 
-    let (char, is_exists) = settings_kl.find_combination(&cur_layout_name, &key, self.modifiers);
+    let (char, is_exists) = settings_kl.find_combination(&cur_layout_name, &key, self.keyboard_snapshot.modifiers);
 
     // skip registration when hotkey missing in all keyboard layouts
     // but save when any of layouts has this hotkey
@@ -136,7 +137,7 @@ impl KeyboardState {
       self.char_stack.push(char);
     }
 
-    self.event_stack.push((char.is_some(), KeyboardSnapshot::new(Some(key), self.modifiers)));
+    self.event_stack.push((char.is_some(), KeyboardSnapshot::new(Some(key), self.keyboard_snapshot.modifiers)));
   }
 
   fn stack_pop(&mut self) {
@@ -152,8 +153,7 @@ impl KeyboardState {
   }
 
   fn state_clear(&mut self) {
-    self.key = None;
-    self.modifiers = KeyboardModifiers::default();
+    self.keyboard_snapshot.clear();
   }
 
   pub fn stack_clear(&mut self) {
@@ -177,33 +177,15 @@ impl KeyboardState {
   }
 
   fn is_banned_event(&self) -> bool {
-    let snapshot: KeyboardSnapshot = KeyboardSnapshot::new(self.key, self.modifiers);
-    let banned = self.settings.get_banned_hotkeys();
+    let hotkeys = self.settings.get_banned_hotkeys();
 
-    banned.into_iter().any(|v| v == snapshot)
+    hotkeys.into_iter().any(|ks| ks == self.keyboard_snapshot)
   }
 
   fn is_stack_breaker(&self, key: &Key) -> bool {
-    match key {
-      Key::UpArrow | Key::DownArrow => true,
-      Key::LeftArrow | Key::RightArrow => true,
-      Key::PageUp | Key::PageDown => true,
-      Key::Home | Key::End => true,
-      _ => false
-        || (*key == Key::Tab && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::ALT_ANY))
-        || (*key == Key::Backspace && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyL && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::META_LEFT))
-        || (*key == Key::KeyA && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyX && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyC && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyY && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
-        || (*key == Key::KeyZ && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY))
-        || (
-            *key == Key::KeyZ
-            && self.modifiers == KeyboardModifiers::new(KeyboardModifiers::CONTROL_ANY)
-            && self.modifiers.is_any_pressed(KeyboardModifiers::SHIFT_ANY)
-          )
-      ,
-    }
+    let snaphot = KeyboardSnapshot::new(Some(*key), self.keyboard_snapshot.modifiers.clone());
+    let hotkeys = self.settings.get_stack_breake_hotkeys();
+
+    hotkeys.into_iter().any(|ks| ks == snaphot)
   }
 }

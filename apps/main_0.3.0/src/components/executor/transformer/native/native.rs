@@ -18,16 +18,16 @@ pub struct NativeTransformer {
 }
 
 impl NativeTransformer {
-  pub fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
-    Self { platform, settings }
-  }
-
   pub fn init(&mut self) {
     log!("<$>Native Transformer</>: Init");
   }
 }
 
 impl Transformer for NativeTransformer {
+  fn new(platform: &'static Platform, settings: &'static Settings) -> Self {
+    Self { platform, settings }
+  }
+
   async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
     match event.executor.value.as_str() {
       "invert_case" => methods::invert_case(target),

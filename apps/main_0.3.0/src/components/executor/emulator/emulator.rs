@@ -22,7 +22,7 @@ impl Emulator {
 
     let delay = self.settings.main_settings.borrow().settings.timings.key_action_delay;
 
-    sleep(Duration::from_nanos(delay)).await;
+    sleep(Duration::from_micros(delay)).await;
 
     for next in queue {
       Self::put_snapshots_into_pipeline(&mut pipeline, current, next);
@@ -30,7 +30,7 @@ impl Emulator {
       for event in &pipeline {
         simulate(event)?;
 
-        sleep(Duration::from_nanos(delay)).await;
+        sleep(Duration::from_micros(delay)).await;
       }
 
       current = next;

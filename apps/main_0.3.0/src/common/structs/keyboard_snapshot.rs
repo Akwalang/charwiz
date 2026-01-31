@@ -17,6 +17,11 @@ impl KeyboardSnapshot {
     Self { key, modifiers }
   }
 
+  pub fn clear(&mut self) {
+    self.key = None;
+    self.modifiers = KeyboardModifiers::default();
+  }
+
   pub fn len(&self) -> u8 {
     let mut length = self.modifiers.0.count_ones() as u8;
 
