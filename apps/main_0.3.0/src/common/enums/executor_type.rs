@@ -1,7 +1,4 @@
-use serde::Deserialize;
-
-#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-#[serde(rename_all = "lowercase")]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ExecutorTypeEnum {
   Native, // Rust converters
   Plugin, // Lua converters

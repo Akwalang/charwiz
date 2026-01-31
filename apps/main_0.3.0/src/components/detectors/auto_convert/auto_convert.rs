@@ -28,7 +28,7 @@ impl AutoConvertDetector {
   }
 
   pub fn init(self: &Arc<Self>) {
-    log!("<$>AutoConvertDetector</>: Init");
+    log!("<$>Auto Convert Detector</>: Init");
 
     self.subscribe();
   }

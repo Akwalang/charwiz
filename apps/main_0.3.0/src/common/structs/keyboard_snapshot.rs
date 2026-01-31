@@ -4,7 +4,7 @@ use rdev::Key;
 
 use super::KeyboardModifiers;
 
-#[derive(Debug, PartialEq, Eq, Clone, Default)]
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct KeyboardSnapshot {
   pub key: Option<Key>,
   pub modifiers: KeyboardModifiers,

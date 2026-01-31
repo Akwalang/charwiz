@@ -1,7 +1,4 @@
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
+#[derive(Debug, Clone, PartialEq)]
 pub enum InjectMethodEnum {
   Paste,
   Emulate,

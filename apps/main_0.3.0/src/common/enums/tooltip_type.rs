@@ -1,7 +1,4 @@
-use serde::Deserialize;
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "lowercase")]
+#[derive(Clone, Debug)]
 pub enum TooltipTypeEnum {
   Option,
 }

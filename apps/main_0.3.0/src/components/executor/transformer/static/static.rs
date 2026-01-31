@@ -8,6 +8,7 @@ use super::super::traits::Transformer;
 use crate::components::executor::enums::InputType;
 
 use crate::common::events::CommandEvent;
+
 pub struct StaticTransformer {
   #[allow(dead_code)]
   platform: &'static Platform,
@@ -21,7 +22,7 @@ impl StaticTransformer {
   }
 
   pub fn init(&mut self) {
-    log!("<$>StaticTransformer</>: Init");
+    log!("<$>Static Transformer</>: Init");
   }
 }
 
@@ -29,7 +30,7 @@ impl Transformer for StaticTransformer {
   async fn transform(&self, event: &CommandEvent, _target: &InputType) -> InputType {
     let result = event.executor.value.to_owned();
 
-    log!("<$>StaticTransformer</>: Result: <i+>{}</>", result);
+    log!("<$>Static Transformer</>: Result: <i+>{}</>", result);
 
     InputType::Text(result)
   }

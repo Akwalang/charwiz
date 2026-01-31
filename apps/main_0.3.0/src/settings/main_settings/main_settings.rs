@@ -30,6 +30,6 @@ impl MainSettings {
       return Err(e);
     };
 
-    Ok(Settings::from(raw.unwrap()))
+    Ok(raw.unwrap().into())
   }
 }

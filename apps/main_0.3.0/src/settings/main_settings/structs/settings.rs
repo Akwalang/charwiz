@@ -3,19 +3,19 @@ use serde::Deserialize;
 use crate::settings::main_settings::structs::{
   Timings,
   HotkeyRaw, HotKey,
-  AutoConvert,
-  Command,
-  Tooltip,
+  AutoConvertRaw, AutoConvert,
+  CommandRaw, Command,
+  TooltipRaw, Tooltip,
 };
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SettingsRaw {
   pub timings: Timings,
-  pub auto_converts: Vec<AutoConvert>,
+  pub auto_converts: Vec<AutoConvertRaw>,
   pub hotkeys: Vec<HotkeyRaw>,
-  pub commands: Vec<Command>,
-  pub tooltips: Vec<Tooltip>,
+  pub commands: Vec<CommandRaw>,
+  pub tooltips: Vec<TooltipRaw>,
 }
 
 #[derive(Debug, Default)]
@@ -27,14 +27,14 @@ pub struct Settings {
   pub tooltips: Vec<Tooltip>,
 }
 
-impl From<SettingsRaw> for Settings {
-  fn from(raw: SettingsRaw) -> Self {
-    Self {
-      timings: raw.timings,
-      auto_converts: raw.auto_converts,
-      hotkeys: raw.hotkeys.into_iter().map(|hk| hk.into()).collect(),
-      commands: raw.commands,
-      tooltips: raw.tooltips,
+impl Into<Settings> for SettingsRaw {
+  fn into(self) -> Settings {
+    Settings {
+      timings: self.timings,
+      auto_converts: self.auto_converts.into_iter().map(Into::into).collect(),
+      hotkeys: self.hotkeys.into_iter().map(Into::into).collect(),
+      commands: self.commands.into_iter().map(Into::into).collect(),
+      tooltips: self.tooltips.into_iter().map(Into::into).collect(),
     }
   }
 }

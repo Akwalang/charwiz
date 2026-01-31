@@ -20,7 +20,7 @@ impl EventHub {
   #[inline]
   fn publish<T: Clone>(tx: &Sender<T>, ev: T, chan: &str) -> anyhow::Result<()> {
     if let Err(_) = tx.send(ev) {
-      warn!("<$>EventHub</>: No subscribers for \"<&>{}</>\"; dropping event", chan);
+      warn!("<$>Event Hub</>: No subscribers for \"<&>{}</>\"; dropping event", chan);
     }
 
     Ok(())

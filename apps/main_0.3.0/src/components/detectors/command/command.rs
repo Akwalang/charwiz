@@ -28,7 +28,7 @@ impl CommandDetector {
   }
 
   pub fn init(self: &Arc<Self>) {
-    log!("<$>CommandDetector</>: Init");
+    log!("<$>Command Detector</>: Init");
 
     self.subscribe();
   }

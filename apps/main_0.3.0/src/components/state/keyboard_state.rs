@@ -157,7 +157,7 @@ impl KeyboardState {
   }
 
   pub fn stack_clear(&mut self) {
-    debug!("<$>KeyboardState</>: Drop keyboard stack");
+    debug!("<$>Keyboard State</>: Drop keyboard stack");
 
     self.char_stack.clear();
     self.event_stack.clear();

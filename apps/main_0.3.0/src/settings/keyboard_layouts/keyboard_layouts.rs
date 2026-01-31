@@ -25,7 +25,7 @@ impl KeyboardLayouts {
   }
 
   pub fn init(&mut self) {
-    log!("<$>Keyboard Layouts</>: Init");
+    log!("<$>Keyboard Layouts Settings</>: Init");
   }
 
   pub fn get_keyboard_layouts(&self) -> &HashMap<String, LayoutItem> {
@@ -38,7 +38,7 @@ impl KeyboardLayouts {
     self.items.insert(name.to_owned(), layout);
   }
 
-  // Yes, we need here tuple not just Some/None, the second return for chars existing in other layouts
+  // Yes, we need here tuple not just Some/None, the second return means the char existing in some other layout
   pub fn find_combination(&self, layout_name: &str, key: &Key, modifiers: KeyboardModifiers) -> (Option<char>, bool) {
     let mut char = None;
     let mut is_exists = false;
@@ -67,7 +67,7 @@ impl KeyboardLayouts {
       let setup = self.items.get(&layout.name);
 
       if setup.is_none() {
-        error!("<$>Keyboard Layouts</>: Keyboard layout now found: {}", layout.name);
+        error!("<$>Keyboard Layouts Settings</>: Keyboard layout now found: {}", layout.name);
         anyhow::bail!("Keyboard layout now found: {}", layout.name);
       }
     }

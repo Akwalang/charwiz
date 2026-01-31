@@ -32,7 +32,7 @@ impl HotkeyDetector {
   }
 
   pub fn init(self: &Arc<Self>) {
-    log!("<$>HotKeyDetector</>: Init");
+    log!("<$>Hotkey Detector</>: Init");
 
     self.subscribe();
   }

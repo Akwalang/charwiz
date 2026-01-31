@@ -28,7 +28,7 @@ impl UserInputController {
   }
 
   pub fn init(self: &Arc<Self>) {
-    log!("<$>UserInputController</>: Init");
+    log!("<$>User Input Controller</>: Init");
 
     self.listen();
   }
@@ -50,7 +50,7 @@ impl UserInputController {
       };
 
       if let Err(error) = listen(callback) {
-        error!("<$>UserInputController</>: Can't start listen keyboard events. Error: {:?}", error);
+        error!("<$>User Input Controller</>: Can't start listen keyboard events. Error: {:?}", error);
       }
     });
   }
@@ -79,7 +79,7 @@ impl UserInputController {
     drop(state);
 
     if let Err(err) = self.event_hub.publish_input(event) {
-      warn!("<$>UserInputController</>: Failed to publish input event: {:?}", err);
+      warn!("<$>User Input Controller</>: Failed to publish input event: {:?}", err);
     }
   }
 
@@ -95,9 +95,9 @@ impl UserInputController {
     let stl = if is_muted { "i" } else { "i!" };
 
     match event.event_type {
-      EventType::KeyPress(key) => { debug!("Key press: <{}>{:?}</>", stl, key); },
-      EventType::KeyRelease(key) => { debug!("Key release: <{}>{:?}</>", stl, key); },
-      EventType::ButtonPress(button) => { debug!("Mouse press: <{}>{:?}</>", stl, button); },
+      EventType::KeyPress(key)         => { debug!("Key press: <{}>{:?}</>", stl, key); },
+      EventType::KeyRelease(key)       => { debug!("Key release: <{}>{:?}</>", stl, key); },
+      EventType::ButtonPress(button)   => { debug!("Mouse press: <{}>{:?}</>", stl, button); },
       EventType::ButtonRelease(button) => { debug!("Mouse release: <{}>{:?}</>", stl, button); },
       _ => {},
     }

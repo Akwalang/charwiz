@@ -12,17 +12,17 @@ pub fn convert_layout(
     return target.clone();
   };
 
-  let plat_layouts = platform.keyboard_layouts.borrow().get_keyboard_layouts();
-  let sets_layouts = settings.keyboard_layouts.borrow().get_keyboard_layouts();
+  // let plat_layouts = platform.keyboard_layouts.borrow().get_keyboard_layouts();
+  // let sets_layouts = settings.keyboard_layouts.borrow().get_keyboard_layouts();
 
   let chars = text.chars();
   let result = String::with_capacity(chars.clone().count() * 4); // cover utf-32
 
-  let layout = 1;
+  // let layout = 1;
 
-  for r#char in chars.into_iter() {
+  // for r#char in chars.into_iter() {
 
-  }
+  // }
 
   InputType::Text(result)
 }

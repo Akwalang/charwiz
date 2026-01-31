@@ -30,7 +30,7 @@ impl PluginTransformer {
   }
 
   pub fn init(&mut self) {
-    log!("<$>PluginTransformer</>: Init");
+    log!("<$>Plugin Transformer</>: Init");
 
     self.load_lua();
   }
@@ -43,7 +43,7 @@ impl PluginTransformer {
     let lua = Self::initialize_lua_scripts().unwrap_or(None);
 
     if lua.is_none() {
-      error!("<$>PluginTransformer</>: Lua scripts could not be loaded");
+      error!("<$>Plugin Transformer</>: Lua scripts could not be loaded");
     }
 
     self.lua = lua;
@@ -56,10 +56,10 @@ impl PluginTransformer {
 
     let dir = Path::new(PLUGINS_FOLDER);
 
-    log!("<$>PluginTransformer</>: Loading Lua scripts from: <i&>{}</>", dir.to_str().unwrap());
+    log!("<$>Plugin Transformer</>: Loading Lua scripts from: <i&>{}</>", dir.to_str().unwrap());
 
     if !dir.exists() {
-      warn!("<$>PluginTransformer</>: Lua scripts directory does not exist");
+      warn!("<$>Plugin Transformer</>: Lua scripts directory does not exist");
       return Ok(None);
     }
 
@@ -69,7 +69,7 @@ impl PluginTransformer {
 
       if path.extension().and_then(|s| s.to_str()) != Some("lua") { continue; }
 
-      log!("<$>PluginTransformer</>: Loading script: <i&>{}</>", path.to_str().unwrap().replace("\\", "/"));
+      log!("<$>Plugin Transformer</>: Loading script: <i&>{}</>", path.to_str().unwrap().replace("\\", "/"));
 
       let script = fs::read_to_string(&path)?;
 
@@ -106,33 +106,33 @@ impl PluginTransformer {
 impl Transformer for PluginTransformer {
   async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
     let Some(lua) = self.lua.as_ref() else {
-      warn!("<$>PluginTransformer</>: Lua not initialized");
+      warn!("<$>Plugin Transformer</>: Lua not initialized");
       return target.clone();
     };
 
     if let InputType::Events(_) = target {
-      warn!("<$>PluginTransformer</>: Event input is banned");
+      warn!("<$>Plugin Transformer</>: Event input is banned");
       return target.clone();
     }
 
     let Ok(handler): Result<Function, Error> = lua.globals().get(event.executor.value.clone()) else {
-      warn!("<$>PluginTransformer</>: Lua function not found");
+      warn!("<$>Plugin Transformer</>: Lua function not found");
       return target.clone();
     };
 
     let Ok(data) = self.prepare_data(target) else {
-      warn!("<$>PluginTransformer</>: Can't transform event data to Lua table");
+      warn!("<$>Plugin Transformer</>: Can't transform event data to Lua table");
       return target.clone();
     };
 
     let result = handler.call(data);
 
     let Ok(result): Result<String, Error> = result else {
-      warn!("<$>PluginTransformer</>: Error during Lua function execution\n{}", result.err().unwrap());
+      warn!("<$>Plugin Transformer</>: Error during Lua function execution\n{}", result.err().unwrap());
       return target.clone();
     };
 
-    log!("<$>PluginTransformer</>: Result:\n<i+>{}</>", result);
+    log!("<$>Plugin Transformer</>: Result:\n<i+>{}</>", result);
 
     InputType::Text(result)
   }

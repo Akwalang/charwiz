@@ -1,15 +1,15 @@
-use std::fs;
-use std::path::Path;
 use std::collections::HashMap;
 
 use rust_logger::*;
 use rdev::Key;
 
-use crate::settings::keyboard_layouts::KeyItem;
+use super::{KeyItemRaw, KeyItem};
 
 use crate::common::structs::KeyboardSnapshot;
 
 use crate::constants::LAYOUTS_FOLDER;
+
+use crate::utils;
 
 pub struct LayoutItem {
   pub name: String,
@@ -21,7 +21,7 @@ impl LayoutItem {
   pub fn new(name: &str) -> Self {
     let name = name.to_owned();
 
-    let items = Self::load(&name).unwrap_or(Vec::new());
+    let items = Self::load(&name).unwrap_or_else(|_| panic!("Can't load layout settings"));
 
     let chars = Self::raw_to_chars_map(&items);
     let keys = Self::raw_to_keys_map(items);
@@ -30,37 +30,20 @@ impl LayoutItem {
   }
 
   fn load(name: &str) -> anyhow::Result<Vec<KeyItem>> {
-    let content = Self::read_file(name)?;
-    
-    Self::parse_json(name, content)
-  }
+    log!("<$>Keyboard Layouts Settings</>: Loading layout: <i&>{}</>", name);
 
-  fn read_file(name: &str) -> anyhow::Result<String> {
     let src = format!("{}/{}.json", LAYOUTS_FOLDER, name);
 
-    log!("<$>Settings::KeyboardLayouts</>: Loading keyboard layout for \"<&>{}</>\": <i&>{}</>", name, src);
+    let raw = utils::read_json::<Vec<KeyItemRaw>>(&src);
 
-    let path = Path::new(&src);
+    if let Err(e) = raw {
+      error!("<$>Keyboard Layouts Settings</>: Failed to load layout settings. Error: <i->{}</>", e.to_string());
+      return Err(e);
+    };
 
-    let content = fs::read_to_string(&path);
+    let result = raw.unwrap_or(vec![]).into_iter().map(Into::into).collect();
 
-    if let Err(e) = content {
-      error!("<$>Settings::KeyboardLayouts</>: Failed to load keyboard layout for \"<&>{}</>\": <i&>{}</>", name, src);
-      anyhow::bail!(e.to_string());
-    }
-    
-    Ok(content.unwrap())
-  }
-
-  fn parse_json(name: &str, content: String) -> anyhow::Result<Vec<KeyItem>> {
-    let items = serde_json::from_str::<Vec<KeyItem>>(&content);
-
-    if let Err(e) = items {
-      error!("<$>Settings::KeyboardLayouts</>: Invalid keyboard layout JSON for \"<&>{}</>\": <i&>{}</> -> <->{}</>", name, content, e);
-      anyhow::bail!(e.to_string());
-    }
-
-    Ok(items.unwrap())
+    Ok(result)
   }
 
   fn raw_to_chars_map(items: &Vec<KeyItem>) -> HashMap<char, KeyboardSnapshot> {

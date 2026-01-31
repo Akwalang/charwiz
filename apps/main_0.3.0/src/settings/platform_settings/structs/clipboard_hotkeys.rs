@@ -1,15 +1,15 @@
 use serde::Deserialize;
 
 use crate::common::structs::KeyboardSnapshot;
-use crate::settings::structs_raw::KeyboardSnapshotRaw;
+use crate::settings::raw::structs::KeyboardSnapshotRaw;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct ClipboardHotkeysRaw {
   copy: KeyboardSnapshotRaw,
   paste: KeyboardSnapshotRaw,
 }
 
-#[derive(Clone, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct ClipboardHotkeys {
   pub copy: KeyboardSnapshot,
   pub paste: KeyboardSnapshot,

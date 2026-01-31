@@ -50,7 +50,7 @@ impl Clipboard {
       self.clipboard.getter.atoms.clipboard,
       self.clipboard.getter.atoms.utf8_string,
       text.as_bytes().to_vec(),
-    );
+    )?;
 
     Ok(())
   }

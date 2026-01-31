@@ -5,4 +5,4 @@ mod keyboard_layouts;
 pub use keyboard_layouts::KeyboardLayouts;
 
 mod structs;
-pub use structs::{KeyItem, KeyInsert};
+pub use structs::{KeyItemRaw, KeyItem, KeyInsert};

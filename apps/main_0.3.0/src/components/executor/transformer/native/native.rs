@@ -23,7 +23,7 @@ impl NativeTransformer {
   }
 
   pub fn init(&mut self) {
-    log!("<$>NativeTransformer</>: Init");
+    log!("<$>Native Transformer</>: Init");
   }
 }
 

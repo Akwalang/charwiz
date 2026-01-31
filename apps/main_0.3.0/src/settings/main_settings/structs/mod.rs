@@ -1,17 +1,17 @@
+mod timings;
+pub use timings::Timings;
+
 mod auto_convert;
-pub use auto_convert::AutoConvert;
+pub use auto_convert::{AutoConvertRaw, AutoConvert};
 
 mod command;
-pub use command::Command;
+pub use command::{CommandRaw, Command};
 
 mod hot_key;
 pub use hot_key::{HotkeyRaw, HotKey};
 
-mod timings;
-pub use timings::Timings;
-
 mod tooltip;
-pub use tooltip::Tooltip;
+pub use tooltip::{TooltipRaw, Tooltip};
 
 mod settings;
 pub use settings::{SettingsRaw, Settings};
