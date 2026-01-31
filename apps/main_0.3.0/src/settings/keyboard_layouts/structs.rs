@@ -1,8 +1,8 @@
 use serde::Deserialize;
 use rdev::Key;
 
-use crate::utils;
 use crate::common::structs::KeyboardModifiers;
+use crate::utils::deserialize_modifiers;
 
 #[derive(Debug, Deserialize)]
 pub struct KeyItem {
@@ -14,6 +14,6 @@ pub struct KeyItem {
 pub struct KeyInsert {
   pub r#char: char,
 
-  #[serde(default, deserialize_with = "utils::deserialize_modifiers")]
+  #[serde(default, deserialize_with = "deserialize_modifiers")]
   pub modifiers: KeyboardModifiers,
 }

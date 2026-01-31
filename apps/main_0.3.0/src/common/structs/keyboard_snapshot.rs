@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 
 use rdev::Key;
 
-use crate::common::structs::KeyboardModifiers;
+use super::KeyboardModifiers;
 
 #[derive(Debug, PartialEq, Eq, Clone, Default)]
 pub struct KeyboardSnapshot {
