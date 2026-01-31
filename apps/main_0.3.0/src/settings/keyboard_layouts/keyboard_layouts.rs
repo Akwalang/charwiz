@@ -28,6 +28,10 @@ impl KeyboardLayouts {
     log!("<$>Keyboard Layouts</>: Init");
   }
 
+  pub fn get_keyboard_layouts(&self) -> &HashMap<String, LayoutItem> {
+    &self.items
+  }
+
   pub fn add(&mut self, name: &str) {
     let layout = LayoutItem::new(name);
 

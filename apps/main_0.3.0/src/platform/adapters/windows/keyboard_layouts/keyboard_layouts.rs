@@ -32,6 +32,10 @@ impl KeyboardLayouts {
     log!("<$>Windows::KeyboardLayouts</>: Available keyboard layouts: {}", names);
   }
 
+  pub fn get_keyboard_layouts(&self) -> &Vec<KeyboardLayoutItem> {
+    &self.items
+  }
+
   pub fn get_keyboard_layout_by_id(&self, id: &str) -> Option<&KeyboardLayoutItem> {
     self.items.iter().find(|lt| lt.id == id)
   }
