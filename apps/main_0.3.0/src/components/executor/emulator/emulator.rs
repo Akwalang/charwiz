@@ -20,9 +20,7 @@ impl Emulator {
     let mut current = &KeyboardSnapshot::default();
     let mut pipeline = Vec::<EventType>::with_capacity(1 + KeyboardSnapshot::CAPACITY); // +1 for before & after key field
 
-    let delay = self.settings.main_settings.borrow().settings.timings.key_action_delay;
-
-    sleep(Duration::from_micros(delay)).await;
+    sleep(Duration::from_millis(1)).await;
 
     for next in queue {
       Self::put_snapshots_into_pipeline(&mut pipeline, current, next);
@@ -30,7 +28,8 @@ impl Emulator {
       for event in &pipeline {
         simulate(event)?;
 
-        sleep(Duration::from_micros(delay)).await;
+        // Must be awaited to not block event_hub
+        sleep(Duration::from_millis(1)).await;
       }
 
       current = next;

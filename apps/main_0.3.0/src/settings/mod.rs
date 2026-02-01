@@ -1,4 +1,5 @@
 pub mod raw;
+pub mod utils;
 
 pub mod main_settings;
 pub use main_settings::{MainSettings, structs as main_settings_structs};

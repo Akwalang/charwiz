@@ -1,7 +1,6 @@
 {
   "timings": {
-    "forgetTimeout": 10000000,
-    "keyActionDelay": 5000
+    "forgetTimeout": 10000000
   },
   "executors": [
     { "type": "native", "value": "switch_layout" },

@@ -4,12 +4,11 @@ use rust_logger::*;
 use rdev::Key;
 
 use super::{KeyItemRaw, KeyItem};
+use super::super::utils;
 
 use crate::common::structs::KeyboardSnapshot;
 
 use crate::constants::LAYOUTS_FOLDER;
-
-use crate::utils;
 
 pub struct LayoutItem {
   pub name: String,
@@ -53,11 +52,16 @@ impl LayoutItem {
 
     for item in items {
       for ins in &item.insert {
+        // prefer regular keys over numpad keys
+        if map.contains_key(&ins.char) { continue; }
+
         let value = KeyboardSnapshot::new(Some(item.key), ins.modifiers);
 
         map.insert(ins.char, value);
       }
     }
+
+    println!("Loaded: {:#?}", map);
 
     map
   }

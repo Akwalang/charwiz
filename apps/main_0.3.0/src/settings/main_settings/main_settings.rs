@@ -2,7 +2,7 @@ use rust_logger::*;
 
 use crate::settings::main_settings::structs::{SettingsRaw, Settings};
 
-use crate::utils;
+use super::super::utils;
 use crate::constants::MAIN_SETTINGS_FILE;
 
 pub struct MainSettings {

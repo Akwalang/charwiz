@@ -2,7 +2,7 @@ use rust_logger::*;
 
 use super::structs::{SettingsRaw, Settings};
 
-use crate::utils;
+use super::super::utils;
 use crate::constants::PLATFORM_SETTINGS_FILE;
 
 pub struct PlatformSettings {

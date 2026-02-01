@@ -2,7 +2,6 @@
 
 mod setup;
 mod common;
-mod utils;
 mod constants;
 
 mod platform;

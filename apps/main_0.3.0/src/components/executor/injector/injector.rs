@@ -133,9 +133,7 @@ impl Injector {
 
     self.platform.keyboard_layouts.borrow_mut().set_keyboard_layout(&line.0)?;
 
-    let delay = self.settings.main_settings.borrow().settings.timings.key_action_delay;
-
-    sleep(Duration::from_nanos(delay)).await;
+    sleep(Duration::from_millis(1)).await;
 
     let chars = line.2.chars();
 
