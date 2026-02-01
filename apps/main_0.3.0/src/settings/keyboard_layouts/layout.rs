@@ -61,8 +61,6 @@ impl LayoutItem {
       }
     }
 
-    println!("Loaded: {:#?}", map);
-
     map
   }
 
