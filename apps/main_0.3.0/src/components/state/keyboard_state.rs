@@ -179,13 +179,13 @@ impl KeyboardState {
   fn is_banned_event(&self) -> bool {
     let hotkeys = self.settings.get_banned_hotkeys();
 
-    hotkeys.into_iter().any(|ks| ks == self.keyboard_snapshot)
+    hotkeys.iter().any(|ks| *ks == self.keyboard_snapshot)
   }
 
   fn is_stack_breaker(&self, key: &Key) -> bool {
     let snaphot = KeyboardSnapshot::new(Some(*key), self.keyboard_snapshot.modifiers.clone());
     let hotkeys = self.settings.get_stack_breake_hotkeys();
 
-    hotkeys.into_iter().any(|ks| ks == snaphot)
+    hotkeys.iter().any(|ks| *ks == snaphot)
   }
 }

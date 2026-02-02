@@ -54,24 +54,24 @@ impl Extractor {
   }
 
   async fn extract_all(&self, emulator: &Emulator) -> anyhow::Result<InputType> {
-    let clipboard = self.settings.get_clipboard_hotkeys();
+    let clipboard_settings = self.settings.get_clipboard_hotkeys();
 
     self.get_data_through_clipboard(
       emulator,
-      &commands::create_copy_all_pipeline(clipboard.copy),
+      &commands::create_copy_all_pipeline(clipboard_settings.copy.clone()),
     ).await
   }
 
   async fn extract_line(&self, emulator: &Emulator) -> anyhow::Result<InputType> {
     let clipboard_settings = self.settings.get_clipboard_hotkeys();
-    let pipeline = commands::create_copy_line_pipeline(clipboard_settings.copy);
+    let pipeline = commands::create_copy_line_pipeline(clipboard_settings.copy.clone());
 
     self.get_data_through_clipboard(emulator, &pipeline).await
   }
 
   async fn extract_word(&self, emulator: &Emulator) -> anyhow::Result<InputType> {
     let clipboard_settings = self.settings.get_clipboard_hotkeys();
-    let pipeline = commands::create_copy_word_pipeline(clipboard_settings.copy);
+    let pipeline = commands::create_copy_word_pipeline(clipboard_settings.copy.clone());
 
     self.get_data_through_clipboard(emulator, &pipeline).await
   }
@@ -90,7 +90,7 @@ impl Extractor {
 
   async fn extract_selection(&self, emulator: &Emulator) -> anyhow::Result<InputType> {
     let clipboard_settings = self.settings.get_clipboard_hotkeys();
-    let pipeline = commands::create_copy_selection_pipeline(clipboard_settings.copy);
+    let pipeline = commands::create_copy_selection_pipeline(clipboard_settings.copy.clone());
 
     self.get_data_through_clipboard(emulator, &pipeline).await
   }

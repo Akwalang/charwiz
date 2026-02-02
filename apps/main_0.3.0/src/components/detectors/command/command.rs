@@ -53,7 +53,7 @@ impl CommandDetector {
     let str = state.keyboard.get_string();
     let commands = self.settings.get_commands();
 
-    for command in commands {
+    for command in commands.iter() {
       if !str.ends_with(&command.cmd) { continue; }
 
       let char_stack = state.keyboard.get_chars();

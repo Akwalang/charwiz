@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use serde::Deserialize;
 
 use crate::common::structs::KeyboardSnapshot;
@@ -16,19 +18,19 @@ pub struct SettingsRaw {
 
 #[derive(Debug, Default)]
 pub struct Settings {
-  pub clipboard_hotkeys: ClipboardHotkeys,
-  pub banned_hotkeys: Vec<KeyboardSnapshot>,
-  pub switch_keyboard_layout_hotkeys: Vec<KeyboardSnapshot>,
-  pub stack_breake_hotkeys: Vec<KeyboardSnapshot>,
+  pub clipboard_hotkeys: Rc<ClipboardHotkeys>,
+  pub banned_hotkeys: Rc<Vec<KeyboardSnapshot>>,
+  pub switch_keyboard_layout_hotkeys: Rc<Vec<KeyboardSnapshot>>,
+  pub stack_breake_hotkeys: Rc<Vec<KeyboardSnapshot>>,
 }
 
 impl From<SettingsRaw> for Settings {
   fn from(raw: SettingsRaw) -> Self {
     Self {
-      clipboard_hotkeys: raw.clipboard_hotkeys.into(),
-      banned_hotkeys: raw.banned_hotkeys.into_iter().map(Into::into).collect(),
-      switch_keyboard_layout_hotkeys: raw.switch_keyboard_layout_hotkeys.into_iter().map(Into::into).collect(),
-      stack_breake_hotkeys: raw.stack_breake_hotkeys.into_iter().map(Into::into).collect(),
+      clipboard_hotkeys: Rc::new(raw.clipboard_hotkeys.into()),
+      banned_hotkeys: Rc::new(raw.banned_hotkeys.into_iter().map(Into::into).collect()),
+      switch_keyboard_layout_hotkeys: Rc::new(raw.switch_keyboard_layout_hotkeys.into_iter().map(Into::into).collect()),
+      stack_breake_hotkeys: Rc::new(raw.stack_breake_hotkeys.into_iter().map(Into::into).collect()),
     }
   }
 }

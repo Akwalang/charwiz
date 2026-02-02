@@ -95,10 +95,10 @@ impl UserInputController {
     let stl = if is_muted { "i" } else { "i!" };
 
     match event.event_type {
-      EventType::KeyPress(key)         => { debug!("Key press: <{}>{:?}</>", stl, key); },
-      EventType::KeyRelease(key)       => { debug!("Key release: <{}>{:?}</>", stl, key); },
-      EventType::ButtonPress(button)   => { debug!("Mouse press: <{}>{:?}</>", stl, button); },
-      EventType::ButtonRelease(button) => { debug!("Mouse release: <{}>{:?}</>", stl, button); },
+      EventType::KeyPress(key)         => debug!("Key press: <{}>{:?}</>", stl, key),
+      EventType::KeyRelease(key)       => debug!("Key release: <{}>{:?}</>", stl, key),
+      EventType::ButtonPress(button)   => debug!("Mouse press: <{}>{:?}</>", stl, button),
+      EventType::ButtonRelease(button) => debug!("Mouse release: <{}>{:?}</>", stl, button),
       _ => {},
     }
   }

@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::rc::Rc;
 
 use rust_logger::*;
 
@@ -49,40 +50,37 @@ impl Settings {
     self.platform_settings.borrow_mut().init();
   }
 
-  // TODO: optimize
-  pub fn get_auto_converters(&self) -> Vec<AutoConvert> {
+  pub fn get_auto_converters(&self) -> Rc<Vec<AutoConvert>> {
     let main = self.main_settings.borrow();
 
     main.settings.auto_converts.clone()
   }
 
-  // TODO: optimize
-  pub fn get_commands(&self) -> Vec<Command> {
+  pub fn get_commands(&self) -> Rc<Vec<Command>> {
     let main = self.main_settings.borrow();
     
     main.settings.commands.clone()
   }
 
-  // TODO: optimize
-  pub fn get_hotkeys(&self) -> Vec<HotKey> {
+  pub fn get_hotkeys(&self) -> Rc<Vec<HotKey>> {
     let main = self.main_settings.borrow();
 
     main.settings.hotkeys.clone()
   }
 
-  pub fn get_banned_hotkeys(&self) -> Vec<KeyboardSnapshot> {
+  pub fn get_banned_hotkeys(&self) -> Rc<Vec<KeyboardSnapshot>> {
     let platform = self.platform_settings.borrow();
 
     platform.settings.banned_hotkeys.clone()
   }
 
-  pub fn get_stack_breake_hotkeys(&self) -> Vec<KeyboardSnapshot> {
+  pub fn get_stack_breake_hotkeys(&self) -> Rc<Vec<KeyboardSnapshot>> {
     let platform = self.platform_settings.borrow();
 
     platform.settings.stack_breake_hotkeys.clone()
   }
 
-  pub fn get_clipboard_hotkeys(&self) -> ClipboardHotkeys {
+  pub fn get_clipboard_hotkeys(&self) -> Rc<ClipboardHotkeys> {
     let platform = self.platform_settings.borrow();
 
     platform.settings.clipboard_hotkeys.clone()

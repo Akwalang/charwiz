@@ -78,7 +78,7 @@ impl Injector {
     clipboard.set_clipboard_text(&value)?;
 
     let clipboard_settings = self.settings.get_clipboard_hotkeys();
-    let pipeline = commands::create_paste_pipeline(clipboard_settings.paste);
+    let pipeline = commands::create_paste_pipeline(clipboard_settings.paste.clone());
 
     let result = emulator.run(&pipeline).await;
 
@@ -118,7 +118,7 @@ impl Injector {
     self.platform.clipboard.borrow_mut().set_clipboard_text(&line.2)?;
 
     let clipboard = self.settings.get_clipboard_hotkeys();
-    let pipeline = commands::create_paste_pipeline(clipboard.paste);
+    let pipeline = commands::create_paste_pipeline(clipboard.paste.clone());
 
     emulator.run(&pipeline).await?;
 

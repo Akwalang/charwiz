@@ -53,7 +53,7 @@ impl AutoConvertDetector {
     let str = state.keyboard.get_string();
     let converters = self.settings.get_auto_converters();
 
-    for converter in converters {
+    for converter in converters.iter() {
       if !str.ends_with(&converter.text) { continue; }
 
       let char_stack = state.keyboard.get_chars();
