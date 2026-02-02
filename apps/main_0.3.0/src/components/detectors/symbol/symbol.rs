@@ -91,11 +91,11 @@ impl SymbolDetector {
     }
   }
 
-  fn find_symbol(&self, cur: &KeyboardSnapshot) -> Option<Symbol> {
+  fn find_symbol(&self, snapshot: &KeyboardSnapshot) -> Option<Symbol> {
     let symbols = self.settings.get_symbols();
 
     for symbol in symbols.iter() {
-      if *cur == symbol.keys { 
+      if *snapshot == symbol.keys { 
         return Some(symbol.clone());
       }
     }

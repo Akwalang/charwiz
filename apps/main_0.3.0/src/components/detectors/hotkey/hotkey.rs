@@ -62,13 +62,22 @@ impl HotkeyDetector {
     
     let state = self.state.borrow();
 
-    let cur = state.keyboard.get_current_snapshot();
-    let mut cap = self.captured.borrow_mut();
+    let snapshot = state.keyboard.get_current_snapshot();
+    let mut captured = self.captured.borrow_mut();
 
-    if Self::is_event_ready(&cur, &cap) {
-      self.publish_command(state, &mut cap);
-    } else {
-      self.check_hotkeys(&cur, &mut cap);
+    if captured.is_some() && snapshot.len() == 0 {
+      self.publish_command(state, captured.as_ref().unwrap().clone());
+      *captured = None;
+
+      return;
+    }
+
+    let Some(hotkey) = self.find_hotkey(&snapshot) else {
+      return;
+    };
+
+    if captured.is_none() || hotkey.keys >= captured.as_ref().unwrap().keys {
+      *captured = Some(hotkey);
     }
   }
 
@@ -79,43 +88,31 @@ impl HotkeyDetector {
     }
   }
 
-  fn is_event_ready(cur: &KeyboardSnapshot, cap: &Option<HotKey>) -> bool {
-    let Some(hot_key) = cap else { return false; };
-
-    cur.len() == 0 && hot_key.keys.len() != 0
-  }
-
-  fn check_hotkeys(&self, cur: &KeyboardSnapshot, cap: &mut Option<HotKey>) {
+  fn find_hotkey(&self, snapshot: &KeyboardSnapshot) -> Option<HotKey> {
     let hotkeys = self.settings.get_hotkeys();
 
     for hotkey in hotkeys.iter() {
-      if cap.is_some() && hotkey.keys <= cap.as_ref().unwrap().keys { continue; }
-      if hotkey.keys != *cur { continue; }
-
-      *cap = Some(hotkey.clone());
+      if *snapshot == hotkey.keys { 
+        return Some(hotkey.clone());
+      }
     }
+
+    None
   }
 
-  fn publish_command(&self, state: Ref<'_, State>, cap: &mut Option<HotKey>) {
-    let Some(hot_key) = cap else {
-      error!("Unexpected empty captured hotkey");
-      return;
-    };
-
+  fn publish_command(&self, state: Ref<'_, State>, hotkey: HotKey) {
     let current_snapshot = state.keyboard.get_current_snapshot();
 
     let char_stack = state.keyboard.get_chars();
     let event_stack = state.keyboard.get_events();
 
-    let executor = hot_key.executor.clone();
-    let mut injector = hot_key.injector.clone();
+    let executor = hotkey.executor.clone();
+    let mut injector = hotkey.injector.clone();
 
     injector.user_input_cleanup = UserInputCleanupEnum::Backspace(char_stack.len() as u8);
 
     let command = CommandEvent { current_snapshot, char_stack, event_stack, executor, injector };
 
     self.event_hub.publish_command(command).ok();
-
-    *cap = None;
   }
 }
