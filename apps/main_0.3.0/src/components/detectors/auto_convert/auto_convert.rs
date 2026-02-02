@@ -1,4 +1,5 @@
-use std::sync::{Arc, Mutex};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 use rust_logger::*;
 use rdev::EventType;
@@ -14,29 +15,29 @@ use crate::common::events::{InputEvent, CommandEvent};
 pub struct AutoConvertDetector {
   settings: &'static Settings,
 
-  state: Arc<Mutex<State>>,
-  event_hub: Arc<EventHub>,
+  state: Rc<RefCell<State>>,
+  event_hub: Rc<EventHub>,
 }
 
 impl AutoConvertDetector {
-  pub fn new(settings: &'static Settings, state: Arc<Mutex<State>>, event_hub: Arc<EventHub>) -> Arc<Self> {
-    Arc::new(AutoConvertDetector {
+  pub fn new(settings: &'static Settings, state: Rc<RefCell<State>>, event_hub: Rc<EventHub>) -> Rc<Self> {
+    Rc::new(AutoConvertDetector {
       settings,
-      state: state,
-      event_hub: event_hub,
+      state,
+      event_hub,
     })
   }
 
-  pub fn init(self: &Arc<Self>) {
+  pub fn init(self: &Rc<Self>) {
     log!("<$>Auto Convert Detector</>: Init");
 
     self.subscribe();
   }
 
-  fn subscribe(self: &Arc<Self>) {
+  fn subscribe(self: &Rc<Self>) {
     let mut input_rx = self.event_hub.input_stream();
 
-    let this = Arc::clone(self);
+    let this = Rc::clone(self);
 
     tokio::task::spawn_local(async move {
       while let Ok(event) = input_rx.recv().await {
@@ -45,8 +46,8 @@ impl AutoConvertDetector {
     });
   }
 
-  fn process_event(self: &Arc<Self>, event: InputEvent) {
-    let state = self.state.lock().unwrap();
+  fn process_event(self: &Rc<Self>, event: InputEvent) {
+    let state = self.state.borrow();
 
     let EventType::KeyPress(_) = event.r#type else { return; };
 

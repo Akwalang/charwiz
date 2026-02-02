@@ -1,5 +1,5 @@
-use std::sync::{Arc, Mutex, MutexGuard};
-
+use std::cell::RefCell;
+use std::rc::Rc;
 use tokio::sync::mpsc;
 
 use rust_logger::*;
@@ -13,30 +13,30 @@ use crate::common::events::InputEvent;
 use super::StickyKeys;
 
 pub struct UserInputController {
-  state: Arc<Mutex<State>>,
-  event_hub: Arc<EventHub>,
-  sticked_keys: Arc<Mutex<StickyKeys>>,
+  state: Rc<RefCell<State>>,
+  event_hub: Rc<EventHub>,
+  sticked_keys: Rc<RefCell<StickyKeys>>,
 }
 
 impl UserInputController {
-  pub fn new(state: &Arc<Mutex<State>>, event_hub: &Arc<EventHub>) -> Arc<Self> {
-    Arc::new(UserInputController {
+  pub fn new(state: Rc<RefCell<State>>, event_hub: Rc<EventHub>) -> Rc<Self> {
+    Rc::new(UserInputController {
       state: state.clone(),
       event_hub: event_hub.clone(),
-      sticked_keys: Arc::new(Mutex::new(StickyKeys::new())),
+      sticked_keys: Rc::new(RefCell::new(StickyKeys::new())),
     })
   }
 
-  pub fn init(self: &Arc<Self>) {
+  pub fn init(self: &Rc<Self>) {
     log!("<$>User Input Controller</>: Init");
 
     self.listen();
   }
 
-  fn listen(self: &Arc<Self>) {
+  fn listen(self: &Rc<Self>) {
     let (tx, mut rx) = mpsc::unbounded_channel();
 
-    let this = Arc::clone(&self);
+    let this = Rc::clone(&self);
 
     tokio::task::spawn_local(async move {
       while let Some(event) = rx.recv().await {
@@ -56,8 +56,8 @@ impl UserInputController {
   }
 
   fn process_event(&self, event: Event) {
-    let mut state = self.state.lock().unwrap();
-    let mut sticked_keys = self.sticked_keys.lock().unwrap();
+    let mut state = self.state.borrow_mut();
+    let mut sticked_keys = self.sticked_keys.borrow_mut();
 
     if state.application.is_disabled() { return; }
 
@@ -103,7 +103,7 @@ impl UserInputController {
     }
   }
 
-  fn mute_sticky_keys(event: &Event, sticked_keys: &mut MutexGuard<'_, StickyKeys>) -> bool {
+  fn mute_sticky_keys(event: &Event, sticked_keys: &mut StickyKeys) -> bool {
     let key = match event.event_type {
       EventType::KeyPress(key) => key,
       EventType::KeyRelease(key) => key,

@@ -1,4 +1,5 @@
-use std::sync::{Arc, Mutex, MutexGuard};
+use std::cell::{Ref, RefCell};
+use std::rc::Rc;
 
 use rust_logger::*;
 use rdev::EventType;
@@ -16,31 +17,31 @@ use crate::common::events::{CommandEvent, InputEvent};
 pub struct HotkeyDetector {
   settings: &'static Settings,
   
-  state: Arc<Mutex<State>>,
-  event_hub: Arc<EventHub>,
-  captured_keys: Mutex<Option<HotKey>>,
+  state: Rc<RefCell<State>>,
+  event_hub: Rc<EventHub>,
+  captured_keys: RefCell<Option<HotKey>>,
 }
 
 impl HotkeyDetector {
-  pub fn new(settings: &'static Settings, state: Arc<Mutex<State>>, event_hub: Arc<EventHub>) -> Arc<Self> {
-    Arc::new(HotkeyDetector {
+  pub fn new(settings: &'static Settings, state: Rc<RefCell<State>>, event_hub: Rc<EventHub>) -> Rc<Self> {
+    Rc::new(HotkeyDetector {
       settings,
       state: state,
       event_hub: event_hub,
-      captured_keys: Mutex::new(None),
+      captured_keys: RefCell::new(None),
     })
   }
 
-  pub fn init(self: &Arc<Self>) {
+  pub fn init(self: &Rc<Self>) {
     log!("<$>Hotkey Detector</>: Init");
 
     self.subscribe();
   }
 
-  fn subscribe(self: &Arc<Self>) {
+  fn subscribe(self: &Rc<Self>) {
     let mut input_rx = self.event_hub.input_stream();
 
-    let this = Arc::clone(self);
+    let this = Rc::clone(self);
 
     tokio::task::spawn_local(async move {
       while let Ok(event) = input_rx.recv().await {
@@ -52,10 +53,10 @@ impl HotkeyDetector {
   fn process_event(&self, event: InputEvent) {
     if !Self::is_trackable_event(&event) { return; }
     
-    let state: std::sync::MutexGuard<'_, State> = self.state.lock().unwrap();
+    let state = self.state.borrow();
 
     let cur = state.keyboard.get_current_snapshot();
-    let mut cap = self.captured_keys.lock().unwrap();
+    let mut cap = self.captured_keys.borrow_mut();
 
     if Self::is_event_ready(&cur, &cap) {
       self.publish_command(state, &mut cap);
@@ -88,7 +89,7 @@ impl HotkeyDetector {
     }
   }
 
-  fn publish_command(&self, state: MutexGuard<'_, State>, cap: &mut Option<HotKey>) {
+  fn publish_command(&self, state: Ref<'_, State>, cap: &mut Option<HotKey>) {
     let Some(hot_key) = cap else {
       error!("Unexpected empty captured hotkey");
       return;

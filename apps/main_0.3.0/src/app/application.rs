@@ -1,4 +1,5 @@
-use std::sync::{Arc, Mutex};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 use rust_logger::*;
 
@@ -17,8 +18,8 @@ pub struct Application {
   platform: &'static Platform,
   settings: &'static Settings,
 
-  state: Arc<Mutex<State>>,
-  event_hub: Arc<EventHub>,
+  state: Rc<RefCell<State>>,
+  event_hub: Rc<EventHub>,
 }
 
 impl Application {
@@ -26,8 +27,8 @@ impl Application {
     let state = State::new(platform, settings);
     let event_hub = EventHub::new();
 
-    let state = Arc::new(Mutex::new(state));
-    let event_hub = Arc::new(event_hub);
+    let state = Rc::new(RefCell::new(state));
+    let event_hub = Rc::new(event_hub);
 
     Application { platform, settings, state, event_hub }
   }
@@ -38,7 +39,7 @@ impl Application {
     let state = &self.state;
     let event_hub = &self.event_hub;
 
-    UserInputController::new(state, event_hub).init();
+    UserInputController::new(state.clone(), event_hub.clone()).init();
 
     AutoConvertDetector::new(self.settings, state.clone(), event_hub.clone()).init();
     CommandDetector::new(self.settings, state.clone(), event_hub.clone()).init();
@@ -53,7 +54,7 @@ impl Application {
 
     executor.init();
 
-    state.lock().unwrap().application.set_status(ApplicationStatus::Active);
+    state.borrow_mut().application.set_status(ApplicationStatus::Active);
 
     log!("<$>Application</>: Ready");
 

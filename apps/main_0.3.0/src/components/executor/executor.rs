@@ -1,4 +1,5 @@
-use std::sync::{Arc, Mutex};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 use rust_logger::*;
 
@@ -26,39 +27,39 @@ pub struct Executor {
   transformer: Transformer,
   injector: Injector,
 
-  state: Arc<Mutex<State>>,
-  event_hub: Arc<EventHub>,
+  state: Rc<RefCell<State>>,
+  event_hub: Rc<EventHub>,
 }
 
 impl Executor {
   pub fn new(
     platform: &'static Platform,
     settings: &'static Settings,
-    state: Arc<Mutex<State>>,
-    event_hub: Arc<EventHub>,
-  ) -> Arc<Self> {
+    state: Rc<RefCell<State>>,
+    event_hub: Rc<EventHub>,
+  ) -> Rc<Self> {
     let emulator = Emulator::new(settings);
     let extractor = Extractor::new(platform, settings);
     let transformer = Transformer::new(platform, settings);
     let injector = Injector::new(platform, settings);
 
-    Arc::new(Executor {
+    Rc::new(Executor {
       platform,
       emulator, extractor, transformer, injector,
       state, event_hub,
     })
   }
 
-  pub fn init(self: &Arc<Self>) {
+  pub fn init(self: &Rc<Self>) {
     log!("<$>Executor</>: Init");
 
     self.subscribe();
   }
 
-  fn subscribe(self: &Arc<Self>) {
+  fn subscribe(self: &Rc<Self>) {
     let mut command_rx = self.event_hub.command_stream();
 
-    let this = Arc::clone(self);
+    let this = Rc::clone(self);
 
     tokio::task::spawn_local(async move {
       while let Ok(event) = command_rx.recv().await {
@@ -67,7 +68,7 @@ impl Executor {
     });
   }
 
-  async fn process_event(self: &Arc<Self>, event: CommandEvent) -> anyhow::Result<()> {
+  async fn process_event(self: &Rc<Self>, event: CommandEvent) -> anyhow::Result<()> {
     self.lock_application();
 
     // println!("char_stack: {:?}", self.state.lock().unwrap().keyboard.char_stack);
@@ -92,7 +93,7 @@ impl Executor {
     }
 
     if event.injector.keyboard_state_cleanup == KeyboardStateCleanupEnum::Drop {
-      self.state.lock().unwrap().keyboard.stack_clear();
+      self.state.borrow_mut().keyboard.stack_clear();
     }
 
     let _ = self.switch_keyboard_layout(&current_layout, &event.injector.layout_after);
@@ -103,11 +104,11 @@ impl Executor {
   }
 
   fn lock_application(&self) {
-    self.state.lock().unwrap().application.set_status(ApplicationStatus::Executing);
+    self.state.borrow_mut().application.set_status(ApplicationStatus::Executing);
   }
 
   fn unlock_application(&self) {
-    self.state.lock().unwrap().application.set_status(ApplicationStatus::Active);
+    self.state.borrow_mut().application.set_status(ApplicationStatus::Active);
   }
 
   fn switch_keyboard_layout(&self, current: &KeyboardLayoutItem, next: &KeyboardLayoutEnum) -> anyhow::Result<()> {
