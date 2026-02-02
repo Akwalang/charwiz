@@ -31,7 +31,7 @@ impl Transformer for NativeTransformer {
   async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
     match event.executor.value.as_str() {
       "invert_case" => methods::invert_case(target),
-      "convert_layout" => methods::convert_layout(self.platform, self.settings, target),
+      "convert_layout" => methods::convert_layout(self.platform, self.settings, event, target),
       "none" => target.clone(),
       _ => InputType::Text("Transformer not found".to_owned()),
     }

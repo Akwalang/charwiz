@@ -1,11 +1,13 @@
 use crate::Platform;
 use crate::Settings;
 
+use crate::common::events::CommandEvent;
 use crate::components::executor::enums::InputType;
 
 pub fn convert_layout(
   platform: &'static Platform,
   settings: &'static Settings,
+  event: &CommandEvent,
   target: &InputType,
 ) -> InputType {
   let InputType::Text(text) = target else {

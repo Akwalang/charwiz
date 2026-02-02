@@ -295,6 +295,56 @@
       }
     }
   ],
+  "symbols": [
+    {
+      "keys": {
+        "key": "Equal",
+        "modifiers": ["Alt"]
+      },
+      "executor": {
+        "type": "static",
+        "value": "≈"
+      },
+      "injector": {
+        "target": "none",
+        "method": "paste",
+        "layoutAfter": "current",
+        "userInputCleanup": "none"
+      }
+    },
+    {
+      "keys": {
+        "key": "Equal",
+        "modifiers": ["ShiftLeft", "Alt"]
+      },
+      "executor": {
+        "type": "static",
+        "value": "≠"
+      },
+      "injector": {
+        "target": "none",
+        "method": "paste",
+        "layoutAfter": "current",
+        "userInputCleanup": "none"
+      }
+    },
+    {
+      "keys": {
+        "key": "Minus",
+        "modifiers": ["Alt"]
+      },
+      "executor": {
+        "type": "static",
+        "value": "—"
+      },
+      "injector": {
+        "target": "none",
+        "method": "paste",
+        "layoutAfter": "current",
+        "userInputCleanup": "none"
+      }
+    }
+  ],
   "commands": [
     {
       "cmd": ":uuid0",

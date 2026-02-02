@@ -1,9 +1,10 @@
 use clipboard_win::{get_clipboard, set_clipboard, formats};
 
 use rust_logger::*;
+use zeroize::Zeroize;
 
 pub struct Clipboard {
-  buffer: Option<String>,
+  buffer: Option<Vec<u8>>,
 }
 
 impl Clipboard {
@@ -12,7 +13,17 @@ impl Clipboard {
   }
 
   pub fn backup(&mut self) {
-    self.buffer = self.get_clipboard_text().or::<String>(Ok(None)).unwrap();
+    let Ok(value) = self.get_clipboard_text() else {
+      warn!("<$>Clipboard</>: Can't backup clipboard value");
+      return;
+    };
+
+    let Some(value) = value else {
+      warn!("<$>Clipboard</>: No clipboard value to backup");
+      return;
+    };
+
+    self.buffer = Some(value.into_bytes());
   }
 
   pub fn restore(&mut self) {
@@ -21,9 +32,23 @@ impl Clipboard {
       return;
     };
 
-    if let Err(e) = self.set_clipboard_text(buffer) {
+    let value = String::from_utf8_lossy(buffer);
+
+    if let Err(e) = self.set_clipboard_text(&value) {
       warn!("<$>Clipboard</>: Failed to restore clipboard buffer: {}", e);
     }
+
+    self.zeroize_buffer();
+  }
+
+  fn zeroize_buffer(&mut self) {
+    if let Some(ref mut bytes) = self.buffer {
+        bytes.zeroize();
+        bytes.clear();
+        bytes.shrink_to_fit();
+    }
+
+    self.buffer = None;
   }
 
   pub fn get_clipboard_text(&self) -> anyhow::Result<Option<String>> {
@@ -40,5 +65,11 @@ impl Clipboard {
     }
 
     Ok(())
+  }
+}
+
+impl Drop for Clipboard {
+  fn drop(&mut self) {
+    self.restore();
   }
 }
