@@ -10,15 +10,34 @@ pub struct Emulator {
 }
 
 impl Emulator {
+  const CAPACITY: usize = 1 + KeyboardSnapshot::CAPACITY; // +1 for before & after key field
+
   pub fn new(settings: &'static Settings) -> Self {
     Self { settings }
   }
 
-  pub async fn run(&self, pipeline: &[KeyboardSnapshot]) -> anyhow::Result<()> {
+  pub async fn switch(&self, from: &KeyboardSnapshot, to: &KeyboardSnapshot) -> anyhow::Result<()> {
+    sleep(Duration::from_millis(1)).await;
+
+    let mut pipeline = Vec::<EventType>::with_capacity(Self::CAPACITY);
+
+    Self::put_snapshots_into_pipeline(&mut pipeline, from, to);
+
+    for event in &pipeline {
+      simulate(event)?;
+
+      // Must be awaited to not block event_hub
+      sleep(Duration::from_millis(1)).await;
+    }
+
+    Ok(())
+  }
+
+  pub async fn run_pipeline(&self, pipeline: &[KeyboardSnapshot]) -> anyhow::Result<()> {
     let queue = pipeline.iter();
 
     let mut current = &KeyboardSnapshot::default();
-    let mut pipeline = Vec::<EventType>::with_capacity(1 + KeyboardSnapshot::CAPACITY); // +1 for before & after key field
+    let mut pipeline = Vec::<EventType>::with_capacity(Self::CAPACITY);
 
     sleep(Duration::from_millis(1)).await;
 

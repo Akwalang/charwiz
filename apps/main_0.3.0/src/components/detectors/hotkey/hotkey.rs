@@ -21,7 +21,8 @@ pub struct HotkeyDetector {
   
   state: Rc<RefCell<State>>,
   event_hub: Rc<EventHub>,
-  captured_keys: RefCell<Option<HotKey>>,
+
+  captured: RefCell<Option<HotKey>>,
 }
 
 impl HotkeyDetector {
@@ -30,7 +31,7 @@ impl HotkeyDetector {
       settings,
       state: state,
       event_hub: event_hub,
-      captured_keys: RefCell::new(None),
+      captured: RefCell::new(None),
     })
   }
 
@@ -62,7 +63,7 @@ impl HotkeyDetector {
     let state = self.state.borrow();
 
     let cur = state.keyboard.get_current_snapshot();
-    let mut cap = self.captured_keys.borrow_mut();
+    let mut cap = self.captured.borrow_mut();
 
     if Self::is_event_ready(&cur, &cap) {
       self.publish_command(state, &mut cap);
@@ -101,6 +102,8 @@ impl HotkeyDetector {
       return;
     };
 
+    let current_snapshot = state.keyboard.get_current_snapshot();
+
     let char_stack = state.keyboard.get_chars();
     let event_stack = state.keyboard.get_events();
 
@@ -109,7 +112,7 @@ impl HotkeyDetector {
 
     injector.user_input_cleanup = UserInputCleanupEnum::Backspace(char_stack.len() as u8);
 
-    let command = CommandEvent { char_stack, event_stack, executor, injector };
+    let command = CommandEvent { current_snapshot, char_stack, event_stack, executor, injector };
 
     self.event_hub.publish_command(command).ok();
 

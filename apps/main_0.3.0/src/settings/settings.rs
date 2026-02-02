@@ -9,7 +9,7 @@ use crate::settings::main_settings::MainSettings;
 use crate::settings::platform_settings::PlatformSettings;
 use crate::settings::keyboard_layouts::KeyboardLayouts;
 
-use crate::settings::main_settings::structs::{AutoConvert, Command, HotKey};
+use crate::settings::main_settings::structs::{AutoConvert, Command, HotKey, Symbol};
 use crate::settings::platform_settings::structs::ClipboardHotkeys;
 
 use crate::common::structs::KeyboardSnapshot;
@@ -66,6 +66,12 @@ impl Settings {
     let main = self.main_settings.borrow();
 
     main.settings.hotkeys.clone()
+  }
+
+  pub fn get_symbols(&self) -> Rc<Vec<Symbol>> {
+    let main = self.main_settings.borrow();
+
+    main.settings.symbols.clone()
   }
 
   pub fn get_banned_hotkeys(&self) -> Rc<Vec<KeyboardSnapshot>> {

@@ -63,6 +63,8 @@ impl AutoConvertDetector {
     for converter in converters.iter() {
       if !str.ends_with(&converter.text) { continue; }
 
+      let current_snapshot = state.keyboard.get_current_snapshot();
+
       let char_stack = state.keyboard.get_chars();
       let event_stack = state.keyboard.get_events();
 
@@ -72,7 +74,7 @@ impl AutoConvertDetector {
       injector.user_input_cleanup = UserInputCleanupEnum::Backspace(converter.text.chars().count() as u8);
       injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
 
-      let command = CommandEvent { char_stack, event_stack, executor, injector };
+      let command = CommandEvent { current_snapshot, char_stack, event_stack, executor, injector };
 
       self.event_hub.publish_command(command).ok();
 

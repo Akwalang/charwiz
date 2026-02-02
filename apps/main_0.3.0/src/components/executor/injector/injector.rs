@@ -30,6 +30,8 @@ impl Injector {
   }
 
   pub async fn inject(&self, emulator: &Emulator, event: &CommandEvent, input: InputType) -> anyhow::Result<()> {
+    emulator.switch(&event.current_snapshot, &KeyboardSnapshot::default()).await?;
+
     self.remove_injection_place(emulator, &event).await?;
 
     match input {
@@ -44,6 +46,8 @@ impl Injector {
       InputType::Events(value) => self.use_emulate(emulator, &value).await?,
     }
 
+    emulator.switch(&KeyboardSnapshot::default(), &event.current_snapshot).await?;
+
     Ok(())
   }
 
@@ -53,8 +57,10 @@ impl Injector {
     match event.injector.user_input_cleanup {
       UserInputCleanupEnum::None => {},
       UserInputCleanupEnum::Backspace(count) => {
+        let pipeline = commands::create_backspace_pipeline();
+
         for _ in 0..count {
-          emulator.run(&commands::create_backspace_pipeline()).await?;
+          emulator.run_pipeline(&pipeline).await?;
         }
       },
     }
@@ -68,7 +74,7 @@ impl Injector {
     pipeline.extend_from_slice(value);
     pipeline.extend_from_slice(&commands::create_release_pipeline());
 
-    emulator.run(&pipeline).await
+    emulator.run_pipeline(&pipeline).await
   }
 
   async fn use_paste(&self, emulator: &Emulator, value: String) -> anyhow::Result<()> {
@@ -80,7 +86,7 @@ impl Injector {
     let clipboard_settings = self.settings.get_clipboard_hotkeys();
     let pipeline = commands::create_paste_pipeline(clipboard_settings.paste.clone());
 
-    let result = emulator.run(&pipeline).await;
+    let result = emulator.run_pipeline(&pipeline).await;
 
     clipboard.restore();
 
@@ -120,7 +126,7 @@ impl Injector {
     let clipboard = self.settings.get_clipboard_hotkeys();
     let pipeline = commands::create_paste_pipeline(clipboard.paste.clone());
 
-    emulator.run(&pipeline).await?;
+    emulator.run_pipeline(&pipeline).await?;
 
     self.platform.clipboard.borrow_mut().restore();
 
@@ -149,7 +155,7 @@ impl Injector {
 
     pipeline.push(KeyboardSnapshot::default());
 
-    emulator.run(&pipeline).await?;
+    emulator.run_pipeline(&pipeline).await?;
 
     Ok(())
   }
