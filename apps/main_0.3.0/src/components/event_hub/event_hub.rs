@@ -11,8 +11,8 @@ pub struct EventHub {
 
 impl EventHub {
   pub fn new() -> Self {
-    let (input_tx, _rx_drop) = channel(8);
-    let (command_tx, _rx_drop) = channel(8);
+    let (input_tx, _rx_drop) = channel(16);
+    let (command_tx, _rx_drop) = channel(16);
 
     Self { input_tx, command_tx }
   }

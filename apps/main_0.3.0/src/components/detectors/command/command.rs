@@ -4,6 +4,8 @@ use std::rc::Rc;
 use rust_logger::*;
 use rdev::EventType;
 
+use tokio::sync::broadcast::error::RecvError;
+
 use crate::settings::Settings;
 
 use crate::components::event_hub::EventHub;
@@ -40,8 +42,12 @@ impl CommandDetector {
     let this = Rc::clone(self);
 
     tokio::task::spawn_local(async move {
-      while let Ok(event) = input_rx.recv().await {
-        this.process_event(event);
+      loop {
+        match input_rx.recv().await {
+          Ok(event) => this.process_event(event),
+          Err(RecvError::Lagged(_)) => continue,
+          Err(RecvError::Closed) => break,
+        }
       }
     });
   }

@@ -3,6 +3,8 @@ use std::rc::Rc;
 
 use rust_logger::*;
 
+use tokio::sync::broadcast::error::RecvError;
+
 use super::emulator::Emulator;
 use super::extractor::Extractor;
 use super::injector::Injector;
@@ -62,8 +64,14 @@ impl Executor {
     let this = Rc::clone(self);
 
     tokio::task::spawn_local(async move {
-      while let Ok(event) = command_rx.recv().await {
-        let _ = this.process_event(event).await;
+      loop {
+        match command_rx.recv().await {
+          Ok(event) => {
+            let _ = this.process_event(event).await;
+          },
+          Err(RecvError::Lagged(_)) => continue,
+          Err(RecvError::Closed) => break,
+        }
       }
     });
   }
