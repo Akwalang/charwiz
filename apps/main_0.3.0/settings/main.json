@@ -245,61 +245,13 @@
         "layoutAfter": "current",
         "userInputCleanup": "none"
       }
-    },
-    {
-      "keys": {
-        "key": "Equal",
-        "modifiers": ["Alt"]
-      },
-      "executor": {
-        "type": "static",
-        "value": "≈"
-      },
-      "injector": {
-        "target": "none",
-        "method": "paste",
-        "layoutAfter": "current",
-        "userInputCleanup": "none"
-      }
-    },
-    {
-      "keys": {
-        "key": "Equal",
-        "modifiers": ["ShiftLeft", "Alt"]
-      },
-      "executor": {
-        "type": "static",
-        "value": "≠"
-      },
-      "injector": {
-        "target": "none",
-        "method": "paste",
-        "layoutAfter": "current",
-        "userInputCleanup": "none"
-      }
-    },
-    {
-      "keys": {
-        "key": "Minus",
-        "modifiers": ["Alt"]
-      },
-      "executor": {
-        "type": "static",
-        "value": "—"
-      },
-      "injector": {
-        "target": "none",
-        "method": "paste",
-        "layoutAfter": "current",
-        "userInputCleanup": "none"
-      }
     }
   ],
   "symbols": [
     {
       "keys": {
         "key": "Equal",
-        "modifiers": ["Alt"]
+        "modifiers": ["AltGr"]
       },
       "executor": {
         "type": "static",
@@ -315,7 +267,7 @@
     {
       "keys": {
         "key": "Equal",
-        "modifiers": ["ShiftLeft", "Alt"]
+        "modifiers": ["ShiftLeft", "AltGr"]
       },
       "executor": {
         "type": "static",
