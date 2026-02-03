@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 
 use rust_logger::*;
@@ -14,24 +14,31 @@ use crate::components::state::State;
 use crate::common::enums::{UserInputCleanupEnum, KeyboardStateCleanupEnum};
 use crate::common::events::{InputEvent, CommandEvent};
 
-pub struct AutoConvertDetector {
+use crate::settings::main_settings_structs::Switch;
+
+pub struct SwitchDetector {
   settings: &'static Settings,
 
   state: Rc<RefCell<State>>,
   event_hub: Rc<EventHub>,
+
+  captured: RefCell<Option<(Switch)>>,
 }
 
-impl AutoConvertDetector {
+impl SwitchDetector {
   pub fn new(settings: &'static Settings, state: Rc<RefCell<State>>, event_hub: Rc<EventHub>) -> Rc<Self> {
-    Rc::new(AutoConvertDetector {
+    Rc::new(SwitchDetector {
       settings,
+      
       state,
       event_hub,
+
+      captured: RefCell::new(None),
     })
   }
 
   pub fn init(self: &Rc<Self>) {
-    log!("<$>Auto Convert Detector</>: Init");
+    log!("<$>Switch Detector</>: Init");
 
     self.subscribe();
   }
@@ -53,32 +60,62 @@ impl AutoConvertDetector {
   }
 
   fn process_event(self: &Rc<Self>, event: InputEvent) {
+    if !Self::is_trackable_event(&event) { return; }
+
     let state = self.state.borrow();
 
-    let EventType::KeyPress(_) = event.r#type else { return; };
+    let input = state.keyboard.get_string();
+    let snapshot = state.keyboard.get_current_snapshot();
 
-    let str = state.keyboard.get_string();
-    let converters = self.settings.get_auto_converters();
+    let mut captured = self.captured.borrow_mut();
 
-    for converter in converters.iter() {
-      if !str.ends_with(&converter.text) { continue; }
+    if captured.is_some() && snapshot.len() == 0 {
+      self.publish_command(state, captured.as_ref().unwrap().clone());
+      *captured = None;
 
+      return;
+    }
+
+    let switch = self.find_switch(&input);
+
+    if switch.is_some() {
+      *captured = switch;
+    }
+  }
+
+  fn is_trackable_event(event: &InputEvent) -> bool {
+    match event.r#type {
+      EventType::KeyPress(_) | EventType::KeyRelease(_) => true,
+      _ => false,
+    }
+  }
+
+  fn find_switch(&self, input: &str) -> Option<Switch> {
+    let switches = self.settings.get_switches();
+
+    for switch in switches.iter() {
+      if input.ends_with(&switch.text) { 
+        return Some(switch.clone());
+      }
+    }
+
+    None
+  }
+
+  fn publish_command(&self, state: Ref<'_, State>, switch: Switch) {
       let current_snapshot = state.keyboard.get_current_snapshot();
 
       let char_stack = state.keyboard.get_chars();
       let event_stack = state.keyboard.get_events();
 
-      let executor = converter.executor.clone();
-      let mut injector = converter.injector.clone();
+      let executor = switch.executor.clone();
+      let mut injector = switch.injector.clone();
 
-      injector.user_input_cleanup = UserInputCleanupEnum::Backspace(converter.text.chars().count() as u8);
+      injector.user_input_cleanup = UserInputCleanupEnum::Backspace(switch.text.chars().count() as u8);
       injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
 
       let command = CommandEvent { current_snapshot, char_stack, event_stack, executor, injector };
 
       self.event_hub.publish_command(command).ok();
-
-      break;
-    }
   }
 }

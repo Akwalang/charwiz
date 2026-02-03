@@ -64,7 +64,7 @@ impl CommandDetector {
 
     let state = self.state.borrow();
 
-    let str = state.keyboard.get_string();
+    let input = state.keyboard.get_string();
     let snapshot = state.keyboard.get_current_snapshot();
 
     let mut captured = self.captured.borrow_mut();
@@ -76,7 +76,7 @@ impl CommandDetector {
       return;
     }
 
-    let Some(command) = self.find_command(&str) else {
+    let Some(command) = self.find_command(&input) else {
       return;
     };
 

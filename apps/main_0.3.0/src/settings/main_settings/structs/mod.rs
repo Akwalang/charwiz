@@ -1,8 +1,8 @@
 mod timings;
 pub use timings::Timings;
 
-mod auto_convert;
-pub use auto_convert::{AutoConvertRaw, AutoConvert};
+mod switch;
+pub use switch::{SwitchRaw, Switch};
 
 mod command;
 pub use command::{CommandRaw, Command};

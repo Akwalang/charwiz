@@ -1,5 +1,5 @@
-mod auto_convert;
-pub use auto_convert::AutoConvertDetector;
+mod switch;
+pub use switch::SwitchDetector;
 
 mod command;
 pub use command::CommandDetector;

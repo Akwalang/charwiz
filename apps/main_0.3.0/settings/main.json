@@ -19,7 +19,7 @@
     { "type": "plugin", "value": "to_kebab_case" },
     { "type": "plugin", "value": "random_uuid" }
   ],
-  "autoConverts": [
+  "switches": [
     {
       "text": "сфкпщ",
       "executor": {

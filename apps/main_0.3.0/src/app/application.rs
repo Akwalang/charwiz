@@ -12,9 +12,9 @@ use crate::components::event_hub::EventHub;
 use crate::components::controllers::UserInputController;
 
 use crate::components::detectors::{
-  AutoConvertDetector,
   CommandDetector,
   HotkeyDetector,
+  SwitchDetector,
   SymbolDetector,
 };
 
@@ -47,9 +47,9 @@ impl Application {
 
     UserInputController::new(state.clone(), event_hub.clone()).init();
 
-    AutoConvertDetector::new(self.settings, state.clone(), event_hub.clone()).init();
     CommandDetector::new(self.settings, state.clone(), event_hub.clone()).init();
     HotkeyDetector::new(self.settings, state.clone(), event_hub.clone()).init();
+    SwitchDetector::new(self.settings, state.clone(), event_hub.clone()).init();
     SymbolDetector::new(self.settings, state.clone(), event_hub.clone()).init();
 
     let executor = Executor::new(

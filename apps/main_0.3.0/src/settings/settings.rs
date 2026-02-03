@@ -9,7 +9,7 @@ use crate::settings::main_settings::MainSettings;
 use crate::settings::platform_settings::PlatformSettings;
 use crate::settings::keyboard_layouts::KeyboardLayouts;
 
-use crate::settings::main_settings::structs::{AutoConvert, Command, HotKey, Symbol};
+use crate::settings::main_settings::structs::{Switch, Command, HotKey, Symbol};
 use crate::settings::platform_settings::structs::ClipboardHotkeys;
 
 use crate::common::structs::KeyboardSnapshot;
@@ -50,10 +50,10 @@ impl Settings {
     self.platform_settings.borrow_mut().init();
   }
 
-  pub fn get_auto_converters(&self) -> Rc<Vec<AutoConvert>> {
+  pub fn get_switches(&self) -> Rc<Vec<Switch>> {
     let main = self.main_settings.borrow();
 
-    main.settings.auto_converts.clone()
+    main.settings.switches.clone()
   }
 
   pub fn get_commands(&self) -> Rc<Vec<Command>> {
