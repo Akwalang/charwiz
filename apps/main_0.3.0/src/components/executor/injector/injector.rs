@@ -30,7 +30,7 @@ impl Injector {
   }
 
   pub async fn inject(&self, emulator: &Emulator, event: &CommandEvent, input: InputType) -> anyhow::Result<()> {
-    emulator.switch(&event.current_snapshot, &KeyboardSnapshot::default()).await?;
+    // emulator.switch(&event.current_snapshot, &KeyboardSnapshot::default()).await?;
 
     self.remove_injection_place(emulator, &event).await?;
 
@@ -46,7 +46,7 @@ impl Injector {
       InputType::Events(value) => self.use_emulate(emulator, &value).await?,
     }
 
-    emulator.switch(&KeyboardSnapshot::default(), &event.current_snapshot).await?;
+    // emulator.switch(&KeyboardSnapshot::default(), &event.current_snapshot).await?;
 
     Ok(())
   }

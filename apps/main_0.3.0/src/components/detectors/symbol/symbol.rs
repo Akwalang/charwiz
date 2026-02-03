@@ -10,7 +10,6 @@ use crate::common::enums::UserInputCleanupEnum;
 use crate::common::events::{CommandEvent, InputEvent};
 use crate::common::structs::KeyboardSnapshot;
 
-use crate::components::detectors::symbol;
 use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
@@ -69,7 +68,7 @@ impl SymbolDetector {
     let snapshot = state.keyboard.get_current_snapshot();
 
     if let Some(symbol) = captured.as_ref() {
-      if snapshot.key.is_none() {
+      if snapshot == KeyboardSnapshot::default() {
         self.publish_command(state, symbol.clone());
         *captured = None;
       }
