@@ -91,4 +91,10 @@ impl Settings {
 
     platform.settings.clipboard_hotkeys.clone()
   }
+
+  pub fn get_switch_keyboard_layout_hotkeys(&self) -> Rc<Vec<KeyboardSnapshot>> {
+    let platform = self.platform_settings.borrow();
+
+    platform.settings.switch_keyboard_layout_hotkeys.clone()
+  }
 }

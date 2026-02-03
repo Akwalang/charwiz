@@ -109,17 +109,20 @@ impl KeyboardState {
     let platform_kl = self.platform.keyboard_layouts.borrow();
     let settings_kl = self.settings.keyboard_layouts.borrow();
 
+    let switchers = self.settings.get_switch_keyboard_layout_hotkeys();
+
     let Ok(cur_layout) = platform_kl.get_current_keyboard_layout() else {
       return;
     };
 
     let cur_layout_name = cur_layout.name.to_owned();
 
-    let (char, is_exists) = settings_kl.find_combination(&cur_layout_name, &key, self.keyboard_snapshot.modifiers);
+    let (char, is_char_exists) = settings_kl.find_combination(&cur_layout_name, &key, self.keyboard_snapshot.modifiers);
+    let is_switch_exists = switchers.iter().any(|kb| *kb == self.keyboard_snapshot);
 
     // skip registration when hotkey missing in all keyboard layouts
     // but save when any of layouts has this hotkey
-    if !is_exists { return; }
+    if !is_char_exists && !is_switch_exists { return; }
 
     if let Some(char) = char {
       if false
