@@ -77,11 +77,7 @@ impl SymbolDetector {
       return;
     }
 
-    let Some(symbol) = self.find_symbol(&snapshot) else {
-      return;
-    };
-
-    *captured = Some(symbol);
+    *captured = self.find_symbol(&snapshot);
   }
 
   fn is_trackable_event(event: &InputEvent) -> bool {

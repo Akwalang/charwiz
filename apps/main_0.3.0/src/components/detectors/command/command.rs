@@ -76,11 +76,7 @@ impl CommandDetector {
       return;
     }
 
-    let Some(command) = self.find_command(&input) else {
-      return;
-    };
-
-    *captured = Some(command);
+    *captured = self.find_command(&input);
   }
 
   fn is_trackable_event(event: &InputEvent) -> bool {

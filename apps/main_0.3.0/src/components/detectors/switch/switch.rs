@@ -76,11 +76,7 @@ impl SwitchDetector {
       return;
     }
 
-    let switch = self.find_switch(&input);
-
-    if switch.is_some() {
-      *captured = switch;
-    }
+    *captured = self.find_switch(&input);
   }
 
   fn is_trackable_event(event: &InputEvent) -> bool {
