@@ -58,6 +58,7 @@ impl KeyboardModifiers {
     (self.0 & modifiers) != 0
   }
 
+  #[inline(always)]
   pub fn is_any_pressed_strict(&self, modifiers: u8) -> bool {
     self.anyfy() == KeyboardModifiers(modifiers).anyfy()
   }
@@ -92,6 +93,7 @@ impl KeyboardModifiers {
     KeyboardModifiers((a.0 ^ b.0) & b.0)
   }
 
+  #[inline(always)]
   fn anyfy(&self) -> KeyboardModifiers {
     let first = self.0 & 0b00001111;
     let last  = self.0 >> 4;
@@ -134,7 +136,7 @@ impl Iterator for KeyboardModifiersIter {
         KeyboardModifiers::META_LEFT     => Some(Key::MetaLeft),
         KeyboardModifiers::META_RIGHT    => Some(Key::MetaRight),
         _ => None,
-      }
+      };
     }
   }
 }
