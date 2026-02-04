@@ -13,8 +13,8 @@ use crate::settings::Settings;
 use crate::settings::main_settings::structs::HotKey;
 
 use crate::common::enums::UserInputCleanupEnum;
-use crate::common::structs::KeyboardSnapshot;
 use crate::common::events::{CommandEvent, InputEvent};
+use crate::common::structs::KeyboardSnapshot;
 
 pub struct HotkeyDetector {
   settings: &'static Settings,
@@ -65,7 +65,7 @@ impl HotkeyDetector {
     let snapshot = state.keyboard.get_current_snapshot();
     let mut captured = self.captured.borrow_mut();
 
-    if captured.is_some() && snapshot.len() == 0 {
+    if captured.is_some() && snapshot == KeyboardSnapshot::default() {
       self.publish_command(state, captured.as_ref().unwrap().clone());
       *captured = None;
 

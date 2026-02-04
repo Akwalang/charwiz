@@ -13,6 +13,7 @@ use crate::components::state::State;
 
 use crate::common::enums::{UserInputCleanupEnum, KeyboardStateCleanupEnum};
 use crate::common::events::{CommandEvent, InputEvent};
+use crate::common::structs::KeyboardSnapshot;
 
 use crate::settings::main_settings_structs::Command;
 
@@ -64,19 +65,19 @@ impl CommandDetector {
 
     let state = self.state.borrow();
 
-    let input = state.keyboard.get_string();
+    let input = state.keyboard.get_char_stack();
     let snapshot = state.keyboard.get_current_snapshot();
 
     let mut captured = self.captured.borrow_mut();
 
-    if captured.is_some() && snapshot.len() == 0 {
+    if captured.is_some() && snapshot == KeyboardSnapshot::default() {
       self.publish_command(state, captured.as_ref().unwrap().clone());
       *captured = None;
 
       return;
     }
 
-    *captured = self.find_command(&input);
+    *captured = self.find_command(input);
   }
 
   fn is_trackable_event(event: &InputEvent) -> bool {
@@ -86,7 +87,7 @@ impl CommandDetector {
     }
   }
 
-  fn find_command(&self, input: &str) -> Option<Command> {
+  fn find_command(&self, input: &Vec<char>) -> Option<Command> {
     let commands = self.settings.get_commands();
 
     for command in commands.iter() {
@@ -107,7 +108,7 @@ impl CommandDetector {
     let executor = command.executor.clone();
     let mut injector = command.injector.clone();
 
-    injector.user_input_cleanup = UserInputCleanupEnum::Backspace(command.cmd.chars().count() as u8);
+    injector.user_input_cleanup = UserInputCleanupEnum::Backspace(command.cmd.len() as u8);
     injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
 
     let command = CommandEvent { current_snapshot, char_stack, event_stack, executor, injector };

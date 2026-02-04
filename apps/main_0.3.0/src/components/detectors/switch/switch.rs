@@ -13,6 +13,7 @@ use crate::components::state::State;
 
 use crate::common::enums::{UserInputCleanupEnum, KeyboardStateCleanupEnum};
 use crate::common::events::{InputEvent, CommandEvent};
+use crate::common::structs::KeyboardSnapshot;
 
 use crate::settings::main_settings_structs::Switch;
 
@@ -64,19 +65,19 @@ impl SwitchDetector {
 
     let state = self.state.borrow();
 
-    let input = state.keyboard.get_string();
+    let input = state.keyboard.get_char_stack();
     let snapshot = state.keyboard.get_current_snapshot();
 
     let mut captured = self.captured.borrow_mut();
 
-    if captured.is_some() && snapshot.len() == 0 {
+    if captured.is_some() && snapshot == KeyboardSnapshot::default() {
       self.publish_command(state, captured.as_ref().unwrap().clone());
       *captured = None;
 
       return;
     }
 
-    *captured = self.find_switch(&input);
+    *captured = self.find_switch(input);
   }
 
   fn is_trackable_event(event: &InputEvent) -> bool {
@@ -86,7 +87,7 @@ impl SwitchDetector {
     }
   }
 
-  fn find_switch(&self, input: &str) -> Option<Switch> {
+  fn find_switch(&self, input: &Vec<char>) -> Option<Switch> {
     let switches = self.settings.get_switches();
 
     for switch in switches.iter() {
@@ -107,7 +108,7 @@ impl SwitchDetector {
       let executor = switch.executor.clone();
       let mut injector = switch.injector.clone();
 
-      injector.user_input_cleanup = UserInputCleanupEnum::Backspace(switch.text.chars().count() as u8);
+      injector.user_input_cleanup = UserInputCleanupEnum::Backspace(switch.text.len() as u8);
       injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
 
       let command = CommandEvent { current_snapshot, char_stack, event_stack, executor, injector };

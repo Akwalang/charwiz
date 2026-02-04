@@ -13,7 +13,7 @@ pub struct SwitchRaw {
 
 #[derive(Debug, Clone)]
 pub struct Switch {
-  pub text: String,
+  pub text: Vec<char>,
   pub executor: Executor,
   pub injector: Injector,
 }
@@ -21,7 +21,7 @@ pub struct Switch {
 impl Into<Switch> for SwitchRaw {
   fn into(self) -> Switch {
     Switch {
-      text: self.text,
+      text: self.text.chars().collect(),
       executor: self.executor.into(),
       injector: self.injector.into(),
     }

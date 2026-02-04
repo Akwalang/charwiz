@@ -37,8 +37,8 @@ impl KeyboardState {
     self.keyboard_snapshot.clone()
   }
 
-  pub fn get_string(&self) -> String {
-    self.char_stack.iter().collect::<String>()
+  pub fn get_char_stack(&self) -> &Vec<char> {
+    &self.char_stack
   }
 
   pub fn get_chars(&self) -> Vec<char> {

@@ -13,7 +13,7 @@ pub struct CommandRaw {
 
 #[derive(Debug, Clone)]
 pub struct Command {
-  pub cmd: String,
+  pub cmd: Vec<char>,
   pub executor: Executor,
   pub injector: Injector,
 }
@@ -21,7 +21,7 @@ pub struct Command {
 impl Into<Command> for CommandRaw {
   fn into(self) -> Command {
     Command {
-      cmd: self.cmd,
+      cmd: self.cmd.chars().collect(),
       executor: self.executor.into(),
       injector: self.injector.into(),
     }
