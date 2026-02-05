@@ -1,11 +1,37 @@
-// #![windows_subsystem = "windows"]
+#![windows_subsystem = "windows"]
 
+mod setup;
+mod common;
 mod constants;
-mod services;
 
-use crate::services::application::Application;
+mod platform;
+mod settings;
 
-#[async_std::main]
-async fn main() {
-  Application::run().await;
+mod app;
+mod components;
+
+use app::Application;
+
+use platform::Platform;
+use settings::Settings;
+
+#[tokio::main(flavor = "current_thread")]
+async fn main() -> anyhow::Result<()> {
+  setup::setup();
+
+  let local = tokio::task::LocalSet::new();
+
+  let platform = Platform::new();
+  let settings = Settings::new(&platform);
+
+  platform.init();
+  settings.init();
+
+  let application = Application::new(&platform, &settings);
+
+  local.run_until(async move {
+    application.run().await;
+  }).await;
+
+  Ok(())
 }

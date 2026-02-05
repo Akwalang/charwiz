@@ -1,0 +1,498 @@
+[
+  {
+    "key": "KeyQ",
+    "insert": [
+      { "char": "q" },
+      { "char": "Q", "modifiers": ["ShiftLeft"] },
+      { "char": "Q", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyW",
+    "insert": [
+      { "char": "w" },
+      { "char": "W", "modifiers": ["ShiftLeft"] },
+      { "char": "W", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyE",
+    "insert": [
+      { "char": "e" },
+      { "char": "E", "modifiers": ["ShiftLeft"] },
+      { "char": "E", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyR",
+    "insert": [
+      { "char": "r" },
+      { "char": "R", "modifiers": ["ShiftLeft"] },
+      { "char": "R", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyT",
+    "insert": [
+      { "char": "t" },
+      { "char": "T", "modifiers": ["ShiftLeft"] },
+      { "char": "T", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyY",
+    "insert": [
+      { "char": "y" },
+      { "char": "Y", "modifiers": ["ShiftLeft"] },
+      { "char": "Y", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyU",
+    "insert": [
+      { "char": "u" },
+      { "char": "U", "modifiers": ["ShiftLeft"] },
+      { "char": "U", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyI",
+    "insert": [
+      { "char": "i" },
+      { "char": "I", "modifiers": ["ShiftLeft"] },
+      { "char": "I", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyO",
+    "insert": [
+      { "char": "o" },
+      { "char": "O", "modifiers": ["ShiftLeft"] },
+      { "char": "O", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyP",
+    "insert": [
+      { "char": "p" },
+      { "char": "P", "modifiers": ["ShiftLeft"] },
+      { "char": "P", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "LeftBracket",
+    "insert": [
+      { "char": "[" },
+      { "char": "{", "modifiers": ["ShiftLeft"] },
+      { "char": "{", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "RightBracket",
+    "insert": [
+      { "char": "]" },
+      { "char": "}", "modifiers": ["ShiftLeft"] },
+      { "char": "}", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "BackSlash",
+    "insert": [
+      { "char": "\\" },
+      { "char": "|", "modifiers": ["ShiftLeft"] },
+      { "char": "|", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyA",
+    "insert": [
+      { "char": "a" },
+      { "char": "A", "modifiers": ["ShiftLeft"] },
+      { "char": "A", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyS",
+    "insert": [
+      { "char": "s" },
+      { "char": "S", "modifiers": ["ShiftLeft"] },
+      { "char": "S", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyD",
+    "insert": [
+      { "char": "d" },
+      { "char": "D", "modifiers": ["ShiftLeft"] },
+      { "char": "D", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyF",
+    "insert": [
+      { "char": "f" },
+      { "char": "F", "modifiers": ["ShiftLeft"] },
+      { "char": "F", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyG",
+    "insert": [
+      { "char": "g" },
+      { "char": "G", "modifiers": ["ShiftLeft"] },
+      { "char": "G", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyH",
+    "insert": [
+      { "char": "h" },
+      { "char": "H", "modifiers": ["ShiftLeft"] },
+      { "char": "H", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyJ",
+    "insert": [
+      { "char": "j" },
+      { "char": "J", "modifiers": ["ShiftLeft"] },
+      { "char": "J", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyK",
+    "insert": [
+      { "char": "k" },
+      { "char": "K", "modifiers": ["ShiftLeft"] },
+      { "char": "K", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyL",
+    "insert": [
+      { "char": "l" },
+      { "char": "L", "modifiers": ["ShiftLeft"] },
+      { "char": "L", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "SemiColon",
+    "insert": [
+      { "char": ";" },
+      { "char": ":", "modifiers": ["ShiftLeft"] },
+      { "char": ":", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Quote",
+    "insert": [
+      { "char": "'" },
+      { "char": "\"", "modifiers": ["ShiftLeft"] },
+      { "char": "\"", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyZ",
+    "insert": [
+      { "char": "z" },
+      { "char": "Z", "modifiers": ["ShiftLeft"] },
+      { "char": "Z", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyX",
+    "insert": [
+      { "char": "x" },
+      { "char": "X", "modifiers": ["ShiftLeft"] },
+      { "char": "X", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyC",
+    "insert": [
+      { "char": "c" },
+      { "char": "C", "modifiers": ["ShiftLeft"] },
+      { "char": "C", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyV",
+    "insert": [
+      { "char": "v" },
+      { "char": "V", "modifiers": ["ShiftLeft"] },
+      { "char": "V", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyB",
+    "insert": [
+      { "char": "b" },
+      { "char": "B", "modifiers": ["ShiftLeft"] },
+      { "char": "B", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyN",
+    "insert": [
+      { "char": "n" },
+      { "char": "N", "modifiers": ["ShiftLeft"] },
+      { "char": "N", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyM",
+    "insert": [
+      { "char": "m" },
+      { "char": "M", "modifiers": ["ShiftLeft"] },
+      { "char": "M", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Comma",
+    "insert": [
+      { "char": "," },
+      { "char": "<", "modifiers": ["ShiftLeft"] },
+      { "char": "<", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Dot",
+    "insert": [
+      { "char": "." },
+      { "char": ">", "modifiers": ["ShiftLeft"] },
+      { "char": ">", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Slash",
+    "insert": [
+      { "char": "/" },
+      { "char": "?", "modifiers": ["ShiftLeft"] },
+      { "char": "?", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "BackQuote",
+    "insert": [
+      { "char": "`" },
+      { "char": "~", "modifiers": ["ShiftLeft"] },
+      { "char": "~", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num1",
+    "insert": [
+      { "char": "1" },
+      { "char": "!", "modifiers": ["ShiftLeft"] },
+      { "char": "!", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num2",
+    "insert": [
+      { "char": "2" },
+      { "char": "@", "modifiers": ["ShiftLeft"] },
+      { "char": "@", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num3",
+    "insert": [
+      { "char": "3" },
+      { "char": "#", "modifiers": ["ShiftLeft"] },
+      { "char": "#", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num4",
+    "insert": [
+      { "char": "4" },
+      { "char": "$", "modifiers": ["ShiftLeft"] },
+      { "char": "$", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num5",
+    "insert": [
+      { "char": "5" },
+      { "char": "%", "modifiers": ["ShiftLeft"] },
+      { "char": "%", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num6",
+    "insert": [
+      { "char": "6" },
+      { "char": "^", "modifiers": ["ShiftLeft"] },
+      { "char": "^", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num7",
+    "insert": [
+      { "char": "7" },
+      { "char": "&", "modifiers": ["ShiftLeft"] },
+      { "char": "&", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num8",
+    "insert": [
+      { "char": "8" },
+      { "char": "*", "modifiers": ["ShiftLeft"] },
+      { "char": "*", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num9",
+    "insert": [
+      { "char": "9" },
+      { "char": "(", "modifiers": ["ShiftLeft"] },
+      { "char": "(", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num0",
+    "insert": [
+      { "char": "0" },
+      { "char": ")", "modifiers": ["ShiftLeft"] },
+      { "char": ")", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Minus",
+    "insert": [
+      { "char": "-" },
+      { "char": "_", "modifiers": ["ShiftLeft"] },
+      { "char": "_", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Equal",
+    "insert": [
+      { "char": "=" },
+      { "char": "+", "modifiers": ["ShiftLeft"] },
+      { "char": "+", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Kp0",
+    "insert": [
+      { "char": "0" }
+    ]
+  },
+  {
+    "key": "Kp1",
+    "insert": [
+      { "char": "1" }
+    ]
+  },
+  {
+    "key": "Kp2",
+    "insert": [
+      { "char": "2" }
+    ]
+  },
+  {
+    "key": "Kp3",
+    "insert": [
+      { "char": "3" }
+    ]
+  },
+  {
+    "key": "Kp4",
+    "insert": [
+      { "char": "4" }
+    ]
+  },
+  {
+    "key": "Kp5",
+    "insert": [
+      { "char": "5" }
+    ]
+  },
+  {
+    "key": "Kp6",
+    "insert": [
+      { "char": "6" }
+    ]
+  },
+  {
+    "key": "Kp7",
+    "insert": [
+      { "char": "7" }
+    ]
+  },
+  {
+    "key": "Kp8",
+    "insert": [
+      { "char": "8" }
+    ]
+  },
+  {
+    "key": "Kp9",
+    "insert": [
+      { "char": "9" }
+    ]
+  },
+  {
+    "key": "KpPlus",
+    "insert": [
+      { "char": "+" },
+      { "char": "+", "modifiers": ["ShiftLeft"] },
+      { "char": "+", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KpMinus",
+    "insert": [
+      { "char": "-" },
+      { "char": "-", "modifiers": ["ShiftLeft"] },
+      { "char": "-", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KpMultiply",
+    "insert": [
+      { "char": "*" },
+      { "char": "*", "modifiers": ["ShiftLeft"] },
+      { "char": "*", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KpDivide",
+    "insert": [
+      { "char": "/" },
+      { "char": "/", "modifiers": ["ShiftLeft"] },
+      { "char": "/", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KpDelete",
+    "insert": [
+      { "char": "." }
+    ]
+  },
+  {
+    "key": "Space",
+    "insert": [
+      { "char": " " },
+      { "char": " ", "modifiers": ["ShiftLeft"] },
+      { "char": " ", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Tab",
+    "insert": [
+      { "char": "\t" }
+    ]
+  },
+  {
+    "key": "Return",
+    "insert": [
+      { "char": "\n" },
+      { "char": "\n", "modifiers": ["ShiftLeft"] },
+      { "char": "\n", "modifiers": ["ShiftRight"] }
+    ]
+  }
+]

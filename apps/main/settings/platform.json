@@ -1,0 +1,42 @@
+{
+  "clipboardHotkeys": {
+    "copy": { "key": "KeyC", "modifiers": ["ControlLeft"] },
+    "paste": { "key": "KeyV", "modifiers": ["ControlLeft"] }
+  },
+  "bannedHotkeys": [
+    { "key": "KeyL", "modifiers": ["MetaLeft"] }
+  ],
+  "switchKeyboardLayoutHotkeys": [
+    { "key": null, "modifiers": ["ShiftLeft", "Alt"] },
+    { "key": null, "modifiers": ["ShiftRight", "Alt"] },
+    { "key": "Space", "modifiers": ["MetaLeft"] }
+  ],
+  "stackBrakeHotkeys": [
+    { "key": "UpArrow", "modifiers": [] },
+    { "key": "DownArrow", "modifiers": [] },
+    { "key": "LeftArrow", "modifiers": [] },
+    { "key": "RightArrow", "modifiers": [] },
+    { "key": "PageUp", "modifiers": [] },
+    { "key": "PageDown", "modifiers": [] },
+    { "key": "Home", "modifiers": [] },
+    { "key": "End", "modifiers": [] },
+    { "key": "Tab", "modifiers": ["Alt"] },
+    { "key": "Tab", "modifiers": ["AltGr"] },
+    { "key": "Backspace", "modifiers": ["ControlLeft"] },
+    { "key": "Backspace", "modifiers": ["ControlRight"] },
+    { "key": "KeyA", "modifiers": ["ControlLeft"] },
+    { "key": "KeyA", "modifiers": ["ControlRight"] },
+    { "key": "KeyX", "modifiers": ["ControlLeft"] },
+    { "key": "KeyX", "modifiers": ["ControlRight"] },
+    { "key": "KeyC", "modifiers": ["ControlLeft"] },
+    { "key": "KeyC", "modifiers": ["ControlRight"] },
+    { "key": "KeyY", "modifiers": ["ControlLeft"] },
+    { "key": "KeyY", "modifiers": ["ControlRight"] },
+    { "key": "KeyZ", "modifiers": ["ControlLeft"] },
+    { "key": "KeyZ", "modifiers": ["ControlRight"] },
+    { "key": "KeyZ", "modifiers": ["ControlLeft", "ShiftLeft"] },
+    { "key": "KeyZ", "modifiers": ["ControlRight", "ShiftRight"] },
+    { "key": "KeyZ", "modifiers": ["ControlLeft", "ShiftRight"] },
+    { "key": "KeyZ", "modifiers": ["ControlRight", "ShiftLeft"] }
+  ]
+}

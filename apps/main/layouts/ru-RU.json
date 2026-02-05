@@ -1,0 +1,499 @@
+[
+  {
+    "key": "KeyQ",
+    "insert": [
+      { "char": "й" },
+      { "char": "Й", "modifiers": ["ShiftLeft"] },
+      { "char": "Й", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyW",
+    "insert": [
+      { "char": "ц" },
+      { "char": "Ц", "modifiers": ["ShiftLeft"] },
+      { "char": "Ц", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyE",
+    "insert": [
+      { "char": "у" },
+      { "char": "У", "modifiers": ["ShiftLeft"] },
+      { "char": "У", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyR",
+    "insert": [
+      { "char": "к" },
+      { "char": "К", "modifiers": ["ShiftLeft"] },
+      { "char": "К", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyT",
+    "insert": [
+      { "char": "е" },
+      { "char": "Е", "modifiers": ["ShiftLeft"] },
+      { "char": "Е", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyY",
+    "insert": [
+      { "char": "н" },
+      { "char": "Н", "modifiers": ["ShiftLeft"] },
+      { "char": "Н", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyU",
+    "insert": [
+      { "char": "г" },
+      { "char": "Г", "modifiers": ["ShiftLeft"] },
+      { "char": "Г", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyI",
+    "insert": [
+      { "char": "ш" },
+      { "char": "Ш", "modifiers": ["ShiftLeft"] },
+      { "char": "Ш", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyO",
+    "insert": [
+      { "char": "щ" },
+      { "char": "Щ", "modifiers": ["ShiftLeft"] },
+      { "char": "Щ", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyP",
+    "insert": [
+      { "char": "з" },
+      { "char": "З", "modifiers": ["ShiftLeft"] },
+      { "char": "З", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "LeftBracket",
+    "insert": [
+      { "char": "х" },
+      { "char": "Х", "modifiers": ["ShiftLeft"] },
+      { "char": "Х", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "RightBracket",
+    "insert": [
+      { "char": "ъ" },
+      { "char": "Ъ", "modifiers": ["ShiftLeft"] },
+      { "char": "Ъ", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "BackSlash",
+    "insert": [
+      { "char": "\\" },
+      { "char": "/", "modifiers": ["ShiftLeft"] },
+      { "char": "/", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyA",
+    "insert": [
+      { "char": "ф" },
+      { "char": "Ф", "modifiers": ["ShiftLeft"] },
+      { "char": "Ф", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyS",
+    "insert": [
+      { "char": "ы" },
+      { "char": "Ы", "modifiers": ["ShiftLeft"] },
+      { "char": "Ы", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyD",
+    "insert": [
+      { "char": "в" },
+      { "char": "В", "modifiers": ["ShiftLeft"] },
+      { "char": "В", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyF",
+    "insert": [
+      { "char": "а" },
+      { "char": "А", "modifiers": ["ShiftLeft"] },
+      { "char": "А", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyG",
+    "insert": [
+      { "char": "п" },
+      { "char": "П", "modifiers": ["ShiftLeft"] },
+      { "char": "П", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyH",
+    "insert": [
+      { "char": "р" },
+      { "char": "Р", "modifiers": ["ShiftLeft"] },
+      { "char": "Р", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyJ",
+    "insert": [
+      { "char": "о" },
+      { "char": "О", "modifiers": ["ShiftLeft"] },
+      { "char": "О", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyK",
+    "insert": [
+      { "char": "л" },
+      { "char": "Л", "modifiers": ["ShiftLeft"] },
+      { "char": "Л", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyL",
+    "insert": [
+      { "char": "д" },
+      { "char": "Д", "modifiers": ["ShiftLeft"] },
+      { "char": "Д", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "SemiColon",
+    "insert": [
+      { "char": "ж" },
+      { "char": "Ж", "modifiers": ["ShiftLeft"] },
+      { "char": "Ж", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Quote",
+    "insert": [
+      { "char": "э" },
+      { "char": "Э", "modifiers": ["ShiftLeft"] },
+      { "char": "Э", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyZ",
+    "insert": [
+      { "char": "я" },
+      { "char": "Я", "modifiers": ["ShiftLeft"] },
+      { "char": "Я", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyX",
+    "insert": [
+      { "char": "ч" },
+      { "char": "Ч", "modifiers": ["ShiftLeft"] },
+      { "char": "Ч", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyC",
+    "insert": [
+      { "char": "с" },
+      { "char": "С", "modifiers": ["ShiftLeft"] },
+      { "char": "С", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyV",
+    "insert": [
+      { "char": "м" },
+      { "char": "М", "modifiers": ["ShiftLeft"] },
+      { "char": "М", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyB",
+    "insert": [
+      { "char": "и" },
+      { "char": "И", "modifiers": ["ShiftLeft"] },
+      { "char": "И", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyN",
+    "insert": [
+      { "char": "т" },
+      { "char": "Т", "modifiers": ["ShiftLeft"] },
+      { "char": "Т", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KeyM",
+    "insert": [
+      { "char": "ь" },
+      { "char": "Ь", "modifiers": ["ShiftLeft"] },
+      { "char": "Ь", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Comma",
+    "insert": [
+      { "char": "б" },
+      { "char": "Б", "modifiers": ["ShiftLeft"] },
+      { "char": "Б", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Dot",
+    "insert": [
+      { "char": "ю" },
+      { "char": "Ю", "modifiers": ["ShiftLeft"] },
+      { "char": "Ю", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Slash",
+    "insert": [
+      { "char": "." },
+      { "char": ",", "modifiers": ["ShiftLeft"] },
+      { "char": ",", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "BackQuote",
+    "insert": [
+      { "char": "ё" },
+      { "char": "Ё", "modifiers": ["ShiftLeft"] },
+      { "char": "Ё", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num1",
+    "insert": [
+      { "char": "1" },
+      { "char": "!", "modifiers": ["ShiftLeft"] },
+      { "char": "!", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num2",
+    "insert": [
+      { "char": "2" },
+      { "char": "\"", "modifiers": ["ShiftLeft"] },
+      { "char": "\"", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num3",
+    "insert": [
+      { "char": "3" },
+      { "char": "№", "modifiers": ["ShiftLeft"] },
+      { "char": "№", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num4",
+    "insert": [
+      { "char": "4" },
+      { "char": ";", "modifiers": ["ShiftLeft"] },
+      { "char": ";", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num5",
+    "insert": [
+      { "char": "5" },
+      { "char": "%", "modifiers": ["ShiftLeft"] },
+      { "char": "%", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num6",
+    "insert": [
+      { "char": "6" },
+      { "char": ":", "modifiers": ["ShiftLeft"] },
+      { "char": ":", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num7",
+    "insert": [
+      { "char": "7" },
+      { "char": "?", "modifiers": ["ShiftLeft"] },
+      { "char": "?", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num8",
+    "insert": [
+      { "char": "8" },
+      { "char": "*", "modifiers": ["ShiftLeft"] },
+      { "char": "*", "modifiers": ["ShiftRight"] },
+      { "char": "₽", "modifiers": ["ControlLeft", "Alt"] }
+    ]
+  },
+  {
+    "key": "Num9",
+    "insert": [
+      { "char": "9" },
+      { "char": "(", "modifiers": ["ShiftLeft"] },
+      { "char": "(", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Num0",
+    "insert": [
+      { "char": "0" },
+      { "char": ")", "modifiers": ["ShiftLeft"] },
+      { "char": ")", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Minus",
+    "insert": [
+      { "char": "-" },
+      { "char": "_", "modifiers": ["ShiftLeft"] },
+      { "char": "_", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Equal",
+    "insert": [
+      { "char": "=" },
+      { "char": "+", "modifiers": ["ShiftLeft"] },
+      { "char": "+", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Kp0",
+    "insert": [
+      { "char": "0" }
+    ]
+  },
+  {
+    "key": "Kp1",
+    "insert": [
+      { "char": "1" }
+    ]
+  },
+  {
+    "key": "Kp2",
+    "insert": [
+      { "char": "2" }
+    ]
+  },
+  {
+    "key": "Kp3",
+    "insert": [
+      { "char": "3" }
+    ]
+  },
+  {
+    "key": "Kp4",
+    "insert": [
+      { "char": "4" }
+    ]
+  },
+  {
+    "key": "Kp5",
+    "insert": [
+      { "char": "5" }
+    ]
+  },
+  {
+    "key": "Kp6",
+    "insert": [
+      { "char": "6" }
+    ]
+  },
+  {
+    "key": "Kp7",
+    "insert": [
+      { "char": "7" }
+    ]
+  },
+  {
+    "key": "Kp8",
+    "insert": [
+      { "char": "8" }
+    ]
+  },
+  {
+    "key": "Kp9",
+    "insert": [
+      { "char": "9" }
+    ]
+  },
+  {
+    "key": "KpPlus",
+    "insert": [
+      { "char": "+" },
+      { "char": "+", "modifiers": ["ShiftLeft"] },
+      { "char": "+", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KpMinus",
+    "insert": [
+      { "char": "-" },
+      { "char": "-", "modifiers": ["ShiftLeft"] },
+      { "char": "-", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KpMultiply",
+    "insert": [
+      { "char": "*" },
+      { "char": "*", "modifiers": ["ShiftLeft"] },
+      { "char": "*", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KpDivide",
+    "insert": [
+      { "char": "/" },
+      { "char": "/", "modifiers": ["ShiftLeft"] },
+      { "char": "/", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "KpDelete",
+    "insert": [
+      { "char": "." }
+    ]
+  },
+  {
+    "key": "Space",
+    "insert": [
+      { "char": " " },
+      { "char": " ", "modifiers": ["ShiftLeft"] },
+      { "char": " ", "modifiers": ["ShiftRight"] }
+    ]
+  },
+  {
+    "key": "Tab",
+    "insert": [
+      { "char": "\t" }
+    ]
+  },
+  {
+    "key": "Return",
+    "insert": [
+      { "char": "\n" },
+      { "char": "\n", "modifiers": ["ShiftLeft"] },
+      { "char": "\n", "modifiers": ["ShiftRight"] }
+    ]
+  }
+]
