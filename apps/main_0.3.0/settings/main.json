@@ -245,6 +245,76 @@
         "layoutAfter": "current",
         "userInputCleanup": "none"
       }
+    },
+    {
+      "keys": {
+        "key": "KeyH",
+        "modifiers": ["ControlLeft", "AltGr"]
+      },
+      "executor": {
+        "type": "plugin",
+        "value": "to_text_case"
+      },
+      "injector": {
+        "target": "selection",
+        "method": "paste"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyV",
+        "modifiers": ["ControlLeft", "AltGr"]
+      },
+      "executor": {
+        "type": "plugin",
+        "value": "to_snake_case"
+      },
+      "injector": {
+        "target": "selection",
+        "method": "paste"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyB",
+        "modifiers": ["ControlLeft", "AltGr"]
+      },
+      "executor": {
+        "type": "plugin",
+        "value": "to_kebab_case"
+      },
+      "injector": {
+        "target": "selection",
+        "method": "paste"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyN",
+        "modifiers": ["ControlLeft", "AltGr"]
+      },
+      "executor": {
+        "type": "plugin",
+        "value": "to_pascal_case"
+      },
+      "injector": {
+        "target": "selection",
+        "method": "paste"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyM",
+        "modifiers": ["ControlLeft", "AltGr"]
+      },
+      "executor": {
+        "type": "plugin",
+        "value": "to_camel_case"
+      },
+      "injector": {
+        "target": "selection",
+        "method": "paste"
+      }
     }
   ],
   "symbols": [
@@ -368,19 +438,6 @@
       "executor": {
         "type": "static",
         "value": "git rev-parse --abbrev-ref HEAD"
-      },
-      "injector": {
-        "target": "none",
-        "method": "type_and_paste",
-        "layoutAfter": "current",
-        "keyboardStateCleanup": "drop"
-      }
-    },
-    {
-      "cmd": ":pi",
-      "executor": {
-        "type": "static",
-        "value": "PI.4-S.4"
       },
       "injector": {
         "target": "none",
