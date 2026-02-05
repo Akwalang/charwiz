@@ -61,7 +61,7 @@ impl Application {
 
     executor.init();
 
-    state.borrow_mut().application.set_status(ApplicationStatus::Active);
+    state.borrow_mut().application.set_status(ApplicationStatus::Listening);
 
     log!("<$>Application</>: Ready");
 

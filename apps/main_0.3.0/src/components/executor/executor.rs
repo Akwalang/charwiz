@@ -116,7 +116,7 @@ impl Executor {
   }
 
   fn unlock_application(&self) {
-    self.state.borrow_mut().application.set_status(ApplicationStatus::Active);
+    self.state.borrow_mut().application.set_status(ApplicationStatus::Listening);
   }
 
   fn switch_keyboard_layout(&self, current: &KeyboardLayoutItem, next: &KeyboardLayoutEnum) -> anyhow::Result<()> {

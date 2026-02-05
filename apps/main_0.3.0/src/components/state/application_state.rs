@@ -3,9 +3,9 @@ use rust_logger::*;
 #[derive(Debug, Eq, PartialEq, Clone, Copy)]
 pub enum ApplicationStatus {
   Starting,
-  Active,
-  Disabled,
+  Listening,
   Executing,
+  Disabled,
 }
 
 pub struct ApplicationState {
