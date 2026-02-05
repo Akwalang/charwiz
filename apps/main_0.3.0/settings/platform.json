@@ -11,7 +11,7 @@
     { "key": null, "modifiers": ["ShiftRight", "Alt"] },
     { "key": "Space", "modifiers": ["MetaLeft"] }
   ],
-  "stackBreakeHotkeys": [
+  "stackBrakeHotkeys": [
     { "key": "UpArrow", "modifiers": [] },
     { "key": "DownArrow", "modifiers": [] },
     { "key": "LeftArrow", "modifiers": [] },

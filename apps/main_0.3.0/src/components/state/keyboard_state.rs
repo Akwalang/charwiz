@@ -186,9 +186,9 @@ impl KeyboardState {
   }
 
   fn is_stack_breaker(&self, key: &Key) -> bool {
-    let snaphot = KeyboardSnapshot::new(Some(*key), self.keyboard_snapshot.modifiers.clone());
-    let hotkeys = self.settings.get_stack_breake_hotkeys();
+    let snapshot = KeyboardSnapshot::new(Some(*key), self.keyboard_snapshot.modifiers.clone());
+    let hotkeys = self.settings.get_stack_brake_hotkeys();
 
-    hotkeys.iter().any(|ks| *ks == snaphot)
+    hotkeys.iter().any(|ks| *ks == snapshot)
   }
 }
