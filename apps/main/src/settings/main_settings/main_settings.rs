@@ -1,4 +1,4 @@
-use rust_logger::*;
+use zero_cost_logger::*;
 
 use crate::settings::main_settings::structs::{SettingsRaw, Settings};
 

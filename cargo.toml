@@ -1,0 +1,7 @@
+[workspace]
+members = [
+  "crates/zero_cost_logger",
+  "apps/main",
+]
+
+resolver = "2"

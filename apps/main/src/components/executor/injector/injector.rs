@@ -1,7 +1,7 @@
 use std::usize;
 use tokio::time::{sleep, Duration};
 
-use rust_logger::*;
+use zero_cost_logger::*;
 
 use crate::platform::Platform;
 use crate::settings::Settings;

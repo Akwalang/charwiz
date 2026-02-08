@@ -1,6 +1,6 @@
 use clipboard_win::{get_clipboard, set_clipboard, formats};
 
-use rust_logger::*;
+use zero_cost_logger::*;
 use zeroize::Zeroize;
 
 pub struct Clipboard {

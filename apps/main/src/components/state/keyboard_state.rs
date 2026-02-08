@@ -1,6 +1,6 @@
 use rdev::{Event, EventType, Key};
 
-use rust_logger::*;
+use zero_cost_logger::*;
 
 use crate::platform::Platform;
 use crate::settings::Settings;

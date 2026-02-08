@@ -3,7 +3,7 @@ use std::rc::Rc;
 
 use tokio::sync::mpsc;
 
-use rust_logger::*;
+use zero_cost_logger::*;
 use rdev::{listen, Event, EventType};
 
 use crate::components::event_hub::EventHub;

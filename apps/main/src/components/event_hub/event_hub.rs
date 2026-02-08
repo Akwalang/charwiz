@@ -1,6 +1,6 @@
 use tokio::sync::broadcast::{channel, Receiver, Sender};
 
-use rust_logger::*;
+use zero_cost_logger::*;
 
 use crate::common::events::{InputEvent, CommandEvent};
 
