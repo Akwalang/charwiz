@@ -1,6 +1,5 @@
 // #![windows_subsystem = "windows"]
 
-mod setup;
 mod common;
 mod constants;
 
@@ -17,8 +16,6 @@ use settings::Settings;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> anyhow::Result<()> {
-  setup::setup();
-
   let local = tokio::task::LocalSet::new();
 
   let platform = Platform::new();
