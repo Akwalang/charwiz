@@ -1,4 +1,4 @@
-use rust_logger::*;
+use zero_cost_logger::*;
 
 use super::structs::{SettingsRaw, Settings};
 

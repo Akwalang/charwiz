@@ -1,7 +1,7 @@
 use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 
-use rust_logger::*;
+use zero_cost_logger::*;
 use rdev::EventType;
 
 use tokio::sync::broadcast::error::RecvError;

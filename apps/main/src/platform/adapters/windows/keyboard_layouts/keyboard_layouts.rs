@@ -1,6 +1,6 @@
 use rdev::Key;
 
-use rust_logger::*;
+use zero_cost_logger::*;
 
 use crate::platform::common::structs::KeyboardLayoutItem;
 

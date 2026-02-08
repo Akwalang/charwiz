@@ -1,4 +1,4 @@
-use rust_logger::*;
+use zero_cost_logger::*;
 
 #[derive(Debug, Eq, PartialEq, Clone, Copy)]
 pub enum ApplicationStatus {

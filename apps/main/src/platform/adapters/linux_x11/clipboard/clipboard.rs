@@ -1,6 +1,6 @@
 use x11_clipboard::Clipboard as X11Clipboard;
 
-use rust_logger::*;
+use zero_cost_logger::*;
 
 pub struct Clipboard {
   clipboard: X11Clipboard,

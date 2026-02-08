@@ -2,11 +2,11 @@
 
 ## Windows
 
-```cargo build --release --target x86_64-pc-windows-msvc```
+```cargo build --release --no-default-features --features prod --target x86_64-pc-windows-msvc```
 
 ## Linux
 
-```cargo build --release --target x86_64-unknown-linux-gnu```
+```cargo build --release --no-default-features --features prod --target x86_64-unknown-linux-gnu```
 
 ## PGO
 

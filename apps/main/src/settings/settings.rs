@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use rust_logger::*;
+use zero_cost_logger::*;
 
 use crate::platform::Platform;
 

@@ -75,7 +75,6 @@ dependencies = [
  "embed-resource",
  "mlua",
  "rdev",
- "rust_logger",
  "serde",
  "serde_derive",
  "serde_json",
@@ -84,6 +83,7 @@ dependencies = [
  "winres",
  "x11",
  "x11-clipboard",
+ "zero_cost_logger",
  "zeroize",
 ]
 
@@ -563,11 +563,6 @@ name = "regex-syntax"
 version = "0.8.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7a2d987857b319362043e95f5353c0535c1f58eec5336fdfcf626430af7def58"
-
-[[package]]
-name = "rust_logger"
-version = "1.0.0"
-source = "git+https://github.com/Akwalang/rust_logger.git?tag=1.1.0#7363cdc21bbbc7716097fd68437f34adc0ea5422"
 
 [[package]]
 name = "rustc-hash"
@@ -1181,6 +1176,10 @@ checksum = "56b245751c0ac9db0e006dc812031482784e434630205a93c73cfefcaabeac67"
 dependencies = [
  "nix",
 ]
+
+[[package]]
+name = "zero_cost_logger"
+version = "0.1.0"
 
 [[package]]
 name = "zeroize"
