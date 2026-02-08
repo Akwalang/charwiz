@@ -1,9 +1,8 @@
 /apps/*/target
+/crates/*/target
 
 .idea
-
-/.devcontainer/logs/*
-!/.devcontainer/logs/.gitkeep
+.vscode
 
 /release/*
 
