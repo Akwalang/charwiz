@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
+
 use rdev::Key;
 
 use crate::platform::Platform;
@@ -25,6 +27,7 @@ impl KeyboardLayouts {
   }
 
   pub fn init(&mut self) {
+    #[cfg(feature = "logger")]
     log!("<$>Keyboard Layouts Settings</>: Init");
   }
 
@@ -67,6 +70,7 @@ impl KeyboardLayouts {
       let setup = self.items.get(&layout.name);
 
       if setup.is_none() {
+        #[cfg(feature = "logger")]
         error!("<$>Keyboard Layouts Settings</>: Keyboard layout now found: {}", layout.name);
         anyhow::bail!("Keyboard layout now found: {}", layout.name);
       }

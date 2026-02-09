@@ -1,4 +1,4 @@
-use zero_cost_logger::*;
+use logger::*;
 
 fn main() {
     log!("Starting <$>&Charwiz</> logger test");

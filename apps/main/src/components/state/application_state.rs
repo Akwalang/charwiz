@@ -1,4 +1,5 @@
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 #[derive(Debug, Eq, PartialEq, Clone, Copy)]
 pub enum ApplicationStatus {
@@ -20,6 +21,7 @@ impl ApplicationState {
   }
 
   pub fn set_status(&mut self, status: ApplicationStatus) {
+    #[cfg(feature = "logger")]
     log!("<$>State</>: Status changed from <&>{:?}</> to <&>{:?}</>", self.status, status);
 
     self.status = status;

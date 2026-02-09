@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
+
 use rdev::Key;
 
 use super::{KeyItemRaw, KeyItem};
@@ -29,6 +31,7 @@ impl LayoutItem {
   }
 
   fn load(name: &str) -> anyhow::Result<Vec<KeyItem>> {
+    #[cfg(feature = "logger")]
     log!("<$>Keyboard Layouts Settings</>: Loading layout: <i&>{}</>", name);
 
     let src = format!("{}/{}.json", LAYOUTS_FOLDER, name);
@@ -36,6 +39,7 @@ impl LayoutItem {
     let raw = utils::read_json::<Vec<KeyItemRaw>>(&src);
 
     if let Err(e) = raw {
+      #[cfg(feature = "logger")]
       error!("<$>Keyboard Layouts Settings</>: Failed to load layout settings. Error: <i->{}</>", e.to_string());
       return Err(e);
     };

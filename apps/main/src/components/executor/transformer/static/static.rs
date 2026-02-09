@@ -1,4 +1,5 @@
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 use crate::Platform;
 use crate::Settings;
@@ -18,6 +19,7 @@ pub struct StaticTransformer {
 
 impl StaticTransformer {
   pub fn init(&mut self) {
+    #[cfg(feature = "logger")]
     log!("<$>Static Transformer</>: Init");
   }
 }
@@ -30,6 +32,7 @@ impl Transformer for StaticTransformer {
   async fn transform(&self, event: &CommandEvent, _target: &InputType) -> InputType {
     let result = event.executor.value.to_owned();
 
+    #[cfg(feature = "logger")]
     log!("<$>Static Transformer</>: Result: <i+>{}</>", result);
 
     InputType::Text(result)

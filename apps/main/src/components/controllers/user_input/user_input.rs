@@ -3,7 +3,9 @@ use std::rc::Rc;
 
 use tokio::sync::mpsc;
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
+
 use rdev::{listen, Event, EventType};
 
 use crate::components::event_hub::EventHub;
@@ -29,6 +31,7 @@ impl UserInputController {
   }
 
   pub fn init(self: &Rc<Self>) {
+    #[cfg(feature = "logger")]
     log!("<$>User Input Controller</>: Init");
 
     self.listen();
@@ -51,6 +54,7 @@ impl UserInputController {
       };
 
       if let Err(error) = listen(callback) {
+        #[cfg(feature = "logger")]
         error!("<$>User Input Controller</>: Can't start listen keyboard events. Error: {:?}", error);
       }
     });
@@ -80,6 +84,7 @@ impl UserInputController {
     drop(state);
 
     if let Err(err) = self.event_hub.publish_input(event) {
+      #[cfg(feature = "logger")]
       warn!("<$>User Input Controller</>: Failed to publish input event: {:?}", err);
     }
   }
@@ -93,14 +98,17 @@ impl UserInputController {
   }
 
   fn write_debug_info(event: &Event, is_muted: bool) {
-    let stl = if is_muted { "i" } else { "i!" };
+    #[cfg(feature = "logger")]
+    {
+      let stl = if is_muted { "i" } else { "i!" };
 
-    match event.event_type {
-      EventType::KeyPress(key)         => debug!("Key press: <{}>{:?}</>", stl, key),
-      EventType::KeyRelease(key)       => debug!("Key release: <{}>{:?}</>", stl, key),
-      EventType::ButtonPress(button)   => debug!("Mouse press: <{}>{:?}</>", stl, button),
-      EventType::ButtonRelease(button) => debug!("Mouse release: <{}>{:?}</>", stl, button),
-      _ => {},
+      match event.event_type {
+        EventType::KeyPress(key)         => debug!("Key press: <{}>{:?}</>", stl, key),
+        EventType::KeyRelease(key)       => debug!("Key release: <{}>{:?}</>", stl, key),
+        EventType::ButtonPress(button)   => debug!("Mouse press: <{}>{:?}</>", stl, button),
+        EventType::ButtonRelease(button) => debug!("Mouse release: <{}>{:?}</>", stl, button),
+        _ => {},
+      }
     }
   }
 

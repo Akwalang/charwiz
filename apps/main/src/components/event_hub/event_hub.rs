@@ -1,6 +1,7 @@
 use tokio::sync::broadcast::{channel, Receiver, Sender};
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 use crate::common::events::{InputEvent, CommandEvent};
 
@@ -20,6 +21,7 @@ impl EventHub {
   #[inline]
   fn publish<T: Clone>(tx: &Sender<T>, ev: T, chan: &str) -> anyhow::Result<()> {
     if let Err(_) = tx.send(ev) {
+      #[cfg(feature = "logger")]
       warn!("<$>Event Hub</>: No subscribers for \"<&>{}</>\"; dropping event", chan);
     }
 

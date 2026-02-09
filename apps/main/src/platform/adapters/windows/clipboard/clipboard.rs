@@ -1,6 +1,8 @@
 use clipboard_win::{get_clipboard, set_clipboard, formats};
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
+
 use zeroize::Zeroize;
 
 pub struct Clipboard {
@@ -14,11 +16,13 @@ impl Clipboard {
 
   pub fn backup(&mut self) {
     let Ok(value) = self.get_clipboard_text() else {
+      #[cfg(feature = "logger")]
       warn!("<$>Clipboard</>: Can't backup clipboard value");
       return;
     };
 
     let Some(value) = value else {
+      #[cfg(feature = "logger")]
       warn!("<$>Clipboard</>: No clipboard value to backup");
       return;
     };
@@ -28,6 +32,7 @@ impl Clipboard {
 
   pub fn restore(&mut self) {
     let Some(buffer) = &self.buffer else {
+      #[cfg(feature = "logger")]
       warn!("<$>Clipboard</>: Can't restore buffer: previous value is empty");
       return;
     };
@@ -35,6 +40,7 @@ impl Clipboard {
     let value = String::from_utf8_lossy(buffer);
 
     if let Err(e) = self.set_clipboard_text(&value) {
+      #[cfg(feature = "logger")]
       warn!("<$>Clipboard</>: Failed to restore clipboard buffer: {}", e);
     }
 

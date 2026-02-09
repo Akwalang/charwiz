@@ -1,7 +1,9 @@
 use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
+
 use rdev::EventType;
 
 use tokio::sync::broadcast::error::RecvError;
@@ -39,6 +41,7 @@ impl CommandDetector {
   }
 
   pub fn init(self: &Rc<Self>) {
+    #[cfg(feature = "logger")]
     log!("<$>Command Detector</>: Init");
 
     self.subscribe();

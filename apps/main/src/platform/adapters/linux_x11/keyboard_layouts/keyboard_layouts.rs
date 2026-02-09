@@ -1,4 +1,5 @@
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 use crate::platform::common::structs::KeyboardLayoutItem;
 
@@ -14,6 +15,7 @@ impl KeyboardLayouts {
   }
 
   pub fn init(&mut self) {
+    #[cfg(feature = "logger")]
     log!("<$>Linux X11::KeyboardLayouts</>: Init");
 
     self.items.push(KeyboardLayoutItem {
@@ -35,6 +37,7 @@ impl KeyboardLayouts {
       .collect::<Vec<String>>()
       .join(", ");
 
+    #[cfg(feature = "logger")]
     log!("<$>Linux X11::KeyboardLayouts</>: Available keyboard layouts: {}", names);
   }
 
@@ -84,12 +87,14 @@ impl KeyboardLayouts {
 
   pub fn set_keyboard_layout(&self, layout_id: &str) -> anyhow::Result<Option<KeyboardLayoutItem>> {
     let Some(lt) = self.get_keyboard_layout_by_id(layout_id) else {
+      #[cfg(feature = "logger")]
       warn!("<$>Platform::KeyboardLayouts</>: <->Keyboard layout not found: {}</>", layout_id);
       return Ok(None);
     };
 
     // utils::switch_global_keyboard_layout(layout_id)?;
 
+    #[cfg(feature = "logger")]
     log!("<$>Platform::KeyboardLayouts</>: Switch keyboard layout to: <i+>{}</> (<i+>{}</>)", lt.name, layout_id);
 
     Ok(Some(lt.clone()))

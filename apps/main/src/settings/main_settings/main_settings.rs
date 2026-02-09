@@ -1,4 +1,4 @@
-use zero_cost_logger::*;
+use logger::*;
 
 use crate::settings::main_settings::structs::{SettingsRaw, Settings};
 
@@ -15,17 +15,20 @@ impl MainSettings {
   }
 
   pub fn init(&mut self) {
+    #[cfg(feature = "logger")]
     log!("<$>Main Settings</>: Init");
 
     self.settings = Self::load().unwrap_or_else(|_| panic!("Can't load main settings"));
   }
 
   fn load() -> anyhow::Result<Settings> {
+    #[cfg(feature = "logger")]
     log!("<$>Main Settings</>: Loading settings: <i&>{}</>", MAIN_SETTINGS_FILE);
 
     let raw = utils::read_json::<SettingsRaw>(MAIN_SETTINGS_FILE);
 
     if let Err(e) = raw {
+      #[cfg(feature = "logger")]
       error!("<$>Main Settings</>: Failed to load settings. Error: <i->{}</>", e.to_string());
       return Err(e);
     };

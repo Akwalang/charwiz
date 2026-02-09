@@ -1,7 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 use crate::platform::Platform;
 
@@ -33,6 +34,7 @@ impl Settings {
   }
 
   pub fn init(&self) {
+    #[cfg(feature = "logger")]
     log!("<$>Settings</>: Init");
 
     {

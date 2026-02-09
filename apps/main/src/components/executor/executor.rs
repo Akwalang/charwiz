@@ -1,7 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 use tokio::sync::broadcast::error::RecvError;
 
@@ -53,6 +54,7 @@ impl Executor {
   }
 
   pub fn init(self: &Rc<Self>) {
+    #[cfg(feature = "logger")]
     log!("<$>Executor</>: Init");
 
     self.subscribe();
@@ -89,6 +91,7 @@ impl Executor {
     let target  = self.extractor.extract(&self.emulator, &event).await;
 
     let Ok(target) = target else {
+      #[cfg(feature = "logger")]
       warn!("<$>Executor</>: Extraction failed: {}", target.err().unwrap());
       self.unlock_application();
       anyhow::bail!("Extraction failed");
@@ -97,6 +100,7 @@ impl Executor {
     let input = self.transformer.transform(&event, &target).await;
 
     if let Err(error) = self.injector.inject(&self.emulator, &event, input).await {
+      #[cfg(feature = "logger")]
       warn!("<$>Executor</>: Injection failed: {}", error);
     }
 

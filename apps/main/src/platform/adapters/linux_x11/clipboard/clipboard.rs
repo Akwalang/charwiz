@@ -1,6 +1,7 @@
 use x11_clipboard::Clipboard as X11Clipboard;
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 pub struct Clipboard {
   clipboard: X11Clipboard,
@@ -23,11 +24,13 @@ impl Clipboard {
 
   pub fn restore(&mut self) {
     let Some(buffer) = &self.buffer else {
+      #[cfg(feature = "logger")]
       warn!("<$>Clipboard</>: Can't restore buffer: previous value is empty");
       return;
     };
 
     if let Err(e) = self.set_clipboard_text(buffer) {
+      #[cfg(feature = "logger")]
       warn!("<$>Clipboard</>: Failed to restore clipboard buffer: {}", e);
     }
   }

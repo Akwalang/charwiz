@@ -1,6 +1,7 @@
 use rdev::{Event, EventType, Key};
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 use crate::platform::Platform;
 use crate::settings::Settings;
@@ -160,6 +161,7 @@ impl KeyboardState {
   }
 
   pub fn stack_clear(&mut self) {
+    #[cfg(feature = "logger")]
     debug!("<$>Keyboard State</>: Drop keyboard stack");
 
     self.char_stack.clear();

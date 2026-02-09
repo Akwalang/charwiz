@@ -1,7 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 use crate::platform::Platform;
 use crate::settings::Settings;
@@ -40,6 +41,7 @@ impl Application {
   }
 
   pub async fn run(&self) {
+    #[cfg(feature = "logger")]
     log!("<$>Application</>: Starting...");
 
     let state = &self.state;
@@ -63,6 +65,7 @@ impl Application {
 
     state.borrow_mut().application.set_status(ApplicationStatus::Listening);
 
+    #[cfg(feature = "logger")]
     log!("<$>Application</>: Ready");
 
     loop {

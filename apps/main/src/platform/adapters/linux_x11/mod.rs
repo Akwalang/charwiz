@@ -1,6 +1,7 @@
 use std::cell::RefCell;
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 mod keyboard_layouts;
 use keyboard_layouts::KeyboardLayouts;
@@ -24,6 +25,7 @@ impl Platform {
   }
 
   pub fn init(&self) {
+    #[cfg(feature = "logger")]
     log!("<$>Linux X11</>: Init");
 
     let mut keyboard_layouts = self.keyboard_layouts.borrow_mut();

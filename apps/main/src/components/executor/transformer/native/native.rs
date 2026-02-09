@@ -1,4 +1,5 @@
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 use crate::Platform;
 use crate::Settings;
@@ -19,6 +20,7 @@ pub struct NativeTransformer {
 
 impl NativeTransformer {
   pub fn init(&mut self) {
+    #[cfg(feature = "logger")]
     log!("<$>Native Transformer</>: Init");
   }
 }

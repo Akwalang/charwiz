@@ -9,35 +9,6 @@ use core::fmt;
 // without `#[cfg(feature=...)]` inside macro expansions.
 //
 
-#[doc(hidden)]
-pub const __ZCL_LOGGER_ENABLED: bool = cfg!(feature = "logger");
-
-#[doc(hidden)]
-pub const __ZCL_LOG_DEBUG_ENABLED: bool = cfg!(feature = "log-debug");
-#[doc(hidden)]
-pub const __ZCL_LOG_INFO_ENABLED: bool = cfg!(feature = "log-info");
-#[doc(hidden)]
-pub const __ZCL_LOG_WARN_ENABLED: bool = cfg!(feature = "log-warn");
-#[doc(hidden)]
-pub const __ZCL_LOG_ERROR_ENABLED: bool = cfg!(feature = "log-error");
-
-#[doc(hidden)]
-pub const __ZCL_COLOR_ENABLED: bool = cfg!(feature = "logger-color");
-#[doc(hidden)]
-pub const __ZCL_TS_ENABLED: bool = cfg!(feature = "logger-timestamp");
-#[doc(hidden)]
-pub const __ZCL_MARKUP_ENABLED: bool = cfg!(feature = "logger-markup");
-#[doc(hidden)]
-pub const __ZCL_ALIASES_ENABLED: bool = cfg!(feature = "logger-aliases");
-
-//
-// -------------------- Public macros (zero-cost when disabled) --------------------
-//
-
-// Compile-time aliases declaration.
-// NOTE: This generates `mod __zcl_aliases` in the CURRENT crate.
-// That means it affects the parser only if used inside `zero_cost_logger` itself
-// (as in the default aliases at the bottom of this file).
 #[macro_export]
 macro_rules! aliases {
     (
@@ -65,11 +36,7 @@ macro_rules! aliases {
 #[macro_export]
 macro_rules! debug {
     ($($arg:tt)*) => {{
-        // This constant lives in zero_cost_logger, so it is correct and warning-free.
-        if $crate::__ZCL_LOG_DEBUG_ENABLED {
-            // `log-debug` depends on `logger` in Cargo.toml, so internal exists when true.
-            $crate::internal::emit($crate::internal::Level::Debug, format_args!($($arg)*));
-        }
+        $crate::internal::emit($crate::internal::Level::Debug, format_args!($($arg)*));
     }};
 }
 
@@ -77,9 +44,7 @@ macro_rules! debug {
 #[macro_export]
 macro_rules! log {
     ($($arg:tt)*) => {{
-        if $crate::__ZCL_LOG_INFO_ENABLED {
-            $crate::internal::emit($crate::internal::Level::Info, format_args!($($arg)*));
-        }
+        $crate::internal::emit($crate::internal::Level::Info, format_args!($($arg)*));
     }};
 }
 
@@ -87,9 +52,7 @@ macro_rules! log {
 #[macro_export]
 macro_rules! warn {
     ($($arg:tt)*) => {{
-        if $crate::__ZCL_LOG_WARN_ENABLED {
-            $crate::internal::emit($crate::internal::Level::Warn, format_args!($($arg)*));
-        }
+        $crate::internal::emit($crate::internal::Level::Warn, format_args!($($arg)*));
     }};
 }
 
@@ -97,9 +60,7 @@ macro_rules! warn {
 #[macro_export]
 macro_rules! error {
     ($($arg:tt)*) => {{
-        if $crate::__ZCL_LOG_ERROR_ENABLED {
-            $crate::internal::emit($crate::internal::Level::Error, format_args!($($arg)*));
-        }
+        $crate::internal::emit($crate::internal::Level::Error, format_args!($($arg)*));
     }};
 }
 
@@ -107,48 +68,13 @@ macro_rules! error {
 #[macro_export]
 macro_rules! new_line {
     () => {{
-        if $crate::__ZCL_LOGGER_ENABLED {
-            $crate::internal::emit_newline();
-        }
+        $crate::internal::emit_newline();
     }};
 }
 
-//
-// -------------------- Empty module to satisfy compiler when logger is disabled --------------------
-//
-#[cfg(not(feature = "logger"))]
-pub mod internal {
-    use core::fmt;
-
-    #[derive(Clone, Copy)]
-    pub enum Level {
-        Debug,
-        Info,
-        Warn,
-        Error,
-    }
-
-    // ---- zero-cost stubs (prod) ----
-
-    #[inline(always)]
-    pub fn emit(_level: Level, _args: fmt::Arguments) {
-        // nothing
-    }
-
-    #[inline(always)]
-    pub fn emit_newline() {
-        // nothing
-    }
-}
-
-//
-// -------------------- Internal implementation (only with feature=logger) --------------------
-//
-#[cfg(feature = "logger")]
 pub mod internal {
     use super::fmt;
 
-    // -------- Level --------
     #[derive(Clone, Copy, Debug)]
     pub enum Level {
         Debug,
@@ -199,20 +125,6 @@ pub mod internal {
         }
     }
 
-    // When markup is OFF we can stream fmt directly into our buffer without heap.
-    #[cfg(not(feature = "logger-markup"))]
-    struct FmtAdapter<'a>(&'a mut Buffer);
-
-    #[cfg(not(feature = "logger-markup"))]
-    impl fmt::Write for FmtAdapter<'_> {
-        #[inline(always)]
-        fn write_str(&mut self, s: &str) -> fmt::Result {
-            self.0.push_str(s);
-            Ok(())
-        }
-    }
-
-    // -------- Prefix: label + colors --------
     #[inline(always)]
     fn level_label(level: Level) -> &'static str {
         match level {
@@ -223,11 +135,8 @@ pub mod internal {
         }
     }
 
-    #[cfg(feature = "logger-color")]
     const ANSI_RESET: &str = "\x1b[0m";
 
-    // Label: colored BACKGROUND with WHITE text and colored spaces around
-    #[cfg(feature = "logger-color")]
     #[inline(always)]
     fn write_level_label(out: &mut Buffer, level: Level) {
         let bg = match level {
@@ -244,8 +153,6 @@ pub mod internal {
         out.push_str(" \x1b[0m ");
     }
 
-    // Default colors for timestamp and message per level
-    #[cfg(feature = "logger-color")]
     #[inline(always)]
     fn timestamp_default_fg(level: Level) -> &'static str {
         match level {
@@ -256,7 +163,6 @@ pub mod internal {
         }
     }
 
-    #[cfg(feature = "logger-color")]
     #[inline(always)]
     fn message_default_fg(level: Level) -> &'static str {
         match level {
@@ -267,8 +173,6 @@ pub mod internal {
         }
     }
 
-    // -------- Timestamp (UTC) --------
-    #[cfg(feature = "logger-timestamp")]
     fn days_to_ymd(days_since_epoch: i64) -> (i32, i32, i32) {
         let z   = days_since_epoch + 719_468;
         let era = if z >= 0 { z } else { z - 146_096 } / 146_097;
@@ -284,20 +188,17 @@ pub mod internal {
         (y, m, d)
     }
 
-    #[cfg(feature = "logger-timestamp")]
     fn write_2(dst: &mut [u8], v: i32) {
         dst[0] = b'0' + ((v / 10) as u8);
         dst[1] = b'0' + ((v % 10) as u8);
     }
 
-    #[cfg(feature = "logger-timestamp")]
     fn write_3(dst: &mut [u8], v: i32) {
         dst[0] = b'0' + ((v / 100) as u8);
         dst[1] = b'0' + (((v / 10) % 10) as u8);
         dst[2] = b'0' + ((v % 10) as u8);
     }
 
-    #[cfg(feature = "logger-timestamp")]
     fn write_4(dst: &mut [u8], v: i32) {
         let v = v.max(0);
 
@@ -307,7 +208,6 @@ pub mod internal {
         dst[3] = b'0' + ((v % 10) as u8);
     }
 
-    #[cfg(feature = "logger-timestamp")]
     fn write_timestamp_utc(out: &mut Buffer) {
         use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -347,8 +247,6 @@ pub mod internal {
         out.push_str("] ");
     }
 
-    // -------- Markup (<red,b,i>text</>) --------
-    #[cfg(feature = "logger-markup")]
     #[inline(always)]
     fn color_name_to_fg_code(name: &str) -> Option<&'static str> {
         match name {
@@ -367,16 +265,11 @@ pub mod internal {
         }
     }
 
-    // Alias resolver:
-    // This works because you declare `aliases!{...}` at the bottom of THIS crate,
-    // so `crate::__zcl_aliases` exists in zero_cost_logger.
-    #[cfg(feature = "logger-aliases")]
     #[inline(always)]
     fn resolve_alias(name: &str) -> Option<&'static str> {
         crate::__zcl_aliases::resolve(name)
     }
 
-    #[cfg(feature = "logger-markup")]
     fn apply_markup_into(out: &mut Buffer, input: &str, default_fg: Option<&'static str>) {
         let bytes = input.as_bytes();
         let mut i = 0usize;
@@ -391,19 +284,7 @@ pub mod internal {
                         let content_end = content_start + close_rel;
                         let content = &input[content_start..content_end];
 
-                        let token_source: &str = if cfg!(feature = "logger-aliases") {
-                            // safe: function exists only when feature is on
-                            #[cfg(feature = "logger-aliases")]
-                            {
-                                if let Some(t) = resolve_alias(tag_inner) { t } else { tag_inner }
-                            }
-                            #[cfg(not(feature = "logger-aliases"))]
-                            {
-                                tag_inner
-                            }
-                        } else {
-                            tag_inner
-                        };
+                        let token_source: &str = if let Some(t) = resolve_alias(tag_inner) { t } else { tag_inner };
 
                         let mut bold = false;
                         let mut italic = false;
@@ -411,6 +292,7 @@ pub mod internal {
                         let mut dim = false;
                         let mut strike = false;
                         let mut reverse = false;
+
                         let mut fg: Option<&'static str> = None;
 
                         for token in token_source
@@ -483,60 +365,33 @@ pub mod internal {
         }
     }
 
-    // -------- Message writing --------
-    #[cfg(feature = "logger-markup")]
     fn write_message(out: &mut Buffer, level: Level, args: fmt::Arguments) {
         let mut s = std::string::String::new();
         let _ = fmt::write(&mut s, args);
 
-        #[cfg(feature = "logger-color")]
         let df = Some(message_default_fg(level));
-
-        #[cfg(not(feature = "logger-color"))]
-        let df: Option<&'static str> = None;
 
         apply_markup_into(out, &s, df);
     }
 
-    #[cfg(not(feature = "logger-markup"))]
-    fn write_message(out: &mut Buffer, _level: Level, args: fmt::Arguments) {
-        let _ = fmt::write(&mut FmtAdapter(out), args);
-    }
-
-    // -------- Emitters --------
     #[inline(always)]
     pub fn emit(level: Level, args: fmt::Arguments) {
         let mut out = Buffer::new();
 
-        #[cfg(feature = "logger-color")]
         write_level_label(&mut out, level);
 
-        #[cfg(not(feature = "logger-color"))]
-        {
-            out.push_str(level_label(level));
-            out.push_str(" ");
-        }
+        out.push_str("\x1b[");
+        out.push_str(timestamp_default_fg(level));
+        out.push_str("m");
 
-        #[cfg(feature = "logger-color")]
-        {
-            out.push_str("\x1b[");
-            out.push_str(timestamp_default_fg(level));
-            out.push_str("m");
-        }
-
-        #[cfg(feature = "logger-timestamp")]
         write_timestamp_utc(&mut out);
 
-        #[cfg(feature = "logger-color")]
-        {
-            out.push_str("\x1b[");
-            out.push_str(message_default_fg(level));
-            out.push_str("m");
-        }
+        out.push_str("\x1b[");
+        out.push_str(message_default_fg(level));
+        out.push_str("m");
 
         write_message(&mut out, level, args);
 
-        #[cfg(feature = "logger-color")]
         out.push_str(ANSI_RESET);
 
         out.flush();
@@ -548,11 +403,6 @@ pub mod internal {
     }
 }
 
-//
-// Default aliases for your style (compiled into this crate).
-// These work when feature `logger-aliases` is enabled.
-//
-#[cfg(feature = "logger-aliases")]
 aliases! {
     "$"  => "purple,i",
     "!"  => "yellow",

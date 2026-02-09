@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 
-use zero_cost_logger::*;
+use logger::*;
 
 mod keyboard_layouts;
 use keyboard_layouts::KeyboardLayouts;

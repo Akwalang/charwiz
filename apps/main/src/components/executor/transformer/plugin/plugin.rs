@@ -2,7 +2,8 @@ use std::fs;
 use std::path::Path;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use zero_cost_logger::*;
+#[cfg(feature = "logger")]
+use logger::*;
 
 use mlua::{Lua, LuaOptions, StdLib, Table, Function, Error};
 
@@ -28,6 +29,7 @@ pub struct PluginTransformer {
 
 impl PluginTransformer {
   pub fn init(&mut self) {
+    #[cfg(feature = "logger")]
     log!("<$>Plugin Transformer</>: Init");
 
     self.load_lua();
@@ -41,6 +43,7 @@ impl PluginTransformer {
     let lua = Self::initialize_lua_scripts().unwrap_or(None);
 
     if lua.is_none() {
+      #[cfg(feature = "logger")]
       error!("<$>Plugin Transformer</>: Lua scripts could not be loaded");
     }
 
@@ -54,9 +57,11 @@ impl PluginTransformer {
 
     let dir = Path::new(PLUGINS_FOLDER);
 
+    #[cfg(feature = "logger")]
     log!("<$>Plugin Transformer</>: Loading Lua scripts from: <i&>{}</>", dir.to_str().unwrap());
 
     if !dir.exists() {
+      #[cfg(feature = "logger")]
       warn!("<$>Plugin Transformer</>: Lua scripts directory does not exist");
       return Ok(None);
     }
@@ -67,6 +72,7 @@ impl PluginTransformer {
 
       if path.extension().and_then(|s| s.to_str()) != Some("lua") { continue; }
 
+      #[cfg(feature = "logger")]
       log!("<$>Plugin Transformer</>: Loading script: <i&>{}</>", path.to_str().unwrap().replace("\\", "/"));
 
       let script = fs::read_to_string(&path)?;
@@ -105,21 +111,25 @@ impl Transformer for PluginTransformer {
 
   async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
     let Some(lua) = self.lua.as_ref() else {
+      #[cfg(feature = "logger")]
       warn!("<$>Plugin Transformer</>: Lua not initialized");
       return target.clone();
     };
 
     if let InputType::Events(_) = target {
+      #[cfg(feature = "logger")]
       warn!("<$>Plugin Transformer</>: Event input is banned");
       return target.clone();
     }
 
     let Ok(handler): Result<Function, Error> = lua.globals().get(event.executor.value.clone()) else {
+      #[cfg(feature = "logger")]
       warn!("<$>Plugin Transformer</>: Lua function not found");
       return target.clone();
     };
 
     let Ok(data) = self.prepare_data(target) else {
+      #[cfg(feature = "logger")]
       warn!("<$>Plugin Transformer</>: Can't transform event data to Lua table");
       return target.clone();
     };
@@ -127,10 +137,12 @@ impl Transformer for PluginTransformer {
     let result = handler.call(data);
 
     let Ok(result): Result<String, Error> = result else {
+      #[cfg(feature = "logger")]
       warn!("<$>Plugin Transformer</>: Error during Lua function execution\n{}", result.err().unwrap());
       return target.clone();
     };
 
+    #[cfg(feature = "logger")]
     log!("<$>Plugin Transformer</>: Result:\n<i+>{}</>", result);
 
     InputType::Text(result)
