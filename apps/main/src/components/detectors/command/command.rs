@@ -10,6 +10,7 @@ use tokio::sync::broadcast::error::RecvError;
 
 use settings_core::enums::{UserInputCleanupEnum, KeyboardStateCleanupEnum};
 use settings_core::structs::KeyboardSnapshot;
+use settings_core::settings::main_settings::Command;
 
 use crate::settings::Settings;
 
@@ -17,8 +18,6 @@ use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
 use crate::common::events::{CommandEvent, InputEvent};
-
-use crate::settings::main_settings_structs::Command;
 
 pub struct CommandDetector {
   settings: &'static Settings,

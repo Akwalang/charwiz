@@ -6,9 +6,9 @@ use logger::*;
 use rdev::Key;
 
 use settings_core::structs::KeyboardSnapshot;
-use settings_core::settings::keyboard_layouts::{KeyItemRaw, KeyItem};
+use settings_core::settings::keyboard_layouts::KeyItem;
 
-use super::super::utils;
+use settings_serde::utils::load_keyboard_layout;
 
 use crate::constants::LAYOUTS_FOLDER;
 
@@ -36,17 +36,14 @@ impl LayoutItem {
 
     let src = format!("{}/{}.json", LAYOUTS_FOLDER, name);
 
-    let raw = utils::read_json::<Vec<KeyItemRaw>>(&src);
+    let result = load_keyboard_layout(&src);
 
-    if let Err(e) = raw {
-      #[cfg(feature = "logger")]
+    #[cfg(feature = "logger")]
+    if let Err(ref e) = result {
       error!("<$>Keyboard Layouts Settings</>: Failed to load layout settings. Error: <i->{}</>", e.to_string());
-      return Err(e);
     };
 
-    let result = raw.unwrap_or(vec![]).into_iter().map(Into::into).collect();
-
-    Ok(result)
+    result
   }
 
   fn raw_to_chars_map(items: &Vec<KeyItem>) -> HashMap<char, KeyboardSnapshot> {

@@ -1,9 +1,8 @@
 use logger::*;
 
-use settings_core::settings::main_settings::Settings;
-use settings_serde::settings::main_settings::SettingsRaw;
+use settings_core::settings::main_settings::{MainSettings as Settings};
 
-use super::super::utils;
+use settings_serde::utils::load_main_settings;
 
 use crate::constants::MAIN_SETTINGS_FILE;
 
@@ -27,14 +26,13 @@ impl MainSettings {
     #[cfg(feature = "logger")]
     log!("<$>Main Settings</>: Loading settings: <i&>{}</>", MAIN_SETTINGS_FILE);
 
-    let raw = utils::read_json::<SettingsRaw>(MAIN_SETTINGS_FILE);
+    let result = load_main_settings(MAIN_SETTINGS_FILE);
 
-    if let Err(e) = raw {
-      #[cfg(feature = "logger")]
+    #[cfg(feature = "logger")]
+    if let Err(ref e) = result {
       error!("<$>Main Settings</>: Failed to load settings. Error: <i->{}</>", e.to_string());
-      return Err(e);
     };
 
-    Ok(raw.unwrap().into())
+    result
   }
 }

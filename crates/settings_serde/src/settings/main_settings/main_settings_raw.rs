@@ -2,11 +2,18 @@ use std::rc::Rc;
 
 use serde::Deserialize;
 
-use settings_core::settings::main_settings::Settings;
+use settings_core::settings::main_settings::MainSettings;
+
+use super::TimingsRaw;
+use super::SwitchRaw;
+use super::HotkeyRaw;
+use super::SymbolRaw;
+use super::CommandRaw;
+use super::TooltipRaw;
 
 #[derive(Deserialize)]
-pub struct SettingsRaw {
-  pub timings: Timings,
+pub struct MainSettingsRaw {
+  pub timings: TimingsRaw,
   pub switches: Vec<SwitchRaw>,
   pub hotkeys: Vec<HotkeyRaw>,
   pub symbols: Vec<SymbolRaw>,
@@ -14,10 +21,10 @@ pub struct SettingsRaw {
   pub tooltips: Vec<TooltipRaw>,
 }
 
-impl Into<Settings> for SettingsRaw {
-  fn into(self) -> Settings {
-    Settings {
-      timings: self.timings,
+impl Into<MainSettings> for MainSettingsRaw {
+  fn into(self) -> MainSettings {
+    MainSettings {
+      timings: self.timings.into(),
       switches: Rc::new(self.switches.into_iter().map(Into::into).collect()),
       hotkeys: Rc::new(self.hotkeys.into_iter().map(Into::into).collect()),
       symbols: Rc::new(self.symbols.into_iter().map(Into::into).collect()),

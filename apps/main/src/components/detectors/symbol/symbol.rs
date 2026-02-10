@@ -10,6 +10,7 @@ use tokio::sync::broadcast::error::RecvError;
 
 use settings_core::enums::UserInputCleanupEnum;
 use settings_core::structs::KeyboardSnapshot;
+use settings_core::settings::main_settings::Symbol;
 
 use crate::common::events::{CommandEvent, InputEvent};
 
@@ -17,7 +18,6 @@ use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
 use crate::settings::Settings;
-use crate::settings::main_settings_structs::Symbol;
 
 pub struct SymbolDetector {
   settings: &'static Settings,

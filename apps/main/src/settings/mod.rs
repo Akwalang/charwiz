@@ -1,6 +1,4 @@
-pub mod utils;
-
-pub mod main_settings;
+mod main_settings;
 pub use main_settings::MainSettings;
 
 mod platform_settings;

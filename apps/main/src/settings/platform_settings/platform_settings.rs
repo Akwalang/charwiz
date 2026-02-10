@@ -1,10 +1,9 @@
 #[cfg(feature = "logger")]
 use logger::*;
 
-use settings_core::settings::platform_settings::Settings;
-use settings_serde::settings::platform_settings::SettingsRaw;
+use settings_core::settings::platform_settings::{PlatformSettings as Settings};
 
-use super::super::utils;
+use settings_serde::utils::load_platform_settings;
 
 use crate::constants::PLATFORM_SETTINGS_FILE;
 
@@ -28,14 +27,13 @@ impl PlatformSettings {
     #[cfg(feature = "logger")]
     log!("<$>Platform Settings</>: Loading settings: <i&>{}</>", PLATFORM_SETTINGS_FILE);
 
-    let raw = utils::read_json::<SettingsRaw>(PLATFORM_SETTINGS_FILE);
+    let result = load_platform_settings(PLATFORM_SETTINGS_FILE);
 
-    if let Err(e) = raw {
-      #[cfg(feature = "logger")]
+    #[cfg(feature = "logger")]
+    if let Err(ref e) = result {
       error!("<$>Platform Settings</>: Failed to load settings. Error: <i->{}</>", e.to_string());
-      return Err(e);
     };
 
-    Ok(raw.unwrap().into())
+    result
   }
 }

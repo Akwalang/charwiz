@@ -14,7 +14,7 @@ mod symbol;
 pub use symbol::Symbol;
 
 mod tooltip;
-pub use tooltip::Tooltip;
+pub use tooltip::{Tooltip, TooltipItem, TooltipSettings};
 
-mod settings;
-pub use settings::Settings;
+mod main_settings;
+pub use main_settings::MainSettings;

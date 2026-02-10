@@ -1,7 +1,6 @@
 use serde::Deserialize;
 
-use settings_core::structs::KeyboardModifiers;
-use settings_core::settings::KeyInsert;
+use settings_core::settings::keyboard_layouts::KeyInsert;
 
 use crate::structs::KeyboardModifiersRaw;
 

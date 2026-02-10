@@ -4,7 +4,7 @@ use rdev::Key;
 
 use settings_core::structs::KeyboardModifiers;
 
-#[derive(serde::Deserialize)]
+#[derive(Deserialize)]
 pub struct KeyboardModifiersRaw(Vec<String>);
 
 impl Default for KeyboardModifiersRaw {

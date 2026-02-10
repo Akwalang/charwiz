@@ -2,7 +2,7 @@ use serde::Deserialize;
 
 use rdev::Key;
 
-use settings_core::settings::KeyItem;
+use settings_core::settings::keyboard_layouts::KeyItem;
 
 use super::KeyInsertRaw;
 

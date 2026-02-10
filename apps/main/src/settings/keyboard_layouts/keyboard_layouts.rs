@@ -9,6 +9,7 @@ use settings_core::structs::KeyboardModifiers;
 use settings_core::settings::keyboard_layouts::KeyInsert;
 
 use crate::platform::Platform;
+
 use crate::settings::keyboard_layouts::LayoutItem;
 
 pub struct KeyboardLayouts {

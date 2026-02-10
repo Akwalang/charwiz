@@ -8,7 +8,7 @@ use super::Command;
 use super::Tooltip;
 
 #[derive(Debug, Default)]
-pub struct Settings {
+pub struct MainSettings {
   pub timings: Timings,
   pub switches: Rc<Vec<Switch>>,
   pub hotkeys: Rc<Vec<HotKey>>,
