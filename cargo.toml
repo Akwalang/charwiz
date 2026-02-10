@@ -1,7 +1,10 @@
 [workspace]
 members = [
-  "crates/zero_cost_logger",
+  "crates/logger",
+  "crates/settings_core",
+  "crates/settings_serde",
   "apps/main",
+  "apps/setup/src-tauri",
 ]
 
 resolver = "2"
