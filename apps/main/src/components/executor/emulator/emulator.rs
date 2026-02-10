@@ -1,9 +1,9 @@
 use tokio::time::{sleep, Duration};
 use rdev::{EventType, simulate};
 
-use crate::settings::Settings;
+use settings_core::structs::{KeyboardSnapshot, KeyboardModifiers};
 
-use crate::common::structs::{KeyboardSnapshot, KeyboardModifiers};
+use crate::settings::Settings;
 
 pub struct Emulator {
   settings: &'static Settings,

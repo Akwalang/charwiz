@@ -4,16 +4,15 @@ use std::rc::Rc;
 #[cfg(feature = "logger")]
 use logger::*;
 
+use settings_core::structs::KeyboardSnapshot;
+use settings_core::settings::main_settings::{Switch, Command, HotKey, Symbol};
+use settings_core::settings::platform_settings::ClipboardHotkeys;
+
 use crate::platform::Platform;
 
 use crate::settings::main_settings::MainSettings;
 use crate::settings::platform_settings::PlatformSettings;
 use crate::settings::keyboard_layouts::KeyboardLayouts;
-
-use crate::settings::main_settings::structs::{Switch, Command, HotKey, Symbol};
-use crate::settings::platform_settings::structs::ClipboardHotkeys;
-
-use crate::common::structs::KeyboardSnapshot;
 
 pub struct Settings {
   platform: &'static Platform,

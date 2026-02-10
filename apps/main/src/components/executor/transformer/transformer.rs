@@ -1,9 +1,10 @@
+use settings_core::enums::ExecutorTypeEnum;
+
 use crate::platform::Platform;
 use crate::settings::Settings;
 
 use crate::components::executor::enums::InputType;
 
-use crate::common::enums::ExecutorTypeEnum;
 use crate::common::events::CommandEvent;
 
 use super::traits::{Transformer as TransformerTrait};

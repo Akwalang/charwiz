@@ -3,10 +3,10 @@ use rdev::{Event, EventType, Key};
 #[cfg(feature = "logger")]
 use logger::*;
 
+use settings_core::structs::{KeyboardSnapshot, KeyboardModifiers};
+
 use crate::platform::Platform;
 use crate::settings::Settings;
-
-use crate::common::structs::{KeyboardSnapshot, KeyboardModifiers};
 
 pub struct KeyboardState {
   platform: &'static Platform,

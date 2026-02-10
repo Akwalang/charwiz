@@ -1,4 +1,4 @@
-use crate::common::structs::KeyboardSnapshot;
+use settings_core::structs::KeyboardSnapshot;
 
 use crate::components::executor::commands;
 use crate::components::executor::enums::InputType;

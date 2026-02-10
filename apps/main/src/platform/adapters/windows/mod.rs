@@ -24,6 +24,7 @@ impl Platform {
   }
 
   pub fn init(&self) {
+    #[cfg(feature = "logger")]
     log!("<$>Windows</>: Init");
 
     let mut keyboard_layouts = self.keyboard_layouts.borrow_mut();

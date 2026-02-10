@@ -6,6 +6,8 @@ use logger::*;
 
 use tokio::sync::broadcast::error::RecvError;
 
+use settings_core::enums::{KeyboardStateCleanupEnum, KeyboardLayoutEnum};
+
 use super::emulator::Emulator;
 use super::extractor::Extractor;
 use super::injector::Injector;
@@ -19,7 +21,6 @@ use crate::platform::common::structs::KeyboardLayoutItem;
 use crate::components::state::{State, ApplicationStatus};
 use crate::components::event_hub::EventHub;
 
-use crate::common::enums::{KeyboardStateCleanupEnum, KeyboardLayoutEnum};
 use crate::common::events::CommandEvent;
 
 pub struct Executor {

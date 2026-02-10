@@ -1,4 +1,4 @@
-use crate::common::structs::{Executor, Injector, KeyboardSnapshot};
+use settings_core::structs::{Executor, Injector, KeyboardSnapshot};
 
 #[derive(Debug, Clone)]
 pub struct CommandEvent {
