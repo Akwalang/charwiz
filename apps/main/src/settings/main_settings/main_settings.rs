@@ -1,8 +1,10 @@
 use logger::*;
 
-use crate::settings::main_settings::structs::{SettingsRaw, Settings};
+use settings_core::settings::main_settings::Settings;
+use settings_serde::settings::main_settings::SettingsRaw;
 
 use super::super::utils;
+
 use crate::constants::MAIN_SETTINGS_FILE;
 
 pub struct MainSettings {

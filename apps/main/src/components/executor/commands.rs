@@ -1,6 +1,6 @@
 use rdev::Key;
 
-use crate::common::structs::{KeyboardSnapshot, KeyboardModifiers};
+use settings_core::structs::{KeyboardSnapshot, KeyboardModifiers};
 
 pub fn create_release_pipeline() -> [KeyboardSnapshot; 1] {
   [

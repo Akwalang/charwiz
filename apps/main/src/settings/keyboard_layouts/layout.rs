@@ -5,10 +5,10 @@ use logger::*;
 
 use rdev::Key;
 
-use super::{KeyItemRaw, KeyItem};
-use super::super::utils;
+use settings_core::structs::KeyboardSnapshot;
+use settings_core::settings::keyboard_layouts::{KeyItemRaw, KeyItem};
 
-use crate::common::structs::KeyboardSnapshot;
+use super::super::utils;
 
 use crate::constants::LAYOUTS_FOLDER;
 

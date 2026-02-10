@@ -5,12 +5,11 @@ use logger::*;
 
 use rdev::Key;
 
+use settings_core::structs::KeyboardModifiers;
+use settings_core::settings::keyboard_layouts::KeyInsert;
+
 use crate::platform::Platform;
-
-use crate::common::structs::KeyboardModifiers;
 use crate::settings::keyboard_layouts::LayoutItem;
-
-use super::KeyInsert;
 
 pub struct KeyboardLayouts {
   platform: &'static Platform,

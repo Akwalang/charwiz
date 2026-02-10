@@ -8,9 +8,10 @@ use rdev::EventType;
 
 use tokio::sync::broadcast::error::RecvError;
 
-use crate::common::enums::UserInputCleanupEnum;
+use settings_core::enums::UserInputCleanupEnum;
+use settings_core::structs::KeyboardSnapshot;
+
 use crate::common::events::{CommandEvent, InputEvent};
-use crate::common::structs::KeyboardSnapshot;
 
 use crate::components::event_hub::EventHub;
 use crate::components::state::State;

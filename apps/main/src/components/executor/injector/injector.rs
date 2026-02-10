@@ -4,6 +4,9 @@ use tokio::time::{sleep, Duration};
 #[cfg(feature = "logger")]
 use logger::*;
 
+use settings_core::enums::{InjectMethodEnum, UserInputCleanupEnum};
+use settings_core::structs::KeyboardSnapshot;
+
 use crate::platform::Platform;
 use crate::settings::Settings;
 
@@ -11,9 +14,7 @@ use crate::components::executor::commands;
 use crate::components::executor::enums::InputType;
 use crate::components::executor::emulator::Emulator;
 
-use crate::common::enums::{InjectMethodEnum, UserInputCleanupEnum};
 use crate::common::events::CommandEvent;
-use crate::common::structs::KeyboardSnapshot;
 
 type CharLine = (String, String, Vec<bool>);
 type ExecuteLine = (String, String, String);

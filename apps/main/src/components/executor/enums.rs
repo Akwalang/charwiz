@@ -1,4 +1,4 @@
-use crate::common::structs::KeyboardSnapshot;
+use settings_core::structs::KeyboardSnapshot;
 
 #[derive(Debug, Clone)]
 pub enum InputType {

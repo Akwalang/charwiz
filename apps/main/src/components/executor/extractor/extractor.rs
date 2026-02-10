@@ -1,9 +1,10 @@
+use settings_core::enums::TransformTargetEnum;
+use settings_core::structs::KeyboardSnapshot;
+
 use crate::platform::Platform;
 use crate::settings::Settings;
 
 use crate::common::events::CommandEvent;
-use crate::common::enums::TransformTargetEnum;
-use crate::common::structs::KeyboardSnapshot;
 
 use super::super::commands;
 use super::super::enums::InputType;

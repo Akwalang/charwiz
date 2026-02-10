@@ -8,15 +8,16 @@ use rdev::EventType;
 
 use tokio::sync::broadcast::error::RecvError;
 
+use settings_core::enums::UserInputCleanupEnum;
+use settings_core::structs::KeyboardSnapshot;
+
 use crate::components::event_hub::EventHub;
 use crate::components::state::State;
 
 use crate::settings::Settings;
 use crate::settings::main_settings::structs::HotKey;
 
-use crate::common::enums::UserInputCleanupEnum;
 use crate::common::events::{CommandEvent, InputEvent};
-use crate::common::structs::KeyboardSnapshot;
 
 pub struct HotkeyDetector {
   settings: &'static Settings,

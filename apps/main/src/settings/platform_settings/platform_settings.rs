@@ -1,9 +1,11 @@
 #[cfg(feature = "logger")]
 use logger::*;
 
-use super::structs::{SettingsRaw, Settings};
+use settings_core::settings::platform_settings::Settings;
+use settings_serde::settings::platform_settings::SettingsRaw;
 
 use super::super::utils;
+
 use crate::constants::PLATFORM_SETTINGS_FILE;
 
 pub struct PlatformSettings {

@@ -76,9 +76,7 @@ dependencies = [
  "logger",
  "mlua",
  "rdev",
- "serde",
- "serde_derive",
- "serde_json",
+ "settings_core",
  "tokio",
  "windows",
  "winres",
@@ -264,12 +262,6 @@ checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
 dependencies = [
  "either",
 ]
-
-[[package]]
-name = "itoa"
-version = "1.0.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
 
 [[package]]
 name = "lazy_static"
@@ -480,7 +472,6 @@ dependencies = [
  "core-graphics 0.19.2",
  "lazy_static",
  "libc",
- "serde",
  "winapi",
  "x11",
 ]
@@ -543,12 +534,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ryu"
-version = "1.0.20"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "28d3b2b1366ec20994f1fd18c3c594f05c5dd4bc44d8bb0c1c632c8d6829481f"
-
-[[package]]
 name = "semver"
 version = "1.0.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -575,24 +560,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "serde_json"
-version = "1.0.142"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "030fedb782600dcbd6f02d479bf0d817ac3bb40d644745b769d6a96bc3afc5a7"
-dependencies = [
- "itoa",
- "memchr",
- "ryu",
- "serde",
-]
-
-[[package]]
 name = "serde_spanned"
 version = "0.6.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "87607cb1398ed59d48732e575a4c28a7a8ebf2454b964fe3f224f2afc07909e1"
 dependencies = [
  "serde",
+]
+
+[[package]]
+name = "settings_core"
+version = "0.1.0"
+dependencies = [
+ "rdev",
 ]
 
 [[package]]
