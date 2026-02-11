@@ -1,11 +1,7 @@
-use rdev::Key;
-
 #[cfg(feature = "logger")]
 use logger::*;
 
 use crate::platform::common::structs::KeyboardLayoutItem;
-
-use crate::common::structs::{KeyboardSnapshot, KeyboardModifiers};
 
 use super::utils;
 
@@ -26,18 +22,20 @@ impl KeyboardLayouts {
       self.items.push(layout);
     }
 
-    let names = self.items.iter()
-      .map(|lt| format!("<cyan>{} ({})</>", lt.name, lt.id))
-      .collect::<Vec<String>>()
-      .join(", ");
-
     #[cfg(feature = "logger")]
-    log!("<$>Windows::KeyboardLayouts</>: Available keyboard layouts: {}", names);
+    {
+      let names = self.items.iter()
+        .map(|lt| format!("<cyan>{} ({})</>", lt.name, lt.id))
+        .collect::<Vec<String>>()
+        .join(", ");
+
+      log!("<$>Windows::KeyboardLayouts</>: Available keyboard layouts: {}", names);
+    }
   }
 
-  pub fn get_keyboard_layouts(&self) -> &Vec<KeyboardLayoutItem> {
-    &self.items
-  }
+  // pub fn get_keyboard_layouts(&self) -> &Vec<KeyboardLayoutItem> {
+  //   &self.items
+  // }
 
   pub fn get_keyboard_layout_by_id(&self, id: &str) -> Option<&KeyboardLayoutItem> {
     self.items.iter().find(|lt| lt.id == id)
@@ -53,17 +51,17 @@ impl KeyboardLayouts {
     Ok(&self.get_keyboard_layout_by_id(&id).unwrap())
   }
 
-  pub fn get_previous_keyboard_layout(&self) -> anyhow::Result<&KeyboardLayoutItem> {
-    let id = utils::get_current_keyboard_layout_id()?;
+  // pub fn get_previous_keyboard_layout(&self) -> anyhow::Result<&KeyboardLayoutItem> {
+  //   let id = utils::get_current_keyboard_layout_id()?;
     
-    Ok(self.get_previous_to_keyboard_layout(&id))
-  }
+  //   Ok(self.get_previous_to_keyboard_layout(&id))
+  // }
 
-  pub fn get_next_keyboard_layout(&self) -> anyhow::Result<&KeyboardLayoutItem> {
-    let id = utils::get_current_keyboard_layout_id()?;
+  // pub fn get_next_keyboard_layout(&self) -> anyhow::Result<&KeyboardLayoutItem> {
+  //   let id = utils::get_current_keyboard_layout_id()?;
 
-    Ok(self.get_next_to_keyboard_layout(&id))
-  }
+  //   Ok(self.get_next_to_keyboard_layout(&id))
+  // }
 
   pub fn get_previous_to_keyboard_layout(&self, id: &str) -> &KeyboardLayoutItem {
     let lts = &self.items;
@@ -98,13 +96,13 @@ impl KeyboardLayouts {
     Ok(Some(lt.clone()))
   }
 
-  pub fn set_previous_keyboard_layout(&self) -> anyhow::Result<Option<KeyboardLayoutItem>> {
-    self.set_keyboard_layout(&self.get_previous_keyboard_layout()?.id)
-  }
+  // pub fn set_previous_keyboard_layout(&self) -> anyhow::Result<Option<KeyboardLayoutItem>> {
+  //   self.set_keyboard_layout(&self.get_previous_keyboard_layout()?.id)
+  // }
 
-  pub fn set_next_keyboard_layout(&self) -> anyhow::Result<Option<KeyboardLayoutItem>> {
-    self.set_keyboard_layout(&self.get_next_keyboard_layout()?.id)
-  }
+  // pub fn set_next_keyboard_layout(&self) -> anyhow::Result<Option<KeyboardLayoutItem>> {
+  //   self.set_keyboard_layout(&self.get_next_keyboard_layout()?.id)
+  // }
 
   pub fn set_previous_to_keyboard_layout(&self, id: &str) -> anyhow::Result<Option<KeyboardLayoutItem>> {
     self.set_keyboard_layout(&self.get_previous_to_keyboard_layout(id).id)
@@ -112,42 +110,5 @@ impl KeyboardLayouts {
 
   pub fn set_next_to_keyboard_layout(&self, id: &str) -> anyhow::Result<Option<KeyboardLayoutItem>> {
     self.set_keyboard_layout(&self.get_next_to_keyboard_layout(id).id)
-  }
-
-  pub fn is_banned_event_snapshots(snapshot: &KeyboardSnapshot) -> bool {
-    let Some(key) = snapshot.key else {
-      return false;
-    };
-
-    let modifiers = snapshot.modifiers;
-
-    false
-    || (key == Key::KeyL && modifiers.is_any_pressed_strict(KeyboardModifiers::META_ANY))
-  }
-
-  pub fn is_stack_breaker_snapshots(snapshot: &KeyboardSnapshot) -> bool {
-    let Some(key) = snapshot.key else {
-      return false;
-    };
-
-    let modifiers = snapshot.modifiers;
-
-    false
-    || key == Key::UpArrow
-    || key == Key::DownArrow
-    || key == Key::LeftArrow
-    || key == Key::RightArrow
-    || key == Key::PageUp
-    || key == Key::PageDown
-    || key == Key::Home
-    || key == Key::End
-    || (key == Key::Backspace && modifiers.is_any_pressed(KeyboardModifiers::CONTROL_ANY))
-    || (key == Key::Tab && modifiers.is_any_pressed_strict(KeyboardModifiers::ALT_ANY))
-    || (key == Key::KeyA && modifiers.is_any_pressed_strict(KeyboardModifiers::CONTROL_ANY))
-    || (key == Key::KeyX && modifiers.is_any_pressed_strict(KeyboardModifiers::CONTROL_ANY))
-    || (key == Key::KeyC && modifiers.is_any_pressed_strict(KeyboardModifiers::CONTROL_ANY))
-    || (key == Key::KeyY && modifiers.is_any_pressed_strict(KeyboardModifiers::CONTROL_ANY))
-    || (key == Key::KeyZ && modifiers.is_any_pressed_strict(KeyboardModifiers::CONTROL_ANY))
-    || (key == Key::KeyZ && modifiers.is_any_pressed_strict(KeyboardModifiers::CONTROL_ANY | KeyboardModifiers::SHIFT_ANY))
   }
 }

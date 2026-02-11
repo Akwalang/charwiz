@@ -19,10 +19,10 @@ impl EventHub {
   }
 
   #[inline]
-  fn publish<T: Clone>(tx: &Sender<T>, ev: T, chan: &str) -> anyhow::Result<()> {
+  fn publish<T: Clone>(tx: &Sender<T>, ev: T, _chan: &str) -> anyhow::Result<()> {
     if let Err(_) = tx.send(ev) {
       #[cfg(feature = "logger")]
-      warn!("<$>Event Hub</>: No subscribers for \"<&>{}</>\"; dropping event", chan);
+      warn!("<$>Event Hub</>: No subscribers for \"<&>{}</>\"; dropping event", _chan);
     }
 
     Ok(())

@@ -105,8 +105,6 @@ impl HotkeyDetector {
   }
 
   fn publish_command(&self, state: Ref<'_, State>, hotkey: HotKey) {
-    let current_snapshot = state.keyboard.get_current_snapshot();
-
     let char_stack = state.keyboard.get_chars();
     let event_stack = state.keyboard.get_events();
 
@@ -115,7 +113,7 @@ impl HotkeyDetector {
 
     injector.user_input_cleanup = UserInputCleanupEnum::Backspace(char_stack.len() as u8);
 
-    let command = CommandEvent { current_snapshot, char_stack, event_stack, executor, injector };
+    let command = CommandEvent { char_stack, event_stack, executor, injector };
 
     self.event_hub.publish_command(command).ok();
   }

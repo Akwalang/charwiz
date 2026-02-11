@@ -53,9 +53,9 @@ impl UserInputController {
         let _ = tx.send(event);
       };
 
-      if let Err(error) = listen(callback) {
+      if let Err(_error) = listen(callback) {
         #[cfg(feature = "logger")]
-        error!("<$>User Input Controller</>: Can't start listen keyboard events. Error: {:?}", error);
+        error!("<$>User Input Controller</>: Can't start listen keyboard events. Error: {:?}", _error);
       }
     });
   }
@@ -71,6 +71,7 @@ impl UserInputController {
 
     let is_executing = state.application.is_executing();
 
+    #[cfg(feature = "logger")]
     Self::write_debug_info(&event, is_executing);
 
     state.keyboard.apply_key_event(&event);
@@ -83,9 +84,9 @@ impl UserInputController {
 
     drop(state);
 
-    if let Err(err) = self.event_hub.publish_input(event) {
+    if let Err(_error) = self.event_hub.publish_input(event) {
       #[cfg(feature = "logger")]
-      warn!("<$>User Input Controller</>: Failed to publish input event: {:?}", err);
+      warn!("<$>User Input Controller</>: Failed to publish input event: {:?}", _error);
     }
   }
 
@@ -97,18 +98,16 @@ impl UserInputController {
     }
   }
 
+  #[cfg(feature = "logger")]
   fn write_debug_info(event: &Event, is_muted: bool) {
-    #[cfg(feature = "logger")]
-    {
-      let stl = if is_muted { "i" } else { "i!" };
+    let stl = if is_muted { "i" } else { "i!" };
 
-      match event.event_type {
-        EventType::KeyPress(key)         => debug!("Key press: <{}>{:?}</>", stl, key),
-        EventType::KeyRelease(key)       => debug!("Key release: <{}>{:?}</>", stl, key),
-        EventType::ButtonPress(button)   => debug!("Mouse press: <{}>{:?}</>", stl, button),
-        EventType::ButtonRelease(button) => debug!("Mouse release: <{}>{:?}</>", stl, button),
-        _ => {},
-      }
+    match event.event_type {
+      EventType::KeyPress(key)         => debug!("Key press: <{}>{:?}</>", stl, key),
+      EventType::KeyRelease(key)       => debug!("Key release: <{}>{:?}</>", stl, key),
+      EventType::ButtonPress(button)   => debug!("Mouse press: <{}>{:?}</>", stl, button),
+      EventType::ButtonRelease(button) => debug!("Mouse release: <{}>{:?}</>", stl, button),
+      _ => {},
     }
   }
 

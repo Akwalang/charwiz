@@ -1,3 +1,4 @@
+#[cfg(feature = "logger")]
 use logger::*;
 
 use settings_core::settings::main_settings::{MainSettings as Settings};

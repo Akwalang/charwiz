@@ -6,6 +6,7 @@ use settings_core::structs::{KeyboardSnapshot, KeyboardModifiers};
 use crate::settings::Settings;
 
 pub struct Emulator {
+  #[allow(dead_code)]
   settings: &'static Settings,
 }
 
@@ -16,22 +17,22 @@ impl Emulator {
     Self { settings }
   }
 
-  pub async fn switch(&self, from: &KeyboardSnapshot, to: &KeyboardSnapshot) -> anyhow::Result<()> {
-    sleep(Duration::from_millis(1)).await;
+  // pub async fn switch(&self, from: &KeyboardSnapshot, to: &KeyboardSnapshot) -> anyhow::Result<()> {
+  //   sleep(Duration::from_millis(1)).await;
 
-    let mut pipeline = Vec::<EventType>::with_capacity(Self::CAPACITY);
+  //   let mut pipeline = Vec::<EventType>::with_capacity(Self::CAPACITY);
 
-    Self::put_snapshots_into_pipeline(&mut pipeline, from, to);
+  //   Self::put_snapshots_into_pipeline(&mut pipeline, from, to);
 
-    for event in &pipeline {
-      simulate(event)?;
+  //   for event in &pipeline {
+  //     simulate(event)?;
 
-      // Must be awaited to not block event_hub
-      sleep(Duration::from_millis(1)).await;
-    }
+  //     // Must be awaited to not block event_hub
+  //     sleep(Duration::from_millis(1)).await;
+  //   }
 
-    Ok(())
-  }
+  //   Ok(())
+  // }
 
   pub async fn run_pipeline(&self, pipeline: &[KeyboardSnapshot]) -> anyhow::Result<()> {
     let queue = pipeline.iter();

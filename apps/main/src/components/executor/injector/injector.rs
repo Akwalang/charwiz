@@ -168,10 +168,12 @@ impl Injector {
 
     let char_lines = self.calculate_char_lines(&value);
 
+    #[cfg(feature = "logger")]
     Self::debug_print_char_lines(&char_lines);
 
     let execute_line = self.calculate_execute_line(&value, char_lines);
 
+    #[cfg(feature = "logger")]
     Self::debug_print_execute_line(&execute_line);
 
     Ok(execute_line)
@@ -264,35 +266,31 @@ impl Injector {
     schedule
   }
 
+  #[cfg(feature = "logger")]
   fn debug_print_char_lines(char_lines: &Vec<CharLine>) {
-    #[cfg(feature = "logger")]
-    {
-      debug!("<$>Injector</>: Type char lines:");
+    debug!("<$>Injector</>: Type char lines:");
 
-      for line in char_lines {
-        let mut line_str = format!("  <i+>{}</>:", line.1);
+    for line in char_lines {
+      let mut line_str = format!("  <i+>{}</>:", line.1);
 
-        for is_exists in &line.2 {
-          if *is_exists {
-            line_str.push_str(" <i>1</>");
-          } else {
-            line_str.push_str(" <i>0</>");
-          }
+      for is_exists in &line.2 {
+        if *is_exists {
+          line_str.push_str(" <i>1</>");
+        } else {
+          line_str.push_str(" <i>0</>");
         }
-
-        debug!("{}", line_str);
       }
+
+      debug!("{}", line_str);
     }
   }
 
+  #[cfg(feature = "logger")]
   fn debug_print_execute_line(execute_line: &Vec<ExecuteLine>) {
-    #[cfg(feature = "logger")]
-    {
-      debug!("<$>Injector</>: Type execute lines:");
+    debug!("<$>Injector</>: Type execute lines:");
 
-      for line in execute_line {
-        debug!("  <i+>{}</>: <i>{:?}</>", &line.1, &line.2);
-      }
+    for line in execute_line {
+      debug!("  <i+>{}</>: <i>{:?}</>", &line.1, &line.2);
     }
   }
 }

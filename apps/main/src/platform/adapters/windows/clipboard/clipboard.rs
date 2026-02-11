@@ -39,9 +39,9 @@ impl Clipboard {
 
     let value = String::from_utf8_lossy(buffer);
 
-    if let Err(e) = self.set_clipboard_text(&value) {
+    if let Err(_error) = self.set_clipboard_text(&value) {
       #[cfg(feature = "logger")]
-      warn!("<$>Clipboard</>: Failed to restore clipboard buffer: {}", e);
+      warn!("<$>Clipboard</>: Failed to restore clipboard buffer: {}", _error);
     }
 
     self.zeroize_buffer();

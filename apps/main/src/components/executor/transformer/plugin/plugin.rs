@@ -35,9 +35,9 @@ impl PluginTransformer {
     self.load_lua();
   }
 
-  pub fn reload(&mut self) {
-    self.load_lua();
-  }
+  // pub fn reload(&mut self) {
+  //   self.load_lua();
+  // }
 
   fn load_lua(&mut self) {
     let lua = Self::initialize_lua_scripts().unwrap_or(None);

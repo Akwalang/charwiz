@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 
+#[cfg(feature = "logger")]
 use logger::*;
 
 mod keyboard_layouts;

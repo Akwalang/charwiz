@@ -10,9 +10,9 @@ use settings_core::settings::platform_settings::ClipboardHotkeys;
 
 use crate::platform::Platform;
 
-use crate::settings::main_settings::MainSettings;
-use crate::settings::platform_settings::PlatformSettings;
-use crate::settings::keyboard_layouts::KeyboardLayouts;
+use super::MainSettings;
+use super::PlatformSettings;
+use super::KeyboardLayouts;
 
 pub struct Settings {
   platform: &'static Platform,

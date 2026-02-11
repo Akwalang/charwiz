@@ -13,21 +13,18 @@ use settings_serde::utils::load_keyboard_layout;
 use crate::constants::LAYOUTS_FOLDER;
 
 pub struct LayoutItem {
-  pub name: String,
   pub chars: HashMap<char, KeyboardSnapshot>,
   pub keys: HashMap<Key, KeyItem>,
 }
 
 impl LayoutItem {
   pub fn new(name: &str) -> Self {
-    let name = name.to_owned();
-
     let items = Self::load(&name).unwrap_or_else(|_| panic!("Can't load layout settings"));
 
     let chars = Self::raw_to_chars_map(&items);
     let keys = Self::raw_to_keys_map(items);
 
-    LayoutItem { name, chars, keys }
+    LayoutItem { chars, keys }
   }
 
   fn load(name: &str) -> anyhow::Result<Vec<KeyItem>> {

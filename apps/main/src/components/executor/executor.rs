@@ -100,8 +100,10 @@ impl Executor {
 
     let input = self.transformer.transform(&event, &target).await;
 
-    if let Err(error) = self.injector.inject(&self.emulator, &event, input).await {
-      #[cfg(feature = "logger")]
+    let _inject_result  = self.injector.inject(&self.emulator, &event, input).await;
+
+    #[cfg(feature = "logger")]
+    if let Err(error)  = _inject_result {
       warn!("<$>Executor</>: Injection failed: {}", error);
     }
 
