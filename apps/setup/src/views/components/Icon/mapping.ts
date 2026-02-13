@@ -1,0 +1,72 @@
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
+
+import {
+  Activity,
+  TriangleAlert,
+  Atom,
+  Bug,
+  Check,
+  ChartPie,
+  Cherry,
+  ChevronDown,
+  Crown,
+  ArrowBigDownDash,
+  FlaskConical,
+  Gem,
+  Heart,
+  HeartPulse,
+  House,
+  KeyRound,
+  Leaf,
+  MapPin,
+  MessageCircleMore,
+  Rocket,
+  Settings,
+  Share2,
+  Sparkles,
+  Star,
+  ArrowBigUpDash,
+  User,
+  AudioWaveform,
+  Zap,
+  Cross,
+  LucideProps,
+} from 'lucide-react';
+
+import { IconType } from '@/global/data/icons';
+
+type Element =
+  & ForwardRefExoticComponent<Omit<LucideProps, "ref">
+  & RefAttributes<SVGSVGElement>>;
+
+export const mapping: Record<IconType, Element> = {
+  [IconType.Activity]: Activity,
+  [IconType.Alert]: TriangleAlert,
+  [IconType.Atom]: Atom,
+  [IconType.Bug]: Bug,
+  [IconType.Check]: Check,
+  [IconType.ChartPie]: ChartPie,
+  [IconType.Cherry]: Cherry,
+  [IconType.ChevronDown]: ChevronDown,
+  [IconType.Cross]: Cross,
+  [IconType.Crown]: Crown,
+  [IconType.Download]: ArrowBigDownDash,
+  [IconType.FlaskConical]: FlaskConical,
+  [IconType.Gem]: Gem,
+  [IconType.Heart]: Heart,
+  [IconType.HeartPulse]: HeartPulse,
+  [IconType.House]: House,
+  [IconType.Key]: KeyRound,
+  [IconType.Leaf]: Leaf,
+  [IconType.MapPin]: MapPin,
+  [IconType.Message]: MessageCircleMore,
+  [IconType.Rocket]: Rocket,
+  [IconType.Settings]: Settings,
+  [IconType.Share]: Share2,
+  [IconType.Sparkles]: Sparkles,
+  [IconType.Star]: Star,
+  [IconType.Upload]: ArrowBigUpDash,
+  [IconType.User]: User,
+  [IconType.Wave]: AudioWaveform,
+  [IconType.Zap]: Zap,
+};
