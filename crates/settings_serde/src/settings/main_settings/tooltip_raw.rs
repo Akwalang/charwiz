@@ -3,7 +3,7 @@ use serde::Deserialize;
 use settings_core::settings::main_settings::{Tooltip, TooltipItem, TooltipSettings};
 
 use crate::enums::TooltipTypeRawEnum;
-use crate::structs::{ExecutorRaw, InjectorRaw};
+use crate::structs::{TransformerRaw, InjectorRaw};
 
 #[derive(Deserialize)]
 pub struct TooltipRaw {
@@ -24,7 +24,7 @@ impl Into<Tooltip> for TooltipRaw {
 #[derive(Deserialize)]
 pub struct TooltipItemRaw {
   pub settings: TooltipSettingsRaw,
-  pub executor: ExecutorRaw,
+  pub transformer: TransformerRaw,
   pub injector: InjectorRaw,
 }
 
@@ -32,7 +32,7 @@ impl Into<TooltipItem> for TooltipItemRaw {
   fn into(self) -> TooltipItem {
     TooltipItem {
       settings: self.settings.into(),
-      executor: self.executor.into(),
+      transformer: self.transformer.into(),
       injector: self.injector.into(),
     }
   }

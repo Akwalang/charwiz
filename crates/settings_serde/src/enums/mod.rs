@@ -1,6 +1,3 @@
-mod executor_type_raw;
-pub use executor_type_raw::ExecutorTypeRawEnum;
-
 mod inject_method_raw;
 pub use inject_method_raw::InjectMethodRawEnum;
 
@@ -15,6 +12,9 @@ pub use tooltip_type_raw::TooltipTypeRawEnum;
 
 mod transform_target_raw;
 pub use transform_target_raw::TransformTargetRawEnum;
+
+mod transformer_type_raw;
+pub use transformer_type_raw::TransformerTypeRawEnum;
 
 mod user_input_cleanup_raw;
 pub use user_input_cleanup_raw::UserInputCleanupRawEnum;

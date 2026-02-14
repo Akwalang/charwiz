@@ -1,6 +1,3 @@
-mod executor_type;
-pub use executor_type::ExecutorTypeEnum;
-
 mod inject_method;
 pub use inject_method::InjectMethodEnum;
 
@@ -15,6 +12,9 @@ pub use tooltip_type::TooltipTypeEnum;
 
 mod transform_target;
 pub use transform_target::TransformTargetEnum;
+
+mod transformer_type;
+pub use transformer_type::TransformerTypeEnum;
 
 mod user_input_cleanup;
 pub use user_input_cleanup::UserInputCleanupEnum;

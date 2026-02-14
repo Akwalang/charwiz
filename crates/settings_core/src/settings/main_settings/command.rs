@@ -1,8 +1,8 @@
-use crate::structs::{Executor, Injector};
+use crate::structs::{Transformer, Injector};
 
 #[derive(Debug, Clone)]
 pub struct Command {
   pub cmd: Vec<char>,
-  pub executor: Executor,
+  pub transformer: Transformer,
   pub injector: Injector,
 }
