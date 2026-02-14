@@ -4,7 +4,7 @@ export * from './Icon/Icon';
 export * from './LangSwitcher/LangSwitcher';
 export * from './Logo/Logo';
 export * from './PageTitle/PageTitle';
-export * from './SettingsItem/SettingsItem';
+export * from './SettingsSetup/SettingsSetup';
 export * from './SvgImage/SvgImage';
 export * from './Tabs/Tabs';
 export * from './ThemeSwitcher/ThemeSwitcher';

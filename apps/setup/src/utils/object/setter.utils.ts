@@ -1,3 +1,5 @@
+import { AllPaths, PathValue } from "../types/paths.type";
+
 const reg = /]\[|]\.|\.|]|\[/g;
 
 enum Types {
@@ -41,8 +43,12 @@ const createNode = (type: Types): Array<any> | Record<any, any> => ({
   [Types.TYPE_ARRAY]: [],
 }[type]);
 
-export const setter = function setter(target: Record<any, any> | Array<any> & Record<any, any>, path: string, value: any): void {
-  let part: PathItem | undefined, context = target;
+export const setter = function setter<
+  T extends object,
+  P extends AllPaths<T>,
+  V extends PathValue<T, P>,
+>(target: T, path: P, value: V): void {
+  let part: PathItem | undefined, context: any = target;
 
   const parts = parse(path);
 

@@ -14,10 +14,13 @@ type Fields = {
   KeyValueEditor: typeof KeyValueEditor;
 };
 
-interface FormProps {}
+interface FormProps {
+  className?: string,
+  children: React.ReactNode,
+}
 
-export const Form: React.FC<FormProps> & Fields = (props) => {
-  return <div>Form</div>;
+export const Form: React.FC<FormProps> & Fields = ({ className, children }) => {
+  return <div className={className}>{children}</div>;
 };
 
 Form.Input = Input;

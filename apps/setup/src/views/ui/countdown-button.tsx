@@ -4,20 +4,23 @@ import { Button, ButtonProps } from "./button";
 
 interface CountdownButtonProps extends ButtonProps {
   countdown?: number,
+  tickSize?: number,
   onTimeUp: () => void,
   waitingText: (v: number) => React.ReactNode,
 }
 
 const DEFAULT_COUNTDOWN = 3;
+const DEFAULT_TICK_SIZE = 1000;
 
 export const CountdownButton: React.FC<CountdownButtonProps> = ({
   countdown = DEFAULT_COUNTDOWN,
+  tickSize = DEFAULT_TICK_SIZE,
   onTimeUp,
   waitingText,
   children,
   ...other
 }) => {
-  const { isActive, remain, startTimer } = useCountdown(countdown, onTimeUp);
+  const { isActive, remain, startTimer } = useCountdown(countdown, tickSize, onTimeUp);
 
   const onMouseDown: React.ReactEventHandler = (event) => {
     if (countdown <= 0) return;
@@ -50,7 +53,7 @@ export const CountdownButton: React.FC<CountdownButtonProps> = ({
   );
 };
 
-const useCountdown = (countdown: number, onTimeUp: () => void) => {
+const useCountdown = (countdown: number, tickSize: number, onTimeUp: () => void) => {
   type StateType = {
     isActive: boolean,
     remain: number,
@@ -76,7 +79,7 @@ const useCountdown = (countdown: number, onTimeUp: () => void) => {
     };
 
     const tick = (remain: number, delay: number) => {
-      timer.current = setTimeout(remain > 1 ? tick : act, delay, remain - 1, 1000);
+      timer.current = setTimeout(remain > 1 ? tick : act, delay, remain - 1, tickSize);
       setState({ isActive: true, remain: remain });
     };
 
@@ -87,7 +90,7 @@ const useCountdown = (countdown: number, onTimeUp: () => void) => {
 
     window.addEventListener(eventType, clearTimer, false);
 
-    tick(countdown || DEFAULT_COUNTDOWN, 900);
+    tick(countdown || DEFAULT_COUNTDOWN, (tickSize * 0.9) << 0);
   };
 
   return { ...state, startTimer };
