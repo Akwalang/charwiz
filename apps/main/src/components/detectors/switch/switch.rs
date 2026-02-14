@@ -106,13 +106,13 @@ impl SwitchDetector {
       let char_stack = state.keyboard.get_chars();
       let event_stack = state.keyboard.get_events();
 
-      let executor = switch.executor.clone();
+      let transformer = switch.transformer.clone();
       let mut injector = switch.injector.clone();
 
       injector.user_input_cleanup = UserInputCleanupEnum::Backspace(switch.text.len() as u8);
       injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
 
-      let command = CommandEvent { char_stack, event_stack, executor, injector };
+      let command = CommandEvent { char_stack, event_stack, transformer, injector };
 
       self.event_hub.publish_command(command).ok();
   }

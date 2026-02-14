@@ -106,12 +106,12 @@ impl SymbolDetector {
     let char_stack = state.keyboard.get_chars();
     let event_stack = state.keyboard.get_events();
 
-    let executor = symbol.executor.clone();
+    let transformer = symbol.transformer.clone();
     let mut injector = symbol.injector.clone();
 
     injector.user_input_cleanup = UserInputCleanupEnum::None;
 
-    let command = CommandEvent { char_stack, event_stack, executor, injector };
+    let command = CommandEvent { char_stack, event_stack, transformer, injector };
 
     self.event_hub.publish_command(command).ok();
   }

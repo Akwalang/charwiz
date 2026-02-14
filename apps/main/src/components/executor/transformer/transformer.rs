@@ -1,4 +1,4 @@
-use settings_core::enums::ExecutorTypeEnum;
+use settings_core::enums::TransformerTypeEnum;
 
 use crate::platform::Platform;
 use crate::settings::Settings;
@@ -37,10 +37,10 @@ impl Transformer {
   }
 
   pub async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
-    match event.executor.r#type {
-      ExecutorTypeEnum::Native => self.native_transformer.transform(event, target).await,
-      ExecutorTypeEnum::Plugin => self.plugin_transformer.transform(event, target).await,
-      ExecutorTypeEnum::Static => self.static_transformer.transform(event, target).await,
+    match event.transformer.r#type {
+      TransformerTypeEnum::Native => self.native_transformer.transform(event, target).await,
+      TransformerTypeEnum::Plugin => self.plugin_transformer.transform(event, target).await,
+      TransformerTypeEnum::Static => self.static_transformer.transform(event, target).await,
     }
   }
 }

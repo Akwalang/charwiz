@@ -108,12 +108,12 @@ impl HotkeyDetector {
     let char_stack = state.keyboard.get_chars();
     let event_stack = state.keyboard.get_events();
 
-    let executor = hotkey.executor.clone();
+    let transformer = hotkey.transformer.clone();
     let mut injector = hotkey.injector.clone();
 
     injector.user_input_cleanup = UserInputCleanupEnum::Backspace(char_stack.len() as u8);
 
-    let command = CommandEvent { char_stack, event_stack, executor, injector };
+    let command = CommandEvent { char_stack, event_stack, transformer, injector };
 
     self.event_hub.publish_command(command).ok();
   }

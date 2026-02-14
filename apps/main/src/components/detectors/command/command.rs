@@ -106,13 +106,13 @@ impl CommandDetector {
     let char_stack = state.keyboard.get_chars();
     let event_stack = state.keyboard.get_events();
 
-    let executor = command.executor.clone();
+    let transformer = command.transformer.clone();
     let mut injector = command.injector.clone();
 
     injector.user_input_cleanup = UserInputCleanupEnum::Backspace(command.cmd.len() as u8);
     injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
 
-    let command = CommandEvent { char_stack, event_stack, executor, injector };
+    let command = CommandEvent { char_stack, event_stack, transformer, injector };
 
     self.event_hub.publish_command(command).ok();
   }

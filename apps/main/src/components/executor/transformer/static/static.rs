@@ -30,7 +30,7 @@ impl Transformer for StaticTransformer {
   }
 
   async fn transform(&self, event: &CommandEvent, _target: &InputType) -> InputType {
-    let result = event.executor.value.to_owned();
+    let result = event.transformer.value.to_owned();
 
     #[cfg(feature = "logger")]
     log!("<$>Static Transformer</>: Result: <i+>{}</>", result);

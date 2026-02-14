@@ -82,9 +82,6 @@ impl Executor {
   async fn process_event(self: &Rc<Self>, event: CommandEvent) -> anyhow::Result<()> {
     self.lock_application();
 
-    // println!("char_stack: {:?}", self.state.lock().unwrap().keyboard.char_stack);
-    // println!("event_stack: {:#?}", self.state.lock().unwrap().keyboard.event_stack);
-
     let current_layout = self.platform.keyboard_layouts.borrow().get_current_keyboard_layout()?.clone();
 
     let _ = self.switch_keyboard_layout(&current_layout, &event.injector.layout_before);

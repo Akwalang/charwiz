@@ -20,8 +20,6 @@ pub fn get_keyboard_layouts() -> Vec<KeyboardLayoutItem> {
         .split(',')
         .map(|s| s.trim().to_string())
         .collect();
-
-      println!(">>> layouts: {:#?}", res);
     }
   }
 

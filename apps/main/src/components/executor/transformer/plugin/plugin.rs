@@ -122,7 +122,7 @@ impl Transformer for PluginTransformer {
       return target.clone();
     }
 
-    let Ok(handler): Result<Function, Error> = lua.globals().get(event.executor.value.clone()) else {
+    let Ok(handler): Result<Function, Error> = lua.globals().get(event.transformer.value.clone()) else {
       #[cfg(feature = "logger")]
       warn!("<$>Plugin Transformer</>: Lua function not found");
       return target.clone();
