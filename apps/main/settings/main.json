@@ -471,6 +471,19 @@
         "layoutAfter": "current",
         "keyboardStateCleanup": "drop"
       }
+    },
+    {
+      "cmd": ":react-view",
+      "transformer": {
+        "type": "plugin",
+        "value": "react_view"
+      },
+      "injector": {
+        "target": "input",
+        "method": "paste",
+        "layoutAfter": "current",
+        "keyboardStateCleanup": "drop"
+      }
     }
   ],
   "tooltips": [

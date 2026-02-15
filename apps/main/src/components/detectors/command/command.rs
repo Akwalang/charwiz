@@ -8,7 +8,7 @@ use rdev::EventType;
 
 use tokio::sync::broadcast::error::RecvError;
 
-use settings_core::enums::{UserInputCleanupEnum, KeyboardStateCleanupEnum};
+use settings_core::enums::{KeyboardStateCleanupEnum, TransformTargetEnum, UserInputCleanupEnum};
 use settings_core::structs::KeyboardSnapshot;
 use settings_core::settings::main_settings::Command;
 
@@ -103,13 +103,21 @@ impl CommandDetector {
   }
 
   fn publish_command(&self, state: Ref<'_, State>, command: Command) {
-    let char_stack = state.keyboard.get_chars();
+    let mut char_stack: Vec<char> = state.keyboard.get_chars();
     let event_stack = state.keyboard.get_events();
 
+    char_stack.truncate(char_stack.len() - command.cmd.len());
+    
     let transformer = command.transformer.clone();
     let mut injector = command.injector.clone();
 
-    injector.user_input_cleanup = UserInputCleanupEnum::Backspace(command.cmd.len() as u8);
+    let mut backspace_count = command.cmd.len();
+
+    if command.injector.target == TransformTargetEnum::Input {
+      backspace_count += char_stack.len();
+    }
+
+    injector.user_input_cleanup = UserInputCleanupEnum::Backspace(backspace_count as u8);
     injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
 
     let command = CommandEvent { char_stack, event_stack, transformer, injector };
