@@ -1,5 +1,5 @@
 import { MainLayout } from "@/views/layouts/MainLayout/MainLayout";
-import { GeneralPage, HomePage, HotkeysPage } from '@/pages';
+import { GeneralPage, CommandsPage, HomePage, HotkeysPage } from '@/pages';
 
 import { useRouterStore } from '@/global/stores/router/router.store';
 import { Page } from '@/global/data/pages';
@@ -12,6 +12,7 @@ export const AppRouter: React.FC<AppRouterProps> = () => {
   const PageView = (() => {
     switch (currentPage) {
       case Page.Home: return HomePage;
+      case Page.Commands: return CommandsPage;
       case Page.Hotkeys: return HotkeysPage;
       case Page.General: return GeneralPage;
       default: return HomePage;

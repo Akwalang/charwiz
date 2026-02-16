@@ -17,7 +17,7 @@ export const main: MainSettings = {
     description: {
       name: "Апісанне",
     },
-    command: {
+    cmd: {
       name: "Тэкставая каманда",
     },
     keyboardSnapshot: {

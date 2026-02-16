@@ -9,10 +9,8 @@ import {
 
 import { HotkeyItem } from "./state";
 
-import {
-  NEW_HOTKEY_TITLE,
-  NEW_HOTKEY_DESCRIPTION,
-} from "../../constants";
+export const NEW_HOTKEY_TITLE = "Hotkey title";
+export const NEW_HOTKEY_DESCRIPTION = "Hotkey description";
 
 export const DEFAULT_HOTKEY: Omit<HotkeyItem, 'id'> = {
   isEditing: false,

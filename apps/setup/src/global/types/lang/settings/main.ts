@@ -15,7 +15,7 @@ export type MainSettings = {
     description: {
       name: string,
     },
-    command: {
+    cmd: {
       name: string,
     },
     keyboardSnapshot: {

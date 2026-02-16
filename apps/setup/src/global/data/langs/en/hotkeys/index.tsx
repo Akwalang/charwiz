@@ -5,6 +5,6 @@ export const hotkeys: HotkeysLang = {
     title: "Hotkey settings",
     description: "Manage global keyboard shortcuts",
     hotkeyNotFound: "Hotkey setup not found",
-    addNewItem: "Add new hotkey",
+    addNewItem: "Add a new hotkey",
   },
 };

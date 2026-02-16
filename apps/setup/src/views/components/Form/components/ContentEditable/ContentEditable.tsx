@@ -110,7 +110,7 @@ interface FieldProps {
 const Field = memo(forwardRef<HTMLDivElement, FieldProps>((props, ref) => {
   const [inValue, setInValue] = useState(props.value);
 
-  const { value, disabled, ...rest } = props;
+  const { value, disabled, className, ...rest } = props;
 
   useEffect(() => {
     const propValue = (props.value || '').trim();
@@ -126,6 +126,7 @@ const Field = memo(forwardRef<HTMLDivElement, FieldProps>((props, ref) => {
       contentEditable={!props.disabled}
       suppressContentEditableWarning={true}
       children={inValue}
+      className={cn('px-3 py-2 border rounded-md text-sm', className)}
       {...rest}
     />
   );

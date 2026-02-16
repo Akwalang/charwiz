@@ -17,7 +17,7 @@ export const main: MainSettings = {
     description: {
       name: "Description",
     },
-    command: {
+    cmd: {
       name: "Text command",
     },
     keyboardSnapshot: {

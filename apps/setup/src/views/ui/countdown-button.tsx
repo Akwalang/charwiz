@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 
 import { Button, ButtonProps } from "./button";
 
-interface CountdownButtonProps extends ButtonProps {
+export interface CountdownButtonProps extends ButtonProps {
   countdown?: number,
   tickSize?: number,
   onTimeUp: () => void,
