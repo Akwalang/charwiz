@@ -1,7 +1,7 @@
-import { type LangType } from '../_';
+import { LangType } from "@/global/types/lang";
 
-import { components } from './components';
-import { pages } from './pages';
-import { settings } from './settings';
+import { hotkeys } from "./hotkeys";
+import { preferences } from "./preferences";
+import { settings } from "./settings";
 
-export const en: LangType = { components, pages, settings };
+export const en: LangType = { hotkeys, preferences, settings };

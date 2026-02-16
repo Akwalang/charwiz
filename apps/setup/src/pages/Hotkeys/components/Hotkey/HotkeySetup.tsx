@@ -1,5 +1,7 @@
 import { SettingsSetup } from "@/views/components";
 
+import { useLang } from "@/global/hooks";
+
 import { useMainSettingsStore } from "@/global/stores/main-settings";
 import { getHotkey } from "@/global/stores/main-settings/selectors";
 
@@ -7,7 +9,9 @@ interface HotkeyBlockProps {
   id: string,
 }
 
-export const HotkeyBlock: React.FC<HotkeyBlockProps> = ({ id }) => {
+export const HotkeySetup: React.FC<HotkeyBlockProps> = ({ id }) => {
+  const lang = useLang((state) => state.hotkeys.page);
+  
   const hotkey = useMainSettingsStore(getHotkey(id));
 
   const editHotkey = useMainSettingsStore((state) => state.editHotkey);
@@ -18,8 +22,8 @@ export const HotkeyBlock: React.FC<HotkeyBlockProps> = ({ id }) => {
 
   if (!hotkey) {
     return (
-      <div className="divide-y border rounded-xl text-center">
-        Hotkey setup not found
+      <div className="p-2 divide-y border rounded-xl text-center">
+        {lang.hotkeyNotFound}
       </div>
     );
   }

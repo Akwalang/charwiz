@@ -1,30 +1,5 @@
-import { Input } from './components/Input/Input';
-import { Select } from './components/Select/Select';
-import { Button } from './components/Button/Button';
-import { ContentEditable } from './components/ContentEditable/ContentEditable';
-import { KeyValueEditor, KeyValueItem } from './components/KeyValueEditor/KeyValueEditor';
-
-export { type KeyValueItem as KeyValueItem };
-
-type Fields = {
-  Input: typeof Input;
-  Select: typeof Select;
-  Button: typeof Button;
-  ContentEditable: typeof ContentEditable;
-  KeyValueEditor: typeof KeyValueEditor;
-};
-
-interface FormProps {
-  className?: string,
-  children: React.ReactNode,
-}
-
-export const Form: React.FC<FormProps> & Fields = ({ className, children }) => {
-  return <div className={className}>{children}</div>;
-};
-
-Form.Input = Input;
-Form.Select = Select;
-Form.Button = Button;
-Form.ContentEditable = ContentEditable;
-Form.KeyValueEditor = KeyValueEditor;
+export { Input } from './components/Input/Input';
+export { Select } from './components/Select/Select';
+export { Button } from './components/Button/Button';
+export { ContentEditable } from './components/ContentEditable/ContentEditable';
+export { KeyValueEditor, type KeyValueItem } from './components/KeyValueEditor/KeyValueEditor';

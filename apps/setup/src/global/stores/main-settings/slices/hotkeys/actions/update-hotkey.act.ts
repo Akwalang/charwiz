@@ -16,7 +16,7 @@ export const updateHotkey = (set: any) => <
     const hotkeys = mutateListItem(state.hotkeys, idx, () => {
       const editing = {} as HotkeyItem["current"];
 
-      setter(editing, path, value)
+      setter(editing, path, value);
 
       return { editing };
     });

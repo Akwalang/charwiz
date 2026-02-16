@@ -1,5 +1,5 @@
 import { Controls } from "./components/Controls/Controls";
-import { Options } from "./components/Options/Options";
+// import { Options } from "./components/Options/Options";
 
 import { CommonValues } from "@/global/types/settings/settings/main-settings";
 
@@ -41,9 +41,9 @@ export const SettingsSetup: React.FC<SettingsSetupProps> = (props) => {
           />
         </div>
       </div>
-      {props.isEditing &&
+      {/* {props.isEditing &&
         <Options id={props.id} values={props.values} onUpdate={props.onUpdate} />
-      }
+      } */}
     </div>
   );
 };

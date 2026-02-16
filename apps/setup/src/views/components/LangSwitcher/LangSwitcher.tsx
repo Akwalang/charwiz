@@ -18,7 +18,7 @@ const Options: React.FC<{ cur: string }> = (props) => {
     return (
       <Base.DropdownMenuItem key={key} onClick={() => setLang(key)}>
         <div className="w-full flex items-center justify-between">
-          <span>{lang.settings.lang.name()}</span>
+          <span>{lang.preferences.lang.name}</span>
           <span>{props.cur === key && <Check size="16" />}</span>
         </div>
       </Base.DropdownMenuItem>
@@ -27,7 +27,7 @@ const Options: React.FC<{ cur: string }> = (props) => {
 };
 
 export const LangSwitcher: React.FC<LangSwitcherProps> = () => {
-  const [lang, cur] = useLang((state, cur) => [state.settings.lang, cur]);
+  const [lang, cur] = useLang((state, cur) => [state.preferences.lang, cur]);
 
   return (
     <div className="h-full items-center flex">
@@ -35,10 +35,10 @@ export const LangSwitcher: React.FC<LangSwitcherProps> = () => {
         <Base.DropdownMenuTrigger asChild>
           <Button variant="link" size="sm" className="h-full flex p-0.5 shadow-none bg-transparent focus:outline-none hover:no-underline select-none">
             <Languages className="text-foreground" size={14} />
-            <div className="text-xs text-foreground ml-[-3px]">{lang.name()}</div>
+            <div className="text-xs text-foreground ml-[-3px]">{lang.name}</div>
           </Button>
         </Base.DropdownMenuTrigger>
-        <Base.DropdownMenuContent align="end" className="w-[160px] select-none">
+        <Base.DropdownMenuContent align="start" className="w-[160px] select-none">
           <Options cur={cur} />
         </Base.DropdownMenuContent>
       </Base.DropdownMenu>

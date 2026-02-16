@@ -1,5 +1,5 @@
 import { useLangStore } from '@/global/stores/lang/lang.store';
-import { LangType } from '@/global/data/langs/_';
+import { LangType } from '@/global/types/lang';
 
 import { langs } from '@/global/data/langs';
 

@@ -1,7 +1,6 @@
-import { type SettingsLang } from "../../_/settings";
+import { SettingsLang } from "@/global/types/lang/settings";
 
-export const settings: SettingsLang = {
-  lang: {
-    name: () => 'Беларусскій',
-  },
-};
+import { buttons } from "./buttons";
+import { main } from "./main";
+
+export const settings: SettingsLang = { main, buttons };

@@ -69,7 +69,9 @@ const useCountdown = (countdown: number, tickSize: number, onTimeUp: () => void)
   const { 0: state, 1: setState } = useState<StateType>(DEFAULT_STATE);
 
   const startTimer = (eventType: 'mouseup' | 'keyup'): void => {
-    const clearTimer = (): void => {
+    const clearTimer = (event?: Event): void => {
+      event?.preventDefault();
+
       timer.current && clearTimeout(timer.current);
       timer.current = null;
 

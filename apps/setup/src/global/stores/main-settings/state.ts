@@ -1,4 +1,6 @@
-import { HotkeysState } from "./slices/hotkeys/state";
+import { HotkeysState, type HotkeyItem } from "./slices/hotkeys/state";
+
+export { HotkeyItem as HotkeyItem };
 
 export type State =
   & HotkeysState;
