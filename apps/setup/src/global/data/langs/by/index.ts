@@ -4,5 +4,6 @@ import { commands } from "./commands";
 import { hotkeys } from "./hotkeys";
 import { preferences } from "./preferences";
 import { settings } from "./settings";
+import { switches } from "./switches";
 
-export const by: LangType = { commands, hotkeys, preferences, settings };
+export const by: LangType = { commands, hotkeys, preferences, settings, switches };

@@ -12,7 +12,7 @@ interface HotkeyProps {
 }
 
 export const Hotkey: React.FC<HotkeyProps> = ({ id }) => {
-  const hotkey = useMainSettingsStore(getHotkey(id))!;
+  const entity = useMainSettingsStore(getHotkey(id))!;
 
   const controlsActions = {
     editEntity: useMainSettingsStore((state) => state.editHotkey),
@@ -25,14 +25,14 @@ export const Hotkey: React.FC<HotkeyProps> = ({ id }) => {
     <div className="w-full px-6 border rounded-2xl flex flex-col items-stretch">
       <div className="w-full py-4 flex items-center justify-between">
         <div className="flex grow flex-col justify-center">
-          <p className="font-medium">{hotkey.current.title}</p>
-          {hotkey.current.description && <p className="text-sm text-foreground/60">{hotkey.current.description}</p>}
+          <p className="font-medium">{entity.current.title}</p>
+          {entity.current.description && <p className="text-sm text-foreground/60">{entity.current.description}</p>}
         </div>
         <div className="flex gap-2">
-          <Controls entity={hotkey} defaultValue={DEFAULT_HOTKEY} {...controlsActions} />
+          <Controls entity={entity} defaultValue={DEFAULT_HOTKEY} {...controlsActions} />
         </div>
       </div>
-      {hotkey.isEditing && <HotkeyFields id={id} />}
+      {entity.isEditing && <HotkeyFields id={id} />}
     </div>
   );
 };

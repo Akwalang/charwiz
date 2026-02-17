@@ -23,7 +23,7 @@ export const main: MainSettings = {
     keyboardSnapshot: {
       name: "Keyboard keys",
     }, 
-    switch: {
+    text: {
       name: "Text to switch from",
     },
     symbol: {

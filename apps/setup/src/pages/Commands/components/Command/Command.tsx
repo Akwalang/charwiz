@@ -12,7 +12,7 @@ interface CommandProps {
 }
 
 export const Command: React.FC<CommandProps> = ({ id }) => {
-  const command = useMainSettingsStore(getCommand(id))!;
+  const entity = useMainSettingsStore(getCommand(id))!;
 
   const controlsActions = {
     editEntity: useMainSettingsStore((state) => state.editCommand),
@@ -25,14 +25,14 @@ export const Command: React.FC<CommandProps> = ({ id }) => {
     <div className="w-full px-6 border rounded-2xl flex flex-col items-stretch">
       <div className="w-full py-4 flex items-center justify-between">
         <div className="flex grow flex-col justify-center">
-          <p className="font-medium">{command.current.title}</p>
-          {command.current.description && <p className="text-sm text-foreground/60">{command.current.description}</p>}
+          <p className="font-medium">{entity.current.title}</p>
+          {entity.current.description && <p className="text-sm text-foreground/60">{entity.current.description}</p>}
         </div>
         <div className="flex gap-2">
-          <Controls entity={command} defaultValue={DEFAULT_COMMAND} {...controlsActions} />
+          <Controls entity={entity} defaultValue={DEFAULT_COMMAND} {...controlsActions} />
         </div>
       </div>
-      {command.isEditing && <CommandFields id={id} />}
+      {entity.isEditing && <CommandFields id={id} />}
     </div>
   );
 };

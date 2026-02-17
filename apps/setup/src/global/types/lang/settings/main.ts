@@ -21,7 +21,7 @@ export type MainSettings = {
     keyboardSnapshot: {
       name: string,
     }, 
-    switch: {
+    text: {
       name: string,
     },
     symbol: {

@@ -23,7 +23,7 @@ export const main: MainSettings = {
     keyboardSnapshot: {
       name: "Клавішы клавіятуры",
     },
-    switch: {
+    text: {
       name: "Тэкст для пераключэння",
     },
     symbol: {
