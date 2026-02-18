@@ -6,6 +6,6 @@ export type ThemeState = {
 };
 
 export const ThemeState = (): ThemeState => ({
-  theme: ThemeName.Claymorphism,
+  theme: ThemeName.RetroArcade,
   mode: ThemeMode.Light,
 }) as const;

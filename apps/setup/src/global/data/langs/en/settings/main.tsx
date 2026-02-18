@@ -38,6 +38,14 @@ export const main: MainSettings = {
         [InjectMethodEnum.TypeAndSkip]: "Type and skip missing symbols",
       },
     },
+    keyboardLayout: {
+      name: "Keyboard after switch",
+      values: {
+        [KeyboardLayoutEnum.Previous]: "Previous layout",
+        [KeyboardLayoutEnum.Current]: "Current layout",
+        [KeyboardLayoutEnum.Next]: "Next layout",
+      },
+    },
     keyboardLayoutBefore: {
       name: "Keyboard layout before execute",
       values: {

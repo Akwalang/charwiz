@@ -1,6 +1,6 @@
-import { HotkeyItem } from "./components/HotkeyItem/HotkeyItem";
+import { Hotkey } from "./components/Hotkey/Hotkey";
 
-import { PageTitle, ApplySettings } from "@/views/components";
+import { PageTitle } from "@/views/components";
 import { Button } from "@/views/ui/button";
 
 import { useLang } from "@/global/hooks";
@@ -21,14 +21,12 @@ export const HotkeysPage: React.FC<HotkeysPageProps> = () => {
       <PageTitle title={lang.page.title} description={lang.page.description} />
 
       <section className="flex flex-col gap-4">
-        {hotkeys.map((item) => <HotkeyItem key={item.id} id={item.id} />)}
+        {hotkeys.map((item) => <Hotkey key={item.id} id={item.id} />)}
       </section>
 
       <div className="mt-6 flex justify-center">
         <Button onClick={createHotkey}>{lang.page.addNewItem}</Button>
       </div>
-
-      <ApplySettings />
     </>
   );
 };

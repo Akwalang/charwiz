@@ -25,8 +25,8 @@ export const Switch: React.FC<SwitchProps> = ({ id }) => {
     <div className="w-full px-6 border rounded-2xl flex flex-col items-stretch">
       <div className="w-full py-4 flex items-center justify-between">
         <div className="flex grow flex-col justify-center">
-          <p className="font-medium">{entity.current.title}</p>
-          {entity.current.description && <p className="text-sm text-foreground/60">{entity.current.description}</p>}
+          <div className="font-medium">From: {entity.current.settings.text || "Not set"}</div>
+          <div className="font-medium">To: {entity.current.settings.text || "Not set"}</div>
         </div>
         <div className="flex gap-2">
           <Controls entity={entity} defaultValue={DEFAULT_SWITCH} {...controlsActions} />

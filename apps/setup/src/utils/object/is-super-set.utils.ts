@@ -1,9 +1,9 @@
-const getType = (val: unknown): string => Object.prototype.toString.call(val).slice(8, -1);
+import { getType } from "../is/get-type.utils";
 
 export const isSuperSet = (sup: any, sub: any): boolean => {
   if (getType(sup) !== getType(sub)) return false;
   
-  if (typeof sup !== 'object' || sup === null) {
+  if (typeof sup !== "object" || sup === null) {
     return sup === sub;
   }
 

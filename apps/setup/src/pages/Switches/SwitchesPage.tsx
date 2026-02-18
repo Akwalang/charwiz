@@ -1,6 +1,6 @@
-import { SwitchItem } from "./components/SwitchItem/SwitchItem";
+import { Switch } from "./components/Switch/Switch";
 
-import { PageTitle, ApplySettings } from "@/views/components";
+import { PageTitle } from "@/views/components";
 import { Button } from "@/views/ui/button";
 
 import { useLang } from "@/global/hooks";
@@ -21,14 +21,12 @@ export const SwitchesPage: React.FC<SwitchesPageProps> = () => {
       <PageTitle title={lang.page.title} description={lang.page.description} />
 
       <section className="flex flex-col gap-4">
-        {switches.map((item) => <SwitchItem key={item.id} id={item.id} />)}
+        {switches.map((item) => <Switch key={item.id} id={item.id} />)}
       </section>
 
       <div className="mt-6 flex justify-center">
         <Button onClick={createSwitch}>{lang.page.addNewItem}</Button>
       </div>
-
-      <ApplySettings />
     </>
   );
 };

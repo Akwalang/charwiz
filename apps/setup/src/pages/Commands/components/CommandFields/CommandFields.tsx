@@ -33,10 +33,6 @@ export const CommandFields: React.FC<CommandFieldsProps> = ({ id }) => {
   return (
     <>
       <Separator />
-      <InputField {...common} path="title" field="title" />
-      <Separator />
-      <InputField {...common} path="description" field="description" />
-      <Separator />
       <InputField {...common} path="settings.cmd" field="cmd" />
       <Separator />
       <SelectField {...common} path="settings.injector.target" field="transformTarget" options={transformTarget} />

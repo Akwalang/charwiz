@@ -15,10 +15,6 @@ export const SymbolFields: React.FC<SymbolFieldsProps> = ({ id }) => {
   return (
     <>
       <Separator />
-      <InputField entity={entity} updateEntity={updateEntity} path="title" field="title" />
-      <Separator />
-      <InputField entity={entity} updateEntity={updateEntity} path="description" field="description" />
-      <Separator />
       <InputField entity={entity} updateEntity={updateEntity} path="settings.transformer.value" field="symbol" />
     </>
   );

@@ -1,4 +1,4 @@
-import { Controls } from "@/views/components";
+import { Controls, KbdSnapshot } from "@/views/components";
 
 import { SymbolFields } from "../SymbolFields/SymbolFields";
 
@@ -25,8 +25,11 @@ export const Symbol: React.FC<SymbolProps> = ({ id }) => {
     <div className="w-full px-6 border rounded-2xl flex flex-col items-stretch">
       <div className="w-full py-4 flex items-center justify-between">
         <div className="flex grow flex-col justify-center">
-          <p className="font-medium">{entity.current.title}</p>
-          {entity.current.description && <p className="text-sm text-foreground/60">{entity.current.description}</p>}
+          <div className="font-medium">Symbol: {entity.current.settings.transformer.value || "None"}</div>
+          <div className="flex items-center gap-1 font-medium">
+            <div>Hotkey:</div>
+            <KbdSnapshot className="text-sm text-foreground/60" snapshot={{ key: "KeyT", modifiers: ["ControlLeft", "ShiftLeft"] } as any} />
+          </div>
         </div>
         <div className="flex gap-2">
           <Controls entity={entity} defaultValue={DEFAULT_SYMBOL} {...controlsActions} />
@@ -36,3 +39,4 @@ export const Symbol: React.FC<SymbolProps> = ({ id }) => {
     </div>
   );
 };
+// entity.current.settings.keys

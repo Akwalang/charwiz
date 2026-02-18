@@ -60,17 +60,17 @@ export const styles = {
   `,
   dark: `
     --background: #002b36;
-    --foreground: #93a1a1;
+    --foreground: #c4d6d6;
     --card: #073642;
-    --card-foreground: #93a1a1;
+    --card-foreground: #c4d6d6;
     --popover: #073642;
-    --popover-foreground: #93a1a1;
+    --popover-foreground: #c4d6d6;
     --primary: #d33682;
     --primary-foreground: #ffffff;
     --secondary: #2aa198;
     --secondary-foreground: #ffffff;
     --muted: #586e75;
-    --muted-foreground: #93a1a1;
+    --muted-foreground: #c4d6d6;
     --accent: #cb4b16;
     --accent-foreground: #ffffff;
     --destructive: #dc322f;
@@ -85,7 +85,7 @@ export const styles = {
     --chart-5: #dc322f;
     --radius: 0.25rem;
     --sidebar: #002b36;
-    --sidebar-foreground: #93a1a1;
+    --sidebar-foreground: #c4d6d6;
     --sidebar-primary: #d33682;
     --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: #2aa198;

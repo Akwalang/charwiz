@@ -1,6 +1,6 @@
-import { CommandItem } from "./components/CommandItem/CommandItem";
+import { Command } from "./components/Command/Command";
 
-import { PageTitle, ApplySettings } from "@/views/components";
+import { PageTitle } from "@/views/components";
 import { Button } from "@/views/ui/button";
 
 import { useLang } from "@/global/hooks";
@@ -21,14 +21,12 @@ export const CommandsPage: React.FC<CommandsPageProps> = () => {
       <PageTitle title={lang.page.title} description={lang.page.description} />
 
       <section className="flex flex-col gap-4">
-        {commands.map((item) => <CommandItem key={item.id} id={item.id} />)}
+        {commands.map((item) => <Command key={item.id} id={item.id} />)}
       </section>
 
       <div className="mt-6 flex justify-center">
         <Button onClick={createCommand}>{lang.page.addNewItem}</Button>
       </div>
-
-      <ApplySettings />
     </>
   );
 };

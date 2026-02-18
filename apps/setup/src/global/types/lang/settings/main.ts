@@ -31,6 +31,10 @@ export type MainSettings = {
       name: string,
       values: Record<InjectMethodEnum, string>,
     },
+    keyboardLayout: {
+      name: string,
+      values: Record<KeyboardLayoutEnum, string>,
+    },
     keyboardLayoutBefore: {
       name: string,
       values: Record<KeyboardLayoutEnum, string>,

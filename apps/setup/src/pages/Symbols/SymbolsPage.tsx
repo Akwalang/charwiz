@@ -1,6 +1,6 @@
-import { SymbolItem } from "./components/SymbolItem/SymbolItem";
+import { Symbol } from "./components/Symbol/Symbol";
 
-import { PageTitle, ApplySettings } from "@/views/components";
+import { PageTitle } from "@/views/components";
 import { Button } from "@/views/ui/button";
 
 import { useLang } from "@/global/hooks";
@@ -21,14 +21,12 @@ export const SymbolsPage: React.FC<SymbolsPageProps> = () => {
       <PageTitle title={lang.page.title} description={lang.page.description} />
 
       <section className="flex flex-col gap-4">
-        {symbols.map((item) => <SymbolItem key={item.id} id={item.id} />)}
+        {symbols.map(({ id }) => <Symbol key={id} id={id} />)}
       </section>
 
       <div className="mt-6 flex justify-center">
         <Button onClick={createSymbol}>{lang.page.addNewItem}</Button>
       </div>
-
-      <ApplySettings />
     </>
   );
 };

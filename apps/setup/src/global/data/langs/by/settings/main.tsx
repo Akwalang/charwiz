@@ -38,6 +38,14 @@ export const main: MainSettings = {
         [InjectMethodEnum.TypeAndSkip]: "Увесці і прапусціць адсутныя сімвалы",
       },
     },
+    keyboardLayout: {
+      name: "Раскладка пасля пераключэння",
+      values: {
+        [KeyboardLayoutEnum.Previous]: "Папярэдняя раскладка",
+        [KeyboardLayoutEnum.Current]: "Бягучая раскладка",
+        [KeyboardLayoutEnum.Next]: "Наступная раскладка",
+      },
+    },
     keyboardLayoutBefore: {
       name: "Раскладка перад выкананнем",
       values: {

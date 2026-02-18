@@ -1,5 +1,7 @@
 import { Link } from "@/views/components/Link/Link";
 
+import { useLang } from "@/global/hooks";
+
 import { useRouterStore } from "@/global/stores/router/router.store";
 import { Page } from "@/global/data/pages";
 
@@ -11,15 +13,17 @@ const classActive = "px-4 py-2 block rounded-lg bg-primary text-primary-foregrou
 const classInactive = "px-4 py-2 block rounded-lg text-sm hover:bg-secondary/60 transition-colors";
 
 export const Navigation: React.FC<NavigationProps> = () => {
+  const lang = useLang((state) => state.menu);
+
   const page = useRouterStore((state) => state.page);
   
   const pages = [
-    { name: "Home", page: Page.Home },
-    { name: "Auto-conversion", page: Page.Switches },
-    { name: "Hotkeys", page: Page.Hotkeys },
-    { name: "Commands", page: Page.Commands },
-    { name: "Symbols", page: Page.Symbols },
-    { name: "General", page: Page.General },
+    { name: lang.home, page: Page.Home },
+    { name: lang.autoSwitches, page: Page.Switches },
+    { name: lang.hotkeys, page: Page.Hotkeys },
+    { name: lang.commands, page: Page.Commands },
+    { name: lang.symbols, page: Page.Symbols },
+    { name: lang.general, page: Page.General },
   ];
 
   return (
