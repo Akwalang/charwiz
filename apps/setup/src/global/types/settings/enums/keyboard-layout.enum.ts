@@ -1,5 +1,5 @@
 export enum KeyboardLayoutEnum {
-  Previous = 'previous',
-  Current = 'current',
-  Next = 'next',
+  Previous = "previous",
+  Current = "current",
+  Next = "next",
 }

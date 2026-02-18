@@ -1,5 +1,5 @@
 import { MainLayout } from "@/views/layouts/MainLayout/MainLayout";
-import { GeneralPage, CommandsPage, HomePage, HotkeysPage, SwitchesPage } from '@/pages';
+import { GeneralPage, CommandsPage, HomePage, HotkeysPage, SwitchesPage, SymbolsPage } from '@/pages';
 
 import { useRouterStore } from '@/global/stores/router/router.store';
 import { Page } from '@/global/data/pages';
@@ -15,6 +15,7 @@ export const AppRouter: React.FC<AppRouterProps> = () => {
       case Page.Commands: return CommandsPage;
       case Page.Hotkeys: return HotkeysPage;
       case Page.Switches: return SwitchesPage;
+      case Page.Symbols: return SymbolsPage;
       case Page.General: return GeneralPage;
       default: return HomePage;
     }

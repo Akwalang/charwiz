@@ -3,6 +3,7 @@ import { HotkeysLang } from "./hotkeys";
 import { PreferencesLang } from "./preferences";
 import { SettingsLang } from "./settings";
 import { SwitchesLang } from "./switches";
+import { SymbolsLang } from "./symbols";
 
 export type LangType = {
   commands: CommandsLang,
@@ -10,4 +11,5 @@ export type LangType = {
   preferences: PreferencesLang,
   settings: SettingsLang,
   switches: SwitchesLang,
+  symbols: SymbolsLang,
 };

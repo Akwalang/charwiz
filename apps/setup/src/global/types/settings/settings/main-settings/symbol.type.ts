@@ -1,4 +1,4 @@
-import { KeyboardSnapshot } from "../../types/keyboard-snapshot.typs";
+import { KeyboardSnapshot } from "../../types/keyboard-snapshot.type";
 
 import { CommonValues } from "./common-values.type";
 

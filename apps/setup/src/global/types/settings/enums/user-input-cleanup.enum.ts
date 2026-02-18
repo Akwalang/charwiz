@@ -1,4 +1,4 @@
 export enum UserInputCleanupEnum {
-  None = 'none',
-  Backspace = 'backspace',
+  None = "none",
+  Backspace = "backspace",
 }

@@ -1,4 +1,4 @@
 export enum KeyboardStateCleanupEnum {
-  None = 'none',
-  Drop = 'drop',
+  None = "none",
+  Drop = "drop",
 }

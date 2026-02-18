@@ -1,6 +1,7 @@
 export * from "./ApplySettings/ApplySettings";
 export * from "./Form/Form";
 export * from "./Icon/Icon";
+export * from "./KbdSnapshot/KbdSnapshot";
 export * from "./LangSwitcher/LangSwitcher";
 export * from "./Logo/Logo";
 export * from "./MainSettingsForm/MainSettingsForm";

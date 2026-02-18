@@ -1,4 +1,5 @@
 export * from './enums/inject-method.enum';
+export * from './enums/key.enum';
 export * from './enums/keyboard-layout.enum';
 export * from './enums/keyboard-state-cleanup.enum';
 export * from './enums/tooltip-type.enum';

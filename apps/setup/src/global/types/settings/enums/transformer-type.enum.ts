@@ -1,5 +1,5 @@
 export enum TransformerTypeEnum {
-  Native = 'native',
-  Plugin = 'plugin',
-  Static = 'static',
+  Native = "native",
+  Plugin = "plugin",
+  Static = "static",
 }

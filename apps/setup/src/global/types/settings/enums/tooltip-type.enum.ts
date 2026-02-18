@@ -1,3 +1,3 @@
 export enum TooltipTypeEnum {
-  Option = 'option',
+  Option = "option",
 }
