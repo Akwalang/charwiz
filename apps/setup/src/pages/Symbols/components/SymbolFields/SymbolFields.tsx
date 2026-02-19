@@ -1,4 +1,4 @@
-import { Separator, InputField } from "@/views/components";
+import { Separator, InputField, HotkeyField } from "@/views/components";
 
 import { useMainSettingsStore } from "@/global/stores/main-settings";
 import { getSymbol } from "@/global/stores/main-settings/selectors";
@@ -14,6 +14,8 @@ export const SymbolFields: React.FC<SymbolFieldsProps> = ({ id }) => {
 
   return (
     <>
+      <Separator />
+      <HotkeyField entity={entity} updateEntity={updateEntity} path="settings.keys" field="keyboardSnapshot" />
       <Separator />
       <InputField entity={entity} updateEntity={updateEntity} path="settings.transformer.value" field="symbol" />
     </>
