@@ -29,5 +29,5 @@ interface KeyProps {
 const split = (str: string) => str.replace(/([a-z])([A-Z0-9])/g, "$1 $2");
 
 const Key: React.FC<KeyProps> = ({ name }) => {
-  return <div className="px-1.5 py-0.5 text-foreground border">{split(name)}</div>
+  return <div className="px-1.5 py-0.5 text-foreground border whitespace-nowrap">{split(name)}</div>
 };

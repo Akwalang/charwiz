@@ -10,6 +10,7 @@ import { MainSettings } from "@/global/types/lang/settings/main";
 
 import { getter } from "@/utils/object";
 import { AllPaths, PathValue } from "@/utils/types";
+import { useRef } from "react";
 
 type WithAction<T extends Record<any, any>> = {
   [K in keyof T as T[K] extends { action: string } ? never : K]: T[K];
@@ -35,7 +36,14 @@ export function HotkeyField<
 >(props: InputFieldProps<E, F, P, V>): React.ReactNode {
   const lang = useLang((state) => state.settings.main.fields);
 
-  const { isRecording, startListen, stopListen } = useHotkeyCapture(props.entity.id, props.path, props.updateEntity as any);
+  const listenerId = useRef(crypto.randomUUID());
+
+  const { isRecording, startListen, stopListen } = useHotkeyCapture(
+    listenerId.current,
+    props.entity.id,
+    props.path,
+    props.updateEntity as any,
+  );
 
   return (
     <div className="flex items-center py-3">

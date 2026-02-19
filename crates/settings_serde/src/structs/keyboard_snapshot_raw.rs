@@ -1,11 +1,11 @@
 use rdev::Key;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use settings_core::structs::KeyboardSnapshot;
 
 use crate::structs::KeyboardModifiersRaw;
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct KeyboardSnapshotRaw {
   pub key: Option<Key>,
   pub modifiers: KeyboardModifiersRaw,

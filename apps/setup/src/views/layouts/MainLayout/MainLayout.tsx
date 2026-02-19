@@ -11,7 +11,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, className, ...
     <div
       className={cn(
         "w-full flex flex-col items-center bg-background/50",
-        "bg-gradient-to-r from-sidebar from-49% to-background to-51%",
+        "bg-linear-to-r from-sidebar from-49% to-background to-51%",
         className,
       )}
       {...other}

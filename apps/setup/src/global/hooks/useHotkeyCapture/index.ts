@@ -9,6 +9,7 @@ import {
 import { KeyboardSnapshot } from "@/global/types/settings/types";
 
 export const useHotkeyCapture = (
+  listenerId: string,
   id: string,
   path: string,
   update: (id: string, path: string, value: KeyboardSnapshot) => void,
@@ -19,8 +20,12 @@ export const useHotkeyCapture = (
 } => {
   const [isRecording, setIsRecording] = useState(false);
 
-  useEffect(() => {
-    isRecording ? startHotkeyCapture() : stopHotkeyCapture();
+  useEffect((): () => void => {
+    let rec = isRecording;
+
+    rec ? startHotkeyCapture(listenerId) : stopHotkeyCapture(listenerId);
+
+    return () => rec && stopHotkeyCapture(listenerId);
   }, [isRecording]);
 
   useEffect(() => {

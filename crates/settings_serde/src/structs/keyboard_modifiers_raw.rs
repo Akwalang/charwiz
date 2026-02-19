@@ -1,10 +1,10 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use rdev::Key;
 
 use settings_core::structs::KeyboardModifiers;
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct KeyboardModifiersRaw(Vec<String>);
 
 impl Default for KeyboardModifiersRaw {
