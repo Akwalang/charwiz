@@ -15,7 +15,7 @@ async fn main() -> anyhow::Result<()> {
   let application = Application::new();
 
   local.run_until(async move {
-    let _ = application.run().await;
+    application.run().await;
   }).await;
 
   Ok(())

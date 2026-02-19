@@ -26,17 +26,20 @@ export const useHotkeyCapture = (
     rec ? startHotkeyCapture(listenerId) : stopHotkeyCapture(listenerId);
 
     return () => rec && stopHotkeyCapture(listenerId);
-  }, [isRecording]);
+  }, [listenerId, isRecording]);
 
   useEffect(() => {
     if (!isRecording) return;
 
-    let promise = retrieveHotkey((snapshot) => update(id, path, snapshot));
+    let promise = retrieveHotkey(
+      (lid, snapshot) => lid === listenerId && update(id, path, snapshot),
+      (lid) => lid === listenerId && setIsRecording(false),
+    );
     
     return () => {
       promise.then((stopStream) => stopStream());
     };
-  }, [id, path, update, isRecording]);
+  }, [listenerId, id, path, update, isRecording]);
 
   return {
     isRecording,

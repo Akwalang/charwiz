@@ -1,15 +1,13 @@
-use uuid::Uuid;
+use super::structs::Stream;
 
 pub struct State {
-  pub name: String,
-  pub hotkey_listener_id: Option<String>,
+  pub hotkey_stream: Option<Stream>,
 }
 
 impl State {
   pub fn new() -> Self {
     State {
-      name: "Charwiz".to_owned(),
-      hotkey_listener_id: None,
+      hotkey_stream: None,
     }
   }
 }
