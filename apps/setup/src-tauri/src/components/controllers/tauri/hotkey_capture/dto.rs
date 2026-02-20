@@ -11,8 +11,8 @@ enum HotkeyEventType {
 #[derive(Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct HotkeyUnsubscribeListenerDto {
-  pub event_type: HotkeyEventType,
-  pub listener_id: String,
+  event_type: HotkeyEventType,
+  listener_id: String,
 }
 
 impl HotkeyUnsubscribeListenerDto {
@@ -26,9 +26,9 @@ impl HotkeyUnsubscribeListenerDto {
 #[derive(Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct HotkeySendSnapshotDto {
-  pub event_type: HotkeyEventType,
-  pub listener_id: String,
-  pub snapshot: KeyboardSnapshotRaw,
+  event_type: HotkeyEventType,
+  listener_id: String,
+  snapshot: KeyboardSnapshotRaw,
 }
 
 impl HotkeySendSnapshotDto {

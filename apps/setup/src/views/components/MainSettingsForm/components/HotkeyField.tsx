@@ -51,7 +51,12 @@ export function HotkeyField<
         {lang[props.field].name}:
       </div>
       <div className="w-1/2">
-        <div className="h-[32px] bg-amber-400" onClick={() => isRecording ? stopListen() : startListen()}>{isRecording ? "Recording" : "Sleeping"}</div>
+        <div
+          className="h-[32px] flex items-center justify-center border text-foreground"
+          onClick={() => isRecording ? stopListen() : startListen()}
+        >
+          {isRecording ? "Recording" : "Sleeping"}
+        </div>
       </div>
     </div>
   );
