@@ -20,7 +20,7 @@ impl Extractor {
     Self { platform, settings }
   }
 
-  pub async fn extract(&self, emulator: &Emulator, event: &CommandEvent) -> anyhow::Result<InputType> {
+  pub async fn extract_target(&self, emulator: &Emulator, event: &CommandEvent) -> anyhow::Result<InputType> {
     match event.injector.target {
       TransformTargetEnum::None => Self::extract_none(),
       TransformTargetEnum::All => self.extract_all(emulator).await,
@@ -31,6 +31,17 @@ impl Extractor {
       TransformTargetEnum::Command => Self::extract_command(),
       TransformTargetEnum::Selection => self.extract_selection(emulator).await,
       TransformTargetEnum::Clipboard => self.extract_clipboard(),
+    }
+  }
+
+  pub async fn extract_context(&self, emulator: &Emulator, event: &CommandEvent) -> anyhow::Result<Option<String>> {
+    if !event.injector.use_selected_context {
+      return Ok(None);
+    }
+
+    match self.extract_selection(emulator).await? {
+      InputType::Text(result) => Ok(Some(result)),
+      _ => Ok(None),
     }
   }
 

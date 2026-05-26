@@ -86,16 +86,24 @@ impl Executor {
 
     let _ = self.switch_keyboard_layout(&current_layout, &event.injector.layout_before);
 
-    let target  = self.extractor.extract(&self.emulator, &event).await;
+    let target  = self.extractor.extract_target(&self.emulator, &event).await;
 
     let Ok(target) = target else {
       #[cfg(feature = "logger")]
-      warn!("<$>Executor</>: Extraction failed: {}", target.err().unwrap());
+      warn!("<$>Executor</>: Target extraction failed: {}", target.err().unwrap());
       self.unlock_application();
-      anyhow::bail!("Extraction failed");
+      anyhow::bail!("Target extraction failed");
     };
 
-    let input = self.transformer.transform(&event, &target).await;
+    let context = self.extractor.extract_context(&self.emulator, &event).await;
+
+    let Ok(context) = context else {
+      #[cfg(feature = "logger")]
+      warn!("<$>Executor</>: Context extraction failed: {}", context.err().unwrap());
+      anyhow::bail!("Context extraction failed");
+    };
+
+    let input = self.transformer.transform(&event, &target, &context).await;
 
     let _inject_result  = self.injector.inject(&self.emulator, &event, input).await;
 
@@ -109,7 +117,7 @@ impl Executor {
     }
 
     let _ = self.switch_keyboard_layout(&current_layout, &event.injector.layout_after);
-    
+
     self.unlock_application();
 
     Ok(())

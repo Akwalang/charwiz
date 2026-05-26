@@ -14,6 +14,8 @@ use crate::enums::{
 #[serde(rename_all = "camelCase")]
 pub struct InjectorRaw {
   #[serde(default)]
+  pub use_selected_context: bool,
+  #[serde(default)]
   pub user_input_cleanup: UserInputCleanupRawEnum,
   #[serde(default)]
   pub keyboard_state_cleanup: KeyboardStateCleanupRawEnum,
@@ -28,6 +30,7 @@ pub struct InjectorRaw {
 impl Into<Injector> for InjectorRaw {
   fn into(self) -> Injector {
     Injector {
+      use_selected_context: self.use_selected_context,
       user_input_cleanup: self.user_input_cleanup.into(),
       keyboard_state_cleanup: self.keyboard_state_cleanup.into(),
       layout_before: self.layout_before.into(),

@@ -263,13 +263,29 @@
     {
       "keys": {
         "key": "KeyV",
+        "modifiers": ["ControlLeft", "Alt"]
+      },
+      "transformer": {
+        "type": "plugin",
+        "value": "smart_case"
+      },
+      "injector": {
+        "useSelectedContext": true,
+        "target": "clipboard",
+        "method": "paste"
+      }
+    },
+    {
+      "keys": {
+        "key": "KeyV",
         "modifiers": ["ControlLeft", "AltGr"]
       },
       "transformer": {
         "type": "plugin",
-        "value": "to_snake_case"
+        "value": "smart_case"
       },
       "injector": {
+        "useSelectedContext": true,
         "target": "selection",
         "method": "paste"
       }

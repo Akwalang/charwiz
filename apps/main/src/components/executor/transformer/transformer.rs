@@ -36,11 +36,11 @@ impl Transformer {
     }
   }
 
-  pub async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
+  pub async fn transform(&self, event: &CommandEvent, target: &InputType, context: &Option<String>) -> InputType {
     match event.transformer.r#type {
-      TransformerTypeEnum::Native => self.native_transformer.transform(event, target).await,
-      TransformerTypeEnum::Plugin => self.plugin_transformer.transform(event, target).await,
-      TransformerTypeEnum::Static => self.static_transformer.transform(event, target).await,
+      TransformerTypeEnum::Native => self.native_transformer.transform(event, target, context).await,
+      TransformerTypeEnum::Plugin => self.plugin_transformer.transform(event, target, context).await,
+      TransformerTypeEnum::Static => self.static_transformer.transform(event, target, context).await,
     }
   }
 }

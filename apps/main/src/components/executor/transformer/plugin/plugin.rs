@@ -83,7 +83,7 @@ impl PluginTransformer {
     Ok(Some(lua))
   }
 
-  fn prepare_data(&self, target: &InputType) -> anyhow::Result<Table<'_>> {
+  fn prepare_data(&self, target: &InputType, context: &Option<String>) -> anyhow::Result<Table<'_>> {
     let lua = self.lua.as_ref().unwrap();
 
     let lua_data = lua.create_table()?;
@@ -92,12 +92,13 @@ impl PluginTransformer {
       .duration_since(UNIX_EPOCH)
       .expect("Time went backwards")
       .as_millis();
-    
+
     let InputType::Text(value) = target else {
       anyhow::bail!("Can't get the target value");
     };
 
     lua_data.set("value", value.to_owned())?;
+    lua_data.set("context", context.to_owned())?;
     lua_data.set("timestamp", format!("{}", timestamp))?;
 
     Ok(lua_data)
@@ -109,7 +110,7 @@ impl Transformer for PluginTransformer {
     Self { platform, settings, lua: None }
   }
 
-  async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
+  async fn transform(&self, event: &CommandEvent, target: &InputType, context: &Option<String>) -> InputType {
     let Some(lua) = self.lua.as_ref() else {
       #[cfg(feature = "logger")]
       warn!("<$>Plugin Transformer</>: Lua not initialized");
@@ -128,7 +129,7 @@ impl Transformer for PluginTransformer {
       return target.clone();
     };
 
-    let Ok(data) = self.prepare_data(target) else {
+    let Ok(data) = self.prepare_data(target, context) else {
       #[cfg(feature = "logger")]
       warn!("<$>Plugin Transformer</>: Can't transform event data to Lua table");
       return target.clone();

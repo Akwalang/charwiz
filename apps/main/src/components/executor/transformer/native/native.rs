@@ -30,7 +30,7 @@ impl Transformer for NativeTransformer {
     Self { platform, settings }
   }
 
-  async fn transform(&self, event: &CommandEvent, target: &InputType) -> InputType {
+  async fn transform(&self, event: &CommandEvent, target: &InputType, context: &Option<String>) -> InputType {
     match event.transformer.value.as_str() {
       "invert_case" => methods::invert_case(target),
       "convert_layout" => methods::convert_layout(self.platform, self.settings, event, target),

@@ -20,7 +20,99 @@ local function split_into_words(input)
     return words
 end
 
-function to_text_case(input)
+local function capitalize(word)
+    return word:sub(1, 1):upper() .. word:sub(2):lower()
+end
+
+local function format_words(words, mode)
+    if mode == "text" then
+        return table.concat(words, " "):lower()
+    end
+
+    if mode == "upper_snake" then
+        return table.concat(words, "_"):upper()
+    end
+
+    if mode == "snake" then
+        return table.concat(words, "_"):lower()
+    end
+
+    if mode == "kebab" then
+        return table.concat(words, "-"):lower()
+    end
+
+    if mode == "pascal" then
+        local result = {}
+
+        for _, word in ipairs(words) do
+            table.insert(result, capitalize(word))
+        end
+
+        return table.concat(result, "")
+    end
+
+    if mode == "camel" then
+        local result = {}
+
+        for i, word in ipairs(words) do
+            if i == 1 then
+                table.insert(result, word:lower())
+            else
+                table.insert(result, capitalize(word))
+            end
+        end
+
+        return table.concat(result, "")
+    end
+
+    return table.concat(words, " ")
+end
+
+local function detect_case(context)
+    if context == nil or context == "" then
+        return "text"
+    end
+
+    context = trim(context)
+
+    if context == "" then
+        return "text"
+    end
+
+    -- UPPER_SNAKE_CASE
+    if context:match("^[A-Z0-9]+_[A-Z0-9_]+$") or context:match("^[A-Z0-9]+$") then
+        return "upper_snake"
+    end
+
+    -- snake_case
+    if context:match("^[a-z0-9]+_[a-z0-9_]+$") then
+        return "snake"
+    end
+
+    -- kebab-case
+    if context:match("^[a-z0-9]+%-[a-z0-9%-]+$") then
+        return "kebab"
+    end
+
+    -- PascalCase
+    if context:match("^%u%w*$") and context:match("%l") then
+        return "pascal"
+    end
+
+    -- camelCase
+    if context:match("^%l%w*$") and context:match("%u") then
+        return "camel"
+    end
+
+    -- plain text
+    if context:match("%s") then
+        return "text"
+    end
+
+    return "text"
+end
+
+local function convert_lines(input, mode)
     local result = {}
 
     for line in input.value:gmatch("([^\n]*)\n?") do
@@ -28,83 +120,63 @@ function to_text_case(input)
             table.insert(result, "")
         else
             local words = split_into_words(line)
-            table.insert(result, table.concat(words, " "):lower())
+            table.insert(result, format_words(words, mode))
         end
     end
 
     return table.concat(result, "\n")
+end
+
+local function split_lines(str)
+    local result = {}
+
+    if str == nil then
+        return result
+    end
+
+    for line in str:gmatch("([^\n]*)\n?") do
+        table.insert(result, line)
+    end
+
+    if #result > 0 and result[#result] == "" then
+        table.remove(result, #result)
+    end
+
+    return result
+end
+
+
+
+function smart_case(input)
+    local context_lines = split_lines(input.context or "")
+    local result = {}
+
+    for _, context_line in ipairs(context_lines) do
+        local words = split_into_words(input.value)
+        local mode = detect_case(context_line)
+
+        table.insert(result, format_words(words, mode))
+    end
+
+    return table.concat(result, "\n")
+end
+
+function to_text_case(input)
+    return convert_lines(input, "text")
 end
 
 function to_snake_case(input)
-    local result = {}
-
-    for line in input.value:gmatch("([^\n]*)\n?") do
-        if line == "" then
-            table.insert(result, "")
-        else
-            local words = split_into_words(line)
-            table.insert(result, table.concat(words, "_"):lower())
-        end
-    end
-
-    return table.concat(result, "\n")
+    return convert_lines(input, "snake")
 end
 
 function to_pascal_case(input)
-    local result = {}
-
-    for line in input.value:gmatch("([^\n]*)\n?") do
-        if line == "" then
-            table.insert(result, "")
-        else
-            local words = split_into_words(line)
-
-            for i, word in ipairs(words) do
-                words[i] = word:sub(1, 1):upper() .. word:sub(2):lower()
-            end
-
-            table.insert(result, table.concat(words, ""))
-        end
-    end
-
-    return table.concat(result, "\n")
+    return convert_lines(input, "pascal")
 end
 
 function to_camel_case(input)
-    local result = {}
-
-    for line in input.value:gmatch("([^\n]*)\n?") do
-        if line == "" then
-            table.insert(result, "")
-        else
-            local words = split_into_words(line)
-
-            for i, word in ipairs(words) do
-                if i > 1 then
-                    words[i] = word:sub(1, 1):upper() .. word:sub(2):lower()
-                else
-                    words[i] = word:lower()
-                end
-            end
-
-            table.insert(result, table.concat(words, ""))
-        end
-    end
-
-    return table.concat(result, "\n")
+    return convert_lines(input, "camel")
 end
 
 function to_kebab_case(input)
-    local result = {}
-
-    for line in input.value:gmatch("([^\n]*)\n?") do
-        if line == "" then
-            table.insert(result, "")
-        else
-            local words = split_into_words(line)
-            table.insert(result, table.concat(words, "-"):lower())
-        end
-    end
-
-    return table.concat(result, "\n")
+    return convert_lines(input, "kebab")
 end

@@ -8,6 +8,7 @@ use crate::enums::{
 
 #[derive(Debug, Clone)]
 pub struct Injector {
+  pub use_selected_context: bool,
   pub user_input_cleanup: UserInputCleanupEnum,
   pub keyboard_state_cleanup: KeyboardStateCleanupEnum,
   pub layout_before: KeyboardLayoutEnum,

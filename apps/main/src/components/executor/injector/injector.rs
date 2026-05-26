@@ -86,10 +86,14 @@ impl Injector {
     clipboard.backup();
     clipboard.set_clipboard_text(&value)?;
 
+    sleep(Duration::from_millis(100)).await;
+
     let clipboard_settings = self.settings.get_clipboard_hotkeys();
     let pipeline = commands::create_paste_pipeline(clipboard_settings.paste.clone());
 
     let result = emulator.run_pipeline(&pipeline).await;
+
+    sleep(Duration::from_millis(100)).await;
 
     clipboard.restore();
 
