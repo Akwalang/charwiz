@@ -1,7 +1,10 @@
+use std::time::Duration;
+
 #[cfg(feature = "logger")]
 use logger::*;
 
 use crate::platform::common::structs::KeyboardLayoutItem;
+use crate::utils::spin_lock::spin_sleep;
 
 use super::utils;
 
@@ -37,6 +40,14 @@ impl KeyboardLayouts {
   //   &self.items
   // }
 
+  pub fn get_first_layout(&self) -> KeyboardLayoutItem {
+    if let Some(kbl) = self.items.first() {
+      kbl.clone()
+    } else {
+      KeyboardLayoutItem::default()
+    }
+  }
+
   pub fn get_keyboard_layout_by_id(&self, id: &str) -> Option<&KeyboardLayoutItem> {
     self.items.iter().find(|lt| lt.id == id)
   }
@@ -66,7 +77,7 @@ impl KeyboardLayouts {
   pub fn get_previous_to_keyboard_layout(&self, id: &str) -> &KeyboardLayoutItem {
     let lts = &self.items;
 
-    let idx: usize = lts.iter().position(|lt| lt.id == *id).unwrap();
+    let idx: usize = lts.iter().position(|lt| lt.id == *id).or(Some(0)).unwrap();
     let next_idx = (lts.len() + idx - 1) % lts.len();
 
     &lts.get(next_idx).unwrap()
@@ -75,7 +86,7 @@ impl KeyboardLayouts {
   pub fn get_next_to_keyboard_layout(&self, id: &str) -> &KeyboardLayoutItem {
     let lts = &self.items;
 
-    let idx: usize = lts.iter().position(|lt| lt.id == *id).unwrap();
+    let idx: usize = lts.iter().position(|lt| lt.id == *id).or(Some(0)).unwrap();
     let next_idx = (lts.len() + idx + 1) % lts.len();
 
     &lts.get(next_idx).unwrap()
@@ -92,6 +103,8 @@ impl KeyboardLayouts {
 
     #[cfg(feature = "logger")]
     log!("<$>Platform::KeyboardLayouts</>: Switch keyboard layout to: <i+>{}</> (<i+>{}</>)", lt.name, layout_id);
+
+    spin_sleep(Duration::from_millis(5));
 
     Ok(Some(lt.clone()))
   }

@@ -29,7 +29,7 @@ impl Transformer for StaticTransformer {
     Self { platform, settings }
   }
 
-  async fn transform(&self, event: &CommandEvent, _target: &InputType, context: &Option<String>) -> InputType {
+  async fn transform(&self, event: &CommandEvent, _target: &InputType, _context: &Option<String>) -> InputType {
     let result = event.transformer.value.to_owned();
 
     #[cfg(feature = "logger")]

@@ -69,7 +69,7 @@ impl HotkeyDetector {
     let snapshot = state.keyboard.get_current_snapshot();
     let mut captured = self.captured.borrow_mut();
 
-    if captured.is_some() && snapshot == KeyboardSnapshot::default() {
+    if captured.is_some() && *snapshot == KeyboardSnapshot::default() {
       self.publish_command(state, captured.as_ref().unwrap().clone());
       *captured = None;
 

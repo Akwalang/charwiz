@@ -2,6 +2,7 @@
 
 mod common;
 mod constants;
+mod utils;
 
 mod platform;
 mod settings;

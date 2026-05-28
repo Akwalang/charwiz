@@ -1,9 +1,10 @@
-use tokio::time::{sleep, Duration};
+use std::time::Duration;
 use rdev::{EventType, simulate};
 
 use settings_core::structs::{KeyboardSnapshot, KeyboardModifiers};
 
 use crate::settings::Settings;
+use crate::utils::spin_lock::spin_sleep;
 
 pub struct Emulator {
   #[allow(dead_code)]
@@ -34,13 +35,11 @@ impl Emulator {
   //   Ok(())
   // }
 
-  pub async fn run_pipeline(&self, pipeline: &[KeyboardSnapshot]) -> anyhow::Result<()> {
+  pub fn run_pipeline(&self, pipeline: &[KeyboardSnapshot]) -> anyhow::Result<()> {
     let queue = pipeline.iter();
 
     let mut current = &KeyboardSnapshot::default();
     let mut pipeline = Vec::<EventType>::with_capacity(Self::CAPACITY);
-
-    sleep(Duration::from_millis(1)).await;
 
     for next in queue {
       Self::put_snapshots_into_pipeline(&mut pipeline, current, next);
@@ -48,8 +47,9 @@ impl Emulator {
       for event in &pipeline {
         simulate(event)?;
 
-        // Must be awaited to not block event_hub
-        sleep(Duration::from_millis(1)).await;
+        if KeyboardModifiers::is_modifier_event(&event) {
+          spin_sleep(Duration::from_millis(5));
+        }
       }
 
       current = next;

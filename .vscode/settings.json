@@ -53,5 +53,6 @@
     "serde",
     "uparrow",
     "winres"
-  ]
+  ],
+  "kiroAgent.configureMCP": "Disabled"
 }

@@ -48,7 +48,7 @@ impl Extractor {
   async fn get_data_through_clipboard(&self, emulator: &Emulator, pipeline: &[KeyboardSnapshot]) -> anyhow::Result<InputType> {
     self.platform.clipboard.borrow_mut().backup();
 
-    let _ = emulator.run_pipeline(pipeline).await;
+    let _ = emulator.run_pipeline(pipeline);
 
     let result = self.platform.clipboard.borrow().get_clipboard_text();
 

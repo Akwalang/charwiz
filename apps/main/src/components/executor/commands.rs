@@ -57,13 +57,12 @@ pub fn create_paste_pipeline(paste: KeyboardSnapshot) -> [KeyboardSnapshot; 2] {
   [paste, KeyboardSnapshot::default()]
 }
 
-pub fn create_backspace_pipeline() -> [KeyboardSnapshot; 2] {
+pub fn create_backspace_pipeline() -> [KeyboardSnapshot; 1] {
   [
     KeyboardSnapshot::new(
       Some(Key::Backspace),
       KeyboardModifiers::new(KeyboardModifiers::NONE),
     ),
-    KeyboardSnapshot::default(),
   ]
 }
 

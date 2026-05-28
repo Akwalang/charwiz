@@ -72,7 +72,7 @@ impl SymbolDetector {
     let snapshot = state.keyboard.get_current_snapshot();
 
     if let Some(symbol) = captured.as_ref() {
-      if snapshot == KeyboardSnapshot::default() {
+      if *snapshot == KeyboardSnapshot::default() {
         self.publish_command(state, symbol.clone());
         *captured = None;
       }

@@ -73,7 +73,7 @@ impl SwitchDetector {
 
     let mut captured = self.captured.borrow_mut();
 
-    if captured.is_some() && snapshot == KeyboardSnapshot::default() {
+    if captured.is_some() && *snapshot == KeyboardSnapshot::default() {
       self.publish_command(state, captured.as_ref().unwrap().clone());
       *captured = None;
 
@@ -93,8 +93,14 @@ impl SwitchDetector {
   fn find_switch(&self, input: &Vec<char>) -> Option<Switch> {
     let switches = self.settings.get_switches();
 
+    let input = if input.last().is_some_and(|c| c.is_whitespace()) {
+        &input[..input.len() - 1]
+    } else {
+        input.as_slice()
+    };
+
     for switch in switches.iter() {
-      if input.ends_with(&switch.text) { 
+      if *input == switch.text {
         return Some(switch.clone());
       }
     }
@@ -103,17 +109,17 @@ impl SwitchDetector {
   }
 
   fn publish_command(&self, state: Ref<'_, State>, switch: Switch) {
-      let char_stack = state.keyboard.get_chars();
-      let event_stack = state.keyboard.get_events();
+    let char_stack = state.keyboard.get_chars();
+    let event_stack = state.keyboard.get_events();
 
-      let transformer = switch.transformer.clone();
-      let mut injector = switch.injector.clone();
+    let transformer = switch.transformer.clone();
+    let mut injector = switch.injector.clone();
 
-      injector.user_input_cleanup = UserInputCleanupEnum::Backspace(switch.text.len() as u8);
-      injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
+    injector.user_input_cleanup = UserInputCleanupEnum::Backspace(switch.text.len() as u8);
+    injector.keyboard_state_cleanup = KeyboardStateCleanupEnum::Drop;
 
-      let command = CommandEvent { char_stack, event_stack, transformer, injector };
+    let command = CommandEvent { char_stack, event_stack, transformer, injector };
 
-      self.event_hub.publish_command(command).ok();
+    self.event_hub.publish_command(command).ok();
   }
 }

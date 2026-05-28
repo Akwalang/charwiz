@@ -60,11 +60,13 @@ impl Injector {
     match event.injector.user_input_cleanup {
       UserInputCleanupEnum::None => {},
       UserInputCleanupEnum::Backspace(count) => {
-        let pipeline = commands::create_backspace_pipeline();
+        let mut pipeline = (0..count)
+          .flat_map(|_| commands::create_backspace_pipeline())
+          .collect::<Vec<KeyboardSnapshot>>();
 
-        for _ in 0..count {
-          emulator.run_pipeline(&pipeline).await?;
-        }
+        pipeline.extend(commands::create_release_pipeline());
+
+        emulator.run_pipeline(&pipeline)?;
       },
     }
 
@@ -77,7 +79,7 @@ impl Injector {
     pipeline.extend_from_slice(value);
     pipeline.extend_from_slice(&commands::create_release_pipeline());
 
-    emulator.run_pipeline(&pipeline).await
+    emulator.run_pipeline(&pipeline)
   }
 
   async fn use_paste(&self, emulator: &Emulator, value: String) -> anyhow::Result<()> {
@@ -91,7 +93,7 @@ impl Injector {
     let clipboard_settings = self.settings.get_clipboard_hotkeys();
     let pipeline = commands::create_paste_pipeline(clipboard_settings.paste.clone());
 
-    let result = emulator.run_pipeline(&pipeline).await;
+    let result = emulator.run_pipeline(&pipeline);
 
     sleep(Duration::from_millis(100)).await;
 
@@ -133,7 +135,7 @@ impl Injector {
     let clipboard = self.settings.get_clipboard_hotkeys();
     let pipeline = commands::create_paste_pipeline(clipboard.paste.clone());
 
-    emulator.run_pipeline(&pipeline).await?;
+    emulator.run_pipeline(&pipeline)?;
 
     self.platform.clipboard.borrow_mut().restore();
 
@@ -145,8 +147,6 @@ impl Injector {
     let layout_chars = settings.items.get(&line.1).unwrap();
 
     self.platform.keyboard_layouts.borrow_mut().set_keyboard_layout(&line.0)?;
-
-    sleep(Duration::from_millis(1)).await;
 
     let chars = line.2.chars();
 
@@ -162,7 +162,7 @@ impl Injector {
 
     pipeline.push(KeyboardSnapshot::default());
 
-    emulator.run_pipeline(&pipeline).await?;
+    emulator.run_pipeline(&pipeline)?;
 
     Ok(())
   }

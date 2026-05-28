@@ -61,6 +61,20 @@
         "layoutAfter": "en-US",
         "keyboardStateCleanup": "drop"
       }
+    },
+    {
+      "text": "пше",
+      "transformer": {
+        "type": "native",
+        "value": "none"
+      },
+      "injector": {
+        "target": "events",
+        "method": "emulate",
+        "layoutBefore": "en-US",
+        "layoutAfter": "en-US",
+        "keyboardStateCleanup": "drop"
+      }
     }
   ],
   "hotkeys": [
@@ -77,7 +91,7 @@
         "target": "events",
         "method": "emulate",
         "layoutBefore": "next",
-        "layoutAfter": "next"
+        "layoutAfter": "current"
       }
     },
     {

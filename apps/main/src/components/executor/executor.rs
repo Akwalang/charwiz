@@ -4,6 +4,7 @@ use std::rc::Rc;
 #[cfg(feature = "logger")]
 use logger::*;
 
+use tokio::time::{sleep, Duration};
 use tokio::sync::broadcast::error::RecvError;
 
 use settings_core::enums::{KeyboardStateCleanupEnum, KeyboardLayoutEnum};
@@ -82,9 +83,15 @@ impl Executor {
   async fn process_event(self: &Rc<Self>, event: CommandEvent) -> anyhow::Result<()> {
     self.lock_application();
 
-    let current_layout = self.platform.keyboard_layouts.borrow().get_current_keyboard_layout()?.clone();
+    let current_layout = self.state.borrow().keyboard.get_initial_keyboard_layout().clone();
 
-    let _ = self.switch_keyboard_layout(&current_layout, &event.injector.layout_before);
+    println!("Current 1: {:?}", current_layout);
+    let kbl = self.switch_keyboard_layout(&current_layout, &event.injector.layout_before);
+    println!("Switch 1: {:?}", kbl);
+
+    if let Ok(Some(kbl)) = kbl {
+      self.state.borrow_mut().keyboard.set_initial_keyboard_layout(kbl);
+    };
 
     let target  = self.extractor.extract_target(&self.emulator, &event).await;
 
@@ -100,6 +107,7 @@ impl Executor {
     let Ok(context) = context else {
       #[cfg(feature = "logger")]
       warn!("<$>Executor</>: Context extraction failed: {}", context.err().unwrap());
+      self.unlock_application();
       anyhow::bail!("Context extraction failed");
     };
 
@@ -112,11 +120,19 @@ impl Executor {
       warn!("<$>Executor</>: Injection failed: {}", error);
     }
 
+    // Must sleep to shade events_hub events before unlock the application
+    // time can evaluate to 15 ms based on os timers but it's fine
+    sleep(Duration::from_millis(1)).await;
+
     if event.injector.keyboard_state_cleanup == KeyboardStateCleanupEnum::Drop {
       self.state.borrow_mut().keyboard.stack_clear();
     }
 
-    let _ = self.switch_keyboard_layout(&current_layout, &event.injector.layout_after);
+    let current_layout = self.platform.keyboard_layouts.borrow().get_current_keyboard_layout()?.clone();
+
+    println!("Current 2: {:?}", current_layout);
+    let kbl = self.switch_keyboard_layout(&current_layout, &event.injector.layout_after);
+    println!("Switch 2: {:?}", kbl);
 
     self.unlock_application();
 
@@ -131,22 +147,20 @@ impl Executor {
     self.state.borrow_mut().application.set_status(ApplicationStatus::Listening);
   }
 
-  fn switch_keyboard_layout(&self, current: &KeyboardLayoutItem, next: &KeyboardLayoutEnum) -> anyhow::Result<()> {
+  fn switch_keyboard_layout(&self, current: &KeyboardLayoutItem, next: &KeyboardLayoutEnum) -> anyhow::Result<Option<KeyboardLayoutItem>> {
     let keyboard_layouts = self.platform.keyboard_layouts.borrow();
 
     match next {
-      KeyboardLayoutEnum::Previous => keyboard_layouts.set_previous_to_keyboard_layout(current.id.as_str())?,
-      KeyboardLayoutEnum::Current => keyboard_layouts.set_keyboard_layout(current.id.as_str())?,
-      KeyboardLayoutEnum::Next => keyboard_layouts.set_next_to_keyboard_layout(current.id.as_str())?,
+      KeyboardLayoutEnum::Previous => keyboard_layouts.set_previous_to_keyboard_layout(current.id.as_str()),
+      KeyboardLayoutEnum::Current => keyboard_layouts.set_keyboard_layout(current.id.as_str()),
+      KeyboardLayoutEnum::Next => keyboard_layouts.set_next_to_keyboard_layout(current.id.as_str()),
       KeyboardLayoutEnum::Direct(layout) => {
         let Some(layout_item) = keyboard_layouts.get_keyboard_layout_by_name(&layout) else {
-          return Ok(());
+          return Ok(None);
         };
 
-        keyboard_layouts.set_keyboard_layout(layout_item.id.as_str())?
+        keyboard_layouts.set_keyboard_layout(layout_item.id.as_str())
       },
-    };
-
-    Ok(())
+    }
   }
 }

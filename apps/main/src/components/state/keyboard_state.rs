@@ -8,16 +8,18 @@ use settings_core::structs::{KeyboardSnapshot, KeyboardModifiers};
 use crate::platform::Platform;
 use crate::settings::Settings;
 
+use crate::platform::common::structs::KeyboardLayoutItem;
+
 pub struct KeyboardState {
   platform: &'static Platform,
   settings: &'static Settings,
 
   keyboard_snapshot: KeyboardSnapshot,
 
-  pub initial_keyboard_layout: String,
+  initial_keyboard_layout: KeyboardLayoutItem,
 
-  pub char_stack: Vec<char>,
-  pub event_stack: Vec<(bool, KeyboardSnapshot)>,
+  char_stack: Vec<char>,
+  event_stack: Vec<(bool, KeyboardSnapshot)>,
 }
 
 impl KeyboardState {
@@ -26,7 +28,7 @@ impl KeyboardState {
       platform,
       settings,
 
-      initial_keyboard_layout: String::new(),
+      initial_keyboard_layout: platform.keyboard_layouts.borrow().get_first_layout(),
       keyboard_snapshot: KeyboardSnapshot::default(),
 
       char_stack: Vec::with_capacity(20),
@@ -34,8 +36,17 @@ impl KeyboardState {
     }
   }
 
-  pub fn get_current_snapshot(&self) -> KeyboardSnapshot {
-    self.keyboard_snapshot.clone()
+  pub fn get_initial_keyboard_layout(&self) -> &KeyboardLayoutItem {
+    &self.initial_keyboard_layout
+  }
+
+  pub fn set_initial_keyboard_layout(&mut self, kbl: KeyboardLayoutItem) {
+    println!("SET KBL: {:?}", kbl);
+    self.initial_keyboard_layout = kbl;
+  }
+
+  pub fn get_current_snapshot(&self) -> &KeyboardSnapshot {
+    &self.keyboard_snapshot
   }
 
   pub fn get_char_stack(&self) -> &Vec<char> {
@@ -116,14 +127,14 @@ impl KeyboardState {
       return;
     };
 
-    let cur_layout_name = cur_layout.name.to_owned();
-
-    let (char, is_char_exists) = settings_kl.find_combination(&cur_layout_name, &key, self.keyboard_snapshot.modifiers);
+    let (char, is_char_exists) = settings_kl.find_combination(&cur_layout.name, &key, self.keyboard_snapshot.modifiers);
     let is_switch_exists = switchers.iter().any(|kb| *kb == self.keyboard_snapshot);
 
     // skip registration when hotkey missing in all keyboard layouts
     // but save when any of layouts has this hotkey
     if !is_char_exists && !is_switch_exists { return; }
+
+    if is_switch_exists && self.char_stack.is_empty() { return; }
 
     if let Some(char) = char {
       if false
@@ -135,7 +146,7 @@ impl KeyboardState {
       }
 
       if self.char_stack.len() == 0 {
-        self.initial_keyboard_layout = cur_layout_name;
+        self.set_initial_keyboard_layout(cur_layout.clone());
       }
 
       self.char_stack.push(char);
