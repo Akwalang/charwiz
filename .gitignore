@@ -1,5 +1,6 @@
 /apps/*/target
 /crates/*/target
+/target
 
 .idea
 .vscode

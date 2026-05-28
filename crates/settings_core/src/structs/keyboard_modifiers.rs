@@ -1,4 +1,4 @@
-use rdev::Key;
+use rdev::{Key, EventType};
 
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
 pub struct KeyboardModifiers(pub u8);
@@ -69,6 +69,14 @@ impl KeyboardModifiers {
       Key::ShiftLeft   | Key::ShiftRight   => true,
       Key::Alt         | Key::AltGr        => true,
       Key::MetaLeft    | Key::MetaRight    => true,
+      _ => false,
+    }
+  }
+
+  pub fn is_modifier_event(event: &EventType) -> bool {
+    match event {
+      EventType::KeyPress(key) => Self::is_modifier(&key),
+      EventType::KeyRelease(key) => Self::is_modifier(&key),
       _ => false,
     }
   }
@@ -144,7 +152,7 @@ impl Iterator for KeyboardModifiersIter {
 impl IntoIterator for KeyboardModifiers {
   type Item = Key;
   type IntoIter = KeyboardModifiersIter;
-  
+
   fn into_iter(self) -> Self::IntoIter {
     KeyboardModifiersIter::new(self)
   }

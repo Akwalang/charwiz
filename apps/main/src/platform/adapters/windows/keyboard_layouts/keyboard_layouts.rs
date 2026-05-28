@@ -64,7 +64,7 @@ impl KeyboardLayouts {
 
   // pub fn get_previous_keyboard_layout(&self) -> anyhow::Result<&KeyboardLayoutItem> {
   //   let id = utils::get_current_keyboard_layout_id()?;
-    
+
   //   Ok(self.get_previous_to_keyboard_layout(&id))
   // }
 

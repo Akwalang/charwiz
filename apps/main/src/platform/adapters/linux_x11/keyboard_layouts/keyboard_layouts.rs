@@ -41,6 +41,14 @@ impl KeyboardLayouts {
     log!("<$>Linux X11::KeyboardLayouts</>: Available keyboard layouts: {}", names);
   }
 
+  pub fn get_first_layout(&self) -> KeyboardLayoutItem {
+    if let Some(kbl) = self.items.first() {
+      kbl.clone()
+    } else {
+      KeyboardLayoutItem::default()
+    }
+  }
+
   pub fn get_keyboard_layout_by_id(&self, id: &str) -> Option<&KeyboardLayoutItem> {
     self.items.iter().find(|lt| lt.id == id)
   }
@@ -57,7 +65,7 @@ impl KeyboardLayouts {
 
   pub fn get_previous_keyboard_layout(&self) -> anyhow::Result<&KeyboardLayoutItem> {
     let id = utils::get_current_keyboard_layout_id();
-    
+
     Ok(self.get_previous_to_keyboard_layout(&id))
   }
 
