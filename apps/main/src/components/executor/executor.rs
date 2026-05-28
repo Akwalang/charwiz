@@ -81,13 +81,10 @@ impl Executor {
   }
 
   async fn process_event(self: &Rc<Self>, event: CommandEvent) -> anyhow::Result<()> {
-    self.lock_application();
+    let _app_lock_guard = self.lock_application();
 
     let current_layout = self.state.borrow().keyboard.get_initial_keyboard_layout().clone();
-
-    println!("Current 1: {:?}", current_layout);
     let kbl = self.switch_keyboard_layout(&current_layout, &event.injector.layout_before);
-    println!("Switch 1: {:?}", kbl);
 
     if let Ok(Some(kbl)) = kbl {
       self.state.borrow_mut().keyboard.set_initial_keyboard_layout(kbl);
@@ -98,7 +95,6 @@ impl Executor {
     let Ok(target) = target else {
       #[cfg(feature = "logger")]
       warn!("<$>Executor</>: Target extraction failed: {}", target.err().unwrap());
-      self.unlock_application();
       anyhow::bail!("Target extraction failed");
     };
 
@@ -107,7 +103,6 @@ impl Executor {
     let Ok(context) = context else {
       #[cfg(feature = "logger")]
       warn!("<$>Executor</>: Context extraction failed: {}", context.err().unwrap());
-      self.unlock_application();
       anyhow::bail!("Context extraction failed");
     };
 
@@ -129,22 +124,13 @@ impl Executor {
     }
 
     let current_layout = self.platform.keyboard_layouts.borrow().get_current_keyboard_layout()?.clone();
-
-    println!("Current 2: {:?}", current_layout);
-    let kbl = self.switch_keyboard_layout(&current_layout, &event.injector.layout_after);
-    println!("Switch 2: {:?}", kbl);
-
-    self.unlock_application();
+    let _ = self.switch_keyboard_layout(&current_layout, &event.injector.layout_after);
 
     Ok(())
   }
 
-  fn lock_application(&self) {
-    self.state.borrow_mut().application.set_status(ApplicationStatus::Executing);
-  }
-
-  fn unlock_application(&self) {
-    self.state.borrow_mut().application.set_status(ApplicationStatus::Listening);
+  fn lock_application(&self) -> ApplicationLockGuard {
+    ApplicationLockGuard::new(self.state.clone())
   }
 
   fn switch_keyboard_layout(&self, current: &KeyboardLayoutItem, next: &KeyboardLayoutEnum) -> anyhow::Result<Option<KeyboardLayoutItem>> {
@@ -162,5 +148,23 @@ impl Executor {
         keyboard_layouts.set_keyboard_layout(layout_item.id.as_str())
       },
     }
+  }
+}
+
+struct ApplicationLockGuard {
+  state: Rc<RefCell<State>>,
+}
+
+impl ApplicationLockGuard {
+  pub fn new(state: Rc<RefCell<State>>) -> Self {
+    state.borrow_mut().application.set_status(ApplicationStatus::Executing);
+
+    Self { state }
+  }
+}
+
+impl Drop for ApplicationLockGuard {
+  fn drop(&mut self) {
+    self.state.borrow_mut().application.set_status(ApplicationStatus::Listening);
   }
 }

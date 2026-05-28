@@ -74,7 +74,7 @@ impl UserInputController {
     #[cfg(feature = "logger")]
     Self::write_debug_info(&event, is_executing);
 
-    state.keyboard.apply_key_event(&event);
+    state.keyboard.apply_key_event(&event, is_executing);
 
     if is_executing { return; }
 

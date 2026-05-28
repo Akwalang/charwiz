@@ -41,7 +41,6 @@ impl KeyboardState {
   }
 
   pub fn set_initial_keyboard_layout(&mut self, kbl: KeyboardLayoutItem) {
-    println!("SET KBL: {:?}", kbl);
     self.initial_keyboard_layout = kbl;
   }
 
@@ -61,10 +60,10 @@ impl KeyboardState {
     self.event_stack.iter().map(|item| item.1.clone()).collect()
   }
 
-  pub fn apply_key_event(&mut self, event: &Event) {
+  pub fn apply_key_event(&mut self, event: &Event, is_executing: bool) {
     match event.event_type {
       EventType::ButtonPress(_) | EventType::ButtonRelease(_) => self.process_mouse_event(event),
-      EventType::KeyPress(_) | EventType::KeyRelease(_) => self.process_keyboard_event(event),
+      EventType::KeyPress(_) | EventType::KeyRelease(_) => self.process_keyboard_event(event, is_executing),
       _ => {},
     }
   }
@@ -75,7 +74,7 @@ impl KeyboardState {
     self.stack_clear();
   }
 
-  fn process_keyboard_event(&mut self, event: &Event) {
+  fn process_keyboard_event(&mut self, event: &Event, is_executing: bool) {
     let Some((key, state)) = Self::get_key(&event) else { return; };
 
     if KeyboardModifiers::is_modifier(&key) {
@@ -97,7 +96,7 @@ impl KeyboardState {
     } else if Self::is_backspace(&key) {
       self.handle_backspace(key);
     } else {
-      self.handle_insert(key);
+      self.handle_insert(key, is_executing);
     }
   }
 
@@ -117,7 +116,7 @@ impl KeyboardState {
     self.stack_clear();
   }
 
-  fn handle_insert(&mut self, key: Key) {
+  fn handle_insert(&mut self, key: Key, is_executing: bool) {
     let platform_kl = self.platform.keyboard_layouts.borrow();
     let settings_kl = self.settings.keyboard_layouts.borrow();
 
@@ -145,7 +144,7 @@ impl KeyboardState {
         self.stack_clear();
       }
 
-      if self.char_stack.len() == 0 {
+      if !is_executing && self.char_stack.len() == 0 {
         self.set_initial_keyboard_layout(cur_layout.clone());
       }
 
