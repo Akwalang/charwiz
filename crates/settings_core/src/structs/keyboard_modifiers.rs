@@ -25,7 +25,7 @@ impl KeyboardModifiers {
     KeyboardModifiers(state)
   }
 
-  pub fn add_key(&mut self, key: &Key) {
+  pub fn add_key(&mut self, key: Key) {
     match key {
       Key::ControlLeft  => self.0 |= Self::CONTROL_LEFT,
       Key::ControlRight => self.0 |= Self::CONTROL_RIGHT,
@@ -39,7 +39,7 @@ impl KeyboardModifiers {
     }
   }
 
-  pub fn remove_key(&mut self, key: &Key) {
+  pub fn remove_key(&mut self, key: Key) {
     match key {
       Key::ControlLeft  => self.0 &= !Self::CONTROL_LEFT,
       Key::ControlRight => self.0 &= !Self::CONTROL_RIGHT,
@@ -63,7 +63,7 @@ impl KeyboardModifiers {
     self.anyfy() == KeyboardModifiers(modifiers).anyfy()
   }
 
-  pub fn is_modifier(key: &Key) -> bool {
+  pub fn is_modifier(key: Key) -> bool {
     match key {
       Key::ControlLeft | Key::ControlRight => true,
       Key::ShiftLeft   | Key::ShiftRight   => true,
@@ -74,16 +74,16 @@ impl KeyboardModifiers {
   }
 
   #[inline(always)]
-  pub fn is_modifier_event(event: &EventType) -> bool {
+  pub fn is_modifier_event(event: EventType) -> bool {
     match event {
-      EventType::KeyPress(key) => Self::is_modifier(&key),
-      EventType::KeyRelease(key) => Self::is_modifier(&key),
+      EventType::KeyPress(key) => Self::is_modifier(key),
+      EventType::KeyRelease(key) => Self::is_modifier(key),
       _ => false,
     }
   }
 
   #[inline(always)]
-  pub fn compare_to_release(a: &KeyboardModifiers, b: &KeyboardModifiers) -> KeyboardModifiers {
+  pub fn compare_to_release(a: KeyboardModifiers, b: KeyboardModifiers) -> KeyboardModifiers {
     // a     01001001
     // b     00101100
     // xor   01100101
@@ -93,7 +93,7 @@ impl KeyboardModifiers {
   }
 
   #[inline(always)]
-  pub fn compare_to_press(a: &KeyboardModifiers, b: &KeyboardModifiers) -> KeyboardModifiers {
+  pub fn compare_to_press(a: KeyboardModifiers, b: KeyboardModifiers) -> KeyboardModifiers {
     // a     01001001
     // b     00101100
     // xor   01100101
@@ -153,7 +153,7 @@ impl Iterator for KeyboardModifiersIter {
 impl IntoIterator for KeyboardModifiers {
   type Item = Key;
   type IntoIter = KeyboardModifiersIter;
-  
+
   fn into_iter(self) -> Self::IntoIter {
     KeyboardModifiersIter::new(self)
   }

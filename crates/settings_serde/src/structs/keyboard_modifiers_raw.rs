@@ -36,7 +36,7 @@ impl Into<KeyboardModifiers> for KeyboardModifiersRaw {
         panic!("Unknown modifier key: {}", str);
       };
 
-      result.add_key(&key);
+      result.add_key(key);
     }
 
     result

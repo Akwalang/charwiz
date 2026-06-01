@@ -38,14 +38,14 @@ impl KeyboardLayouts {
   }
 
   // Yes, we need here tuple not just Some/None, the second return means the char existing in some other layout
-  pub fn find_combination(&self, layout_name: &str, key: &Key, modifiers: KeyboardModifiers) -> (Option<char>, bool) {
+  pub fn find_combination(&self, layout_name: &str, key: Key, modifiers: KeyboardModifiers) -> (Option<char>, bool) {
     let mut char = None;
     let mut is_exists = false;
 
     let compare = |item: &&KeyInsert| item.modifiers == modifiers;
 
     for (name, layout_item) in &self.items {
-      let Some(setup) = layout_item.keys.get(key) else { continue; };
+      let Some(setup) = layout_item.keys.get(&key) else { continue; };
       let Some(insert) = setup.insert.iter().find(compare) else { continue; };
 
       is_exists = true;

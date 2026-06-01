@@ -45,7 +45,7 @@ impl Emulator {
       Self::put_snapshots_into_pipeline(&mut pipeline, current, next);
 
       for event in &pipeline {
-        let is_modifier = KeyboardModifiers::is_modifier_event(&event);
+        let is_modifier = KeyboardModifiers::is_modifier_event(*event);
 
         if is_modifier {
           spin_sleep(Duration::from_millis(8));
@@ -71,8 +71,8 @@ impl Emulator {
   ) {
     pipeline.clear();
 
-    let release = KeyboardModifiers::compare_to_release(&before.modifiers, &after.modifiers);
-    let press = KeyboardModifiers::compare_to_press(&before.modifiers, &after.modifiers);
+    let release = KeyboardModifiers::compare_to_release(before.modifiers, after.modifiers);
+    let press = KeyboardModifiers::compare_to_press(before.modifiers, after.modifiers);
 
     if before.key.is_some() {
       pipeline.push(EventType::KeyRelease(before.key.unwrap()));

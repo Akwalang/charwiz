@@ -77,11 +77,11 @@ impl KeyboardState {
   fn process_keyboard_event(&mut self, event: &Event, is_executing: bool) {
     let Some((key, state)) = Self::get_key(&event) else { return; };
 
-    if KeyboardModifiers::is_modifier(&key) {
+    if KeyboardModifiers::is_modifier(key) {
       self.handle_modifier_update(key, state);
     }
 
-    if !KeyboardModifiers::is_modifier(&key) {
+    if !KeyboardModifiers::is_modifier(key) {
       self.keyboard_snapshot.key = if state { Some(key) } else { None };
     }
 
@@ -90,10 +90,10 @@ impl KeyboardState {
     if self.is_banned_event() {
       self.state_clear();
     }
-    
-    if self.is_stack_breaker(&key) {
+
+    if self.is_stack_breaker(key) {
       self.handle_stack_breaker(key);
-    } else if Self::is_backspace(&key) {
+    } else if Self::is_backspace(key) {
       self.handle_backspace(key);
     } else {
       self.handle_insert(key, is_executing);
@@ -102,9 +102,9 @@ impl KeyboardState {
 
   fn handle_modifier_update(&mut self, key: Key, state: bool) {
     if state {
-      self.keyboard_snapshot.modifiers.add_key(&key);
+      self.keyboard_snapshot.modifiers.add_key(key);
     } else {
-      self.keyboard_snapshot.modifiers.remove_key(&key);
+      self.keyboard_snapshot.modifiers.remove_key(key);
     }
   }
 
@@ -126,7 +126,7 @@ impl KeyboardState {
       return;
     };
 
-    let (char, is_char_exists) = settings_kl.find_combination(&cur_layout.name, &key, self.keyboard_snapshot.modifiers);
+    let (char, is_char_exists) = settings_kl.find_combination(&cur_layout.name, key, self.keyboard_snapshot.modifiers);
     let is_switch_exists = switchers.iter().any(|kb| *kb == self.keyboard_snapshot);
 
     // skip registration when hotkey missing in all keyboard layouts
@@ -187,8 +187,8 @@ impl KeyboardState {
   }
 
   #[inline]
-  fn is_backspace(key: &Key) -> bool {
-    *key == Key::Backspace
+  fn is_backspace(key: Key) -> bool {
+    key == Key::Backspace
   }
 
   fn is_banned_event(&self) -> bool {
@@ -197,8 +197,8 @@ impl KeyboardState {
     hotkeys.iter().any(|ks| *ks == self.keyboard_snapshot)
   }
 
-  fn is_stack_breaker(&self, key: &Key) -> bool {
-    let snapshot = KeyboardSnapshot::new(Some(*key), self.keyboard_snapshot.modifiers.clone());
+  fn is_stack_breaker(&self, key: Key) -> bool {
+    let snapshot = KeyboardSnapshot::new(Some(key), self.keyboard_snapshot.modifiers.clone());
     let hotkeys = self.settings.get_stack_brake_hotkeys();
 
     hotkeys.iter().any(|ks| *ks == snapshot)
