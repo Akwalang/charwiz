@@ -1,4 +1,4 @@
-use rdev::{Key, EventType};
+use rdev::{EventType, Key};
 
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
 pub struct KeyboardModifiers(pub u8);
@@ -73,6 +73,7 @@ impl KeyboardModifiers {
     }
   }
 
+  #[inline(always)]
   pub fn is_modifier_event(event: &EventType) -> bool {
     match event {
       EventType::KeyPress(key) => Self::is_modifier(&key),
@@ -152,7 +153,7 @@ impl Iterator for KeyboardModifiersIter {
 impl IntoIterator for KeyboardModifiers {
   type Item = Key;
   type IntoIter = KeyboardModifiersIter;
-
+  
   fn into_iter(self) -> Self::IntoIter {
     KeyboardModifiersIter::new(self)
   }

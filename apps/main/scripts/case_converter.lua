@@ -25,6 +25,20 @@ local function capitalize(word)
 end
 
 local function format_words(words, mode)
+    if mode == "title" then
+        local result = {}
+
+        for _, word in ipairs(words) do
+            table.insert(result, capitalize(word))
+        end
+
+        return table.concat(result, " ")
+    end
+
+    if mode == "upper_text" then
+        return table.concat(words, " "):upper()
+    end
+
     if mode == "text" then
         return table.concat(words, " "):lower()
     end
@@ -77,6 +91,16 @@ local function detect_case(context)
 
     if context == "" then
         return "text"
+    end
+
+    -- TitleCase
+    if context:match("^%u%l+ %u+") then
+        return "title"
+    end
+
+    -- UPPER_TEXT_CASE
+    if context:match("^[A-Z0-9]+ [A-Z0-9 ]+$") or context:match("^[A-Z0-9]+$") then
+        return "upper_text"
     end
 
     -- UPPER_SNAKE_CASE
@@ -159,6 +183,14 @@ function smart_case(input)
     end
 
     return table.concat(result, "\n")
+end
+
+function to_title_case(input)
+    return convert_lines(input, "title")
+end
+
+function to_upper_text_case(input)
+    return convert_lines(input, "upper_text")
 end
 
 function to_text_case(input)

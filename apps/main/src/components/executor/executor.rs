@@ -24,6 +24,8 @@ use crate::components::event_hub::EventHub;
 
 use crate::common::events::CommandEvent;
 
+use crate::utils::spin_lock::spin_sleep;
+
 pub struct Executor {
   platform: &'static Platform,
 
@@ -82,6 +84,8 @@ impl Executor {
 
   async fn process_event(self: &Rc<Self>, event: CommandEvent) -> anyhow::Result<()> {
     let _app_lock_guard = self.lock_application();
+
+    spin_sleep(std::time::Duration::from_millis(5));
 
     let current_layout = self.state.borrow().keyboard.get_initial_keyboard_layout().clone();
     let kbl = self.switch_keyboard_layout(&current_layout, &event.injector.layout_before);

@@ -45,10 +45,16 @@ impl Emulator {
       Self::put_snapshots_into_pipeline(&mut pipeline, current, next);
 
       for event in &pipeline {
+        let is_modifier = KeyboardModifiers::is_modifier_event(&event);
+
+        if is_modifier {
+          spin_sleep(Duration::from_millis(8));
+        }
+
         simulate(event)?;
 
-        if KeyboardModifiers::is_modifier_event(&event) {
-          spin_sleep(Duration::from_millis(5));
+        if is_modifier {
+          spin_sleep(Duration::from_millis(8));
         }
       }
 

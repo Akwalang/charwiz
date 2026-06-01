@@ -255,23 +255,9 @@
       },
       "injector": {
         "target": "clipboard",
-        "method": "type_and_paste",
+        "method": "paste",
         "layoutAfter": "current",
         "userInputCleanup": "none"
-      }
-    },
-    {
-      "keys": {
-        "key": "KeyH",
-        "modifiers": ["ControlLeft", "AltGr"]
-      },
-      "transformer": {
-        "type": "plugin",
-        "value": "to_text_case"
-      },
-      "injector": {
-        "target": "selection",
-        "method": "paste"
       }
     },
     {
@@ -286,63 +272,6 @@
       "injector": {
         "useSelectedContext": true,
         "target": "clipboard",
-        "method": "paste"
-      }
-    },
-    {
-      "keys": {
-        "key": "KeyV",
-        "modifiers": ["ControlLeft", "AltGr"]
-      },
-      "transformer": {
-        "type": "plugin",
-        "value": "smart_case"
-      },
-      "injector": {
-        "useSelectedContext": true,
-        "target": "selection",
-        "method": "paste"
-      }
-    },
-    {
-      "keys": {
-        "key": "KeyB",
-        "modifiers": ["ControlLeft", "AltGr"]
-      },
-      "transformer": {
-        "type": "plugin",
-        "value": "to_kebab_case"
-      },
-      "injector": {
-        "target": "selection",
-        "method": "paste"
-      }
-    },
-    {
-      "keys": {
-        "key": "KeyN",
-        "modifiers": ["ControlLeft", "AltGr"]
-      },
-      "transformer": {
-        "type": "plugin",
-        "value": "to_pascal_case"
-      },
-      "injector": {
-        "target": "selection",
-        "method": "paste"
-      }
-    },
-    {
-      "keys": {
-        "key": "KeyM",
-        "modifiers": ["ControlLeft", "AltGr"]
-      },
-      "transformer": {
-        "type": "plugin",
-        "value": "to_camel_case"
-      },
-      "injector": {
-        "target": "selection",
         "method": "paste"
       }
     }
@@ -392,6 +321,23 @@
       "injector": {
         "target": "none",
         "method": "paste",
+        "layoutAfter": "current",
+        "userInputCleanup": "none"
+      }
+    },
+    {
+      "keys": {
+        "key": "BackQuote",
+        "modifiers": ["Alt"]
+      },
+      "transformer": {
+        "type": "static",
+        "value": "`"
+      },
+      "injector": {
+        "target": "none",
+        "method": "paste",
+        "layoutBefore": "current",
         "layoutAfter": "current",
         "userInputCleanup": "none"
       }
@@ -445,7 +391,7 @@
       },
       "injector": {
         "target": "none",
-        "method": "type_and_paste",
+        "method": "paste",
         "layoutAfter": "en-US",
         "keyboardStateCleanup": "drop"
       }
