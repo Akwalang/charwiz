@@ -280,7 +280,7 @@
     {
       "keys": {
         "key": "Equal",
-        "modifiers": ["AltGr"]
+        "modifiers": ["Alt"]
       },
       "transformer": {
         "type": "static",
@@ -289,14 +289,13 @@
       "injector": {
         "target": "none",
         "method": "paste",
-        "layoutAfter": "current",
         "userInputCleanup": "none"
       }
     },
     {
       "keys": {
         "key": "Equal",
-        "modifiers": ["ShiftLeft", "AltGr"]
+        "modifiers": ["ShiftLeft", "Alt"]
       },
       "transformer": {
         "type": "static",
@@ -305,7 +304,6 @@
       "injector": {
         "target": "none",
         "method": "paste",
-        "layoutAfter": "current",
         "userInputCleanup": "none"
       }
     },
@@ -321,7 +319,6 @@
       "injector": {
         "target": "none",
         "method": "paste",
-        "layoutAfter": "current",
         "userInputCleanup": "none"
       }
     },
@@ -337,8 +334,6 @@
       "injector": {
         "target": "none",
         "method": "paste",
-        "layoutBefore": "current",
-        "layoutAfter": "current",
         "userInputCleanup": "none"
       }
     }
@@ -404,7 +399,7 @@
       },
       "injector": {
         "target": "none",
-        "method": "type_and_paste",
+        "method": "paste",
         "layoutAfter": "current",
         "keyboardStateCleanup": "drop"
       }

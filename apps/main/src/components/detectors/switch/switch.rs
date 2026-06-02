@@ -9,7 +9,6 @@ use rdev::EventType;
 use tokio::sync::broadcast::error::RecvError;
 
 use settings_core::enums::{UserInputCleanupEnum, KeyboardStateCleanupEnum};
-use settings_core::structs::KeyboardSnapshot;
 use settings_core::settings::main_settings::Switch;
 
 use crate::settings::Settings;
@@ -69,18 +68,17 @@ impl SwitchDetector {
     let state = self.state.borrow();
 
     let input = state.keyboard.get_char_stack();
-    let snapshot = state.keyboard.get_current_snapshot();
 
     let mut captured = self.captured.borrow_mut();
 
-    if captured.is_some() && *snapshot == KeyboardSnapshot::default() {
+    *captured = self.find_switch(input);
+
+    if captured.is_some() {
       self.publish_command(state, captured.as_ref().unwrap().clone());
       *captured = None;
 
       return;
     }
-
-    *captured = self.find_switch(input);
   }
 
   fn is_trackable_event(event: &InputEvent) -> bool {

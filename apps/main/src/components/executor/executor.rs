@@ -142,7 +142,7 @@ impl Executor {
 
     match next {
       KeyboardLayoutEnum::Previous => keyboard_layouts.set_previous_to_keyboard_layout(current.id.as_str()),
-      KeyboardLayoutEnum::Current => keyboard_layouts.set_keyboard_layout(current.id.as_str()),
+      KeyboardLayoutEnum::Current => keyboard_layouts.get_current_keyboard_layout().map(|v| Some(v.clone())),
       KeyboardLayoutEnum::Next => keyboard_layouts.set_next_to_keyboard_layout(current.id.as_str()),
       KeyboardLayoutEnum::Direct(layout) => {
         let Some(layout_item) = keyboard_layouts.get_keyboard_layout_by_name(&layout) else {

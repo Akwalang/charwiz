@@ -9,7 +9,6 @@ use rdev::EventType;
 use tokio::sync::broadcast::error::RecvError;
 
 use settings_core::enums::{KeyboardStateCleanupEnum, TransformTargetEnum, UserInputCleanupEnum};
-use settings_core::structs::KeyboardSnapshot;
 use settings_core::settings::main_settings::Command;
 
 use crate::settings::Settings;
@@ -35,7 +34,7 @@ impl CommandDetector {
 
       state: state,
       event_hub: event_hub,
-      
+
       captured: RefCell::new(None),
     })
   }
@@ -69,18 +68,16 @@ impl CommandDetector {
     let state = self.state.borrow();
 
     let input = state.keyboard.get_char_stack();
-    let snapshot = state.keyboard.get_current_snapshot();
-
     let mut captured = self.captured.borrow_mut();
 
-    if captured.is_some() && *snapshot == KeyboardSnapshot::default() {
+    *captured = self.find_command(input);
+
+    if captured.is_some() {
       self.publish_command(state, captured.as_ref().unwrap().clone());
       *captured = None;
 
       return;
     }
-
-    *captured = self.find_command(input);
   }
 
   fn is_trackable_event(event: &InputEvent) -> bool {
@@ -94,7 +91,7 @@ impl CommandDetector {
     let commands = self.settings.get_commands();
 
     for command in commands.iter() {
-      if input.ends_with(&command.cmd) { 
+      if input.ends_with(&command.cmd) {
         return Some(command.clone());
       }
     }
@@ -107,7 +104,7 @@ impl CommandDetector {
     let event_stack = state.keyboard.get_events();
 
     char_stack.truncate(char_stack.len() - command.cmd.len());
-    
+
     let transformer = command.transformer.clone();
     let mut injector = command.injector.clone();
 

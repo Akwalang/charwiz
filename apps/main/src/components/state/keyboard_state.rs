@@ -79,13 +79,11 @@ impl KeyboardState {
 
     if KeyboardModifiers::is_modifier(key) {
       self.handle_modifier_update(key, state);
-    }
-
-    if !KeyboardModifiers::is_modifier(key) {
+    } else {
       self.keyboard_snapshot.key = if state { Some(key) } else { None };
     }
 
-    if !state { return; }
+    if !state || is_executing { return; }
 
     if self.is_banned_event() {
       self.state_clear();
