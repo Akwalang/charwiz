@@ -172,14 +172,34 @@ end
 
 
 function smart_case(input)
+    local input_lines = split_lines(input.value)
     local context_lines = split_lines(input.context or "")
+
     local result = {}
 
+    if #input_lines == #context_lines and #input_lines > 1 then
+        for i, context_line in ipairs(context_lines) do
+            local words = split_into_words(input_lines[i])
+            local mode = detect_case(context_line)
+
+            table.insert(
+                result,
+                format_words(words, mode)
+            )
+        end
+
+        return table.concat(result, "\n")
+    end
+
+    local words = split_into_words(input.value)
+
     for _, context_line in ipairs(context_lines) do
-        local words = split_into_words(input.value)
         local mode = detect_case(context_line)
 
-        table.insert(result, format_words(words, mode))
+        table.insert(
+            result,
+            format_words(words, mode)
+        )
     end
 
     return table.concat(result, "\n")
