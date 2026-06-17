@@ -19,8 +19,48 @@ local FUNCTIONS = {
     end,
 }
 
+local EPSILON = 1e-9
+
 local function trim(value)
     return value:match("^%s*(.-)%s*$")
+end
+
+local function is_nan(value)
+    return value ~= value
+end
+
+local function nearly_equal(a, b)
+    if is_nan(a) or is_nan(b) then
+        return false
+    end
+
+    return math.abs(a - b) < EPSILON
+end
+
+local function format_result(value)
+    if is_nan(value) then
+        return "Not Defined"
+    end
+
+    if value == math.huge then
+        return "Infinity"
+    end
+
+    if value == -math.huge then
+        return "-Infinity"
+    end
+
+    if nearly_equal(value, 0) then
+        value = 0
+    end
+
+    local integer = math.floor(value)
+
+    if nearly_equal(integer, value) then
+        return tostring(integer)
+    end
+
+    return string.format("%.10g", value)
 end
 
 local function tokenize(expr)
@@ -223,38 +263,240 @@ local function evaluate(expr, variables)
     return parser:parse()
 end
 
-local function is_nan(value)
-    return value ~= value
+local function extract_unknowns(expr, variables)
+    local found = {}
+    local unknowns = {}
+
+    for identifier in expr:gmatch("[%a_][%w_]*") do
+        if CONSTANTS[identifier] == nil
+            and FUNCTIONS[identifier] == nil
+            and variables[identifier] == nil
+            and not found[identifier]
+        then
+            found[identifier] = true
+            table.insert(unknowns, identifier)
+        end
+    end
+
+    return unknowns
 end
 
-local function nearly_equal(a, b)
-    if is_nan(a) or is_nan(b) then
+local function clone_variables_with(variables, name, value)
+    local cloned = {}
+
+    for key, item in pairs(variables) do
+        cloned[key] = item
+    end
+
+    cloned[name] = value
+
+    return cloned
+end
+
+local function evaluate_with_unknown(expr, variables, name, value)
+    return evaluate(expr, clone_variables_with(variables, name, value))
+end
+
+local function evaluate_equation_delta(left, right, variables, name, value)
+    return evaluate_with_unknown(left, variables, name, value)
+        - evaluate_with_unknown(right, variables, name, value)
+end
+
+local function is_bad_number(value)
+    return value == nil or is_nan(value) or value == math.huge or value == -math.huge
+end
+
+local function solve_polynomial_equation(left, right, variables)
+    local unknowns = extract_unknowns(left .. " " .. right, variables)
+
+    if #unknowns ~= 1 then
+        return nil
+    end
+
+    local name = unknowns[1]
+
+    local ok0, y0 = pcall(evaluate_equation_delta, left, right, variables, name, 0)
+    local ok1, y1 = pcall(evaluate_equation_delta, left, right, variables, name, 1)
+    local ok2, y2 = pcall(evaluate_equation_delta, left, right, variables, name, 2)
+    local ok3, y3 = pcall(evaluate_equation_delta, left, right, variables, name, 3)
+
+    if not ok0 or not ok1 or not ok2 or not ok3 then
+        return nil
+    end
+
+    if is_bad_number(y0) or is_bad_number(y1) or is_bad_number(y2) or is_bad_number(y3) then
+        return nil
+    end
+
+    -- f(x) = ax^2 + bx + c
+    local c = y0
+    local a = (y2 - 2 * y1 + y0) / 2
+    local b = y1 - y0 - a
+
+    -- Проверяем, что выражение действительно не выше второй степени.
+    if not nearly_equal(y3, 9 * a + 3 * b + c) then
+        return nil
+    end
+
+    if nearly_equal(a, 0) then
+        if nearly_equal(b, 0) then
+            if nearly_equal(c, 0) then
+                return { kind = "identity", name = name }
+            end
+
+            return { kind = "no_solution", name = name }
+        end
+
+        return {
+            kind = "linear",
+            name = name,
+            value = -c / b,
+        }
+    end
+
+    local discriminant = b * b - 4 * a * c
+
+    if discriminant < -EPSILON then
+        return {
+            kind = "no_real_roots",
+            name = name,
+        }
+    end
+
+    if nearly_equal(discriminant, 0) then
+        return {
+            kind = "quadratic_one_root",
+            name = name,
+            value = -b / (2 * a),
+        }
+    end
+
+    local sqrt_d = math.sqrt(discriminant)
+    local x1 = (-b - sqrt_d) / (2 * a)
+    local x2 = (-b + sqrt_d) / (2 * a)
+
+    if x1 > x2 then
+        x1, x2 = x2, x1
+    end
+
+    return {
+        kind = "quadratic_two_roots",
+        name = name,
+        x1 = x1,
+        x2 = x2,
+    }
+end
+
+
+local function parse_user_solution(solution)
+    local result = {}
+
+    for name, value in solution:gmatch("([%a_][%w_]*)%s*=%s*([%+%-]?%d+%.?%d*)") do
+        result[name] = tonumber(value)
+    end
+
+    for name, value in solution:gmatch("([%a_][%w_]*)%s*=%s*([%+%-]?%d*%.%d+)") do
+        result[name] = tonumber(value)
+    end
+
+    return result
+end
+
+local function build_actual_solution(solved)
+    local result = {}
+
+    if solved.kind == "linear" then
+        result[solved.name] = solved.value
+    elseif solved.kind == "quadratic_one_root" then
+        result[solved.name] = solved.value
+    elseif solved.kind == "quadratic_two_roots" then
+        result[solved.name .. "1"] = solved.x1
+        result[solved.name .. "2"] = solved.x2
+    end
+
+    return result
+end
+
+local function solutions_match(actual, user)
+    for name, value in pairs(actual) do
+        local user_value = user[name]
+
+        if user_value == nil then
+            return false
+        end
+
+        if not nearly_equal(value, user_value) then
+            return false
+        end
+    end
+
+    return true
+end
+
+local function restore_solved_variables(line, variables)
+    local equation, solution =
+        line:match("^(.-)%s*[≠]?=>%s*(.-)%s*$")
+
+    if not equation then
         return false
     end
 
-    return math.abs(a - b) < 1e-9
+    local left, right =
+        equation:match("^(.-)%s*=%s*(.-)$")
+
+    if not left then
+        return false
+    end
+
+    left = trim(left)
+    right = trim(right)
+
+    local solved =
+        solve_polynomial_equation(
+            left,
+            right,
+            variables
+        )
+
+    if not solved then
+        return false
+    end
+
+    local actual =
+        build_actual_solution(solved)
+
+    for name, value in pairs(actual) do
+        variables[name] = value
+    end
+
+    local user =
+        parse_user_solution(solution)
+
+    return solutions_match(actual, user)
 end
 
-local function format_result(value)
-    if is_nan(value) then
-        return "Not Defined"
+local function process_already_solved(line, variables)
+    local equation, solution =
+        line:match("^(.-)%s*[≠]?=>%s*(.-)%s*$")
+
+    if not equation then
+        return nil
     end
 
-    if value == math.huge then
-        return "Infinity"
-    end
+    local is_valid =
+        restore_solved_variables(
+            line,
+            variables
+        )
 
-    if value == -math.huge then
-        return "-Infinity"
-    end
+    local operator =
+        is_valid and "=>" or "≠>"
 
-    local integer = math.floor(value)
-
-    if integer == value then
-        return tostring(integer)
-    end
-
-    return string.format("%.10g", value)
+    return equation
+        .. " "
+        .. operator
+        .. " "
+        .. solution
 end
 
 local function process_equation(line, variables)
@@ -270,15 +512,58 @@ local function process_equation(line, variables)
     local ok_left, value_left = pcall(evaluate, left, variables)
     local ok_right, value_right = pcall(evaluate, right, variables)
 
-    if not ok_left or not ok_right then
-        return line .. " = ERROR", nil
+    if ok_left and ok_right then
+        local operator = nearly_equal(value_left, value_right)
+            and "="
+            or "≠"
+
+        return left .. " " .. operator .. " " .. right, value_left
     end
 
-    local operator = nearly_equal(value_left, value_right)
-        and "="
-        or "≠"
+    local solved = solve_polynomial_equation(left, right, variables)
 
-    return left .. " " .. operator .. " " .. right, value_left
+    if solved then
+        if solved.kind == "linear" then
+            variables[solved.name] = solved.value
+
+            return line .. " => " .. solved.name .. " = " .. format_result(solved.value), solved.value
+        end
+
+        if solved.kind == "quadratic_one_root" then
+            variables[solved.name] = solved.value
+
+            return line .. " => " .. solved.name .. " = " .. format_result(solved.value), solved.value
+        end
+
+        if solved.kind == "quadratic_two_roots" then
+            local first_name = solved.name .. "1"
+            local second_name = solved.name .. "2"
+
+            variables[first_name] = solved.x1
+            variables[second_name] = solved.x2
+
+            return line
+                .. " => "
+                .. first_name .. " = " .. format_result(solved.x1)
+                .. ", "
+                .. second_name .. " = " .. format_result(solved.x2),
+                nil
+        end
+
+        if solved.kind == "identity" then
+            return line .. " => Any value", nil
+        end
+
+        if solved.kind == "no_solution" then
+            return line .. " => No solution", nil
+        end
+
+        if solved.kind == "no_real_roots" then
+            return line .. " => No real roots", nil
+        end
+    end
+
+    return line .. " = ERROR", nil
 end
 
 local function process_expression(line, variables)
@@ -305,15 +590,27 @@ local function process_assignment(line, variables)
 
     if expression:find("[=≠]") then
         text, value = process_equation(expression, variables)
-    else
-        text, value = process_expression(expression, variables)
+
+        if value ~= nil then
+            variables[name] = value
+        end
+
+        return name .. ": " .. text
     end
 
-    if value ~= nil then
-        variables[name] = value
+    local ok, result = pcall(evaluate, expression, variables)
+
+    if not ok then
+        return name .. ": " .. expression .. " = ERROR"
     end
 
-    return name .. ": " .. text
+    variables[name] = result
+
+    if nearly_equal(result, tonumber(expression) or math.huge) then
+        return name .. ": " .. format_result(result)
+    end
+
+    return name .. ": " .. expression .. " = " .. format_result(result)
 end
 
 local function process_line(line, variables)
@@ -321,6 +618,12 @@ local function process_line(line, variables)
 
     if expression == "" then
         return nil
+    end
+
+    local already_solved = process_already_solved(expression, variables)
+
+    if already_solved then
+        return already_solved
     end
 
     local assignment = process_assignment(expression, variables)
@@ -343,13 +646,10 @@ function calculate(input)
     local variables = {}
 
     for line in (input.value .. "\n"):gmatch("(.-)\n") do
-        local processed = process_line(line, variables)
-
-        if processed then
-            table.insert(result, processed)
-        else
-            table.insert(result, "")
-        end
+        table.insert(
+            result,
+            process_line(line, variables) or ""
+        )
     end
 
     return table.concat(result, "\n")
